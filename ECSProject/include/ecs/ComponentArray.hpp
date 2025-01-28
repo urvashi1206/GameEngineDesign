@@ -5,14 +5,10 @@
 #include <cassert>
 #include "EntityManager.hpp"
 
-/**
- * A dense array of components, mapping Entity IDs to component instances.
- */
 template <typename T>
 class ComponentArray {
 public:
     void InsertData(Entity entity, const T& component) {
-        // Ensure the entity does not already have this component
         assert(m_EntityToIndexMap.find(entity) == m_EntityToIndexMap.end()
             && "Component added to same entity more than once.");
 
@@ -24,11 +20,9 @@ public:
     }
 
     void RemoveData(Entity entity) {
-        // Ensure the entity currently has this component
         assert(m_EntityToIndexMap.find(entity) != m_EntityToIndexMap.end()
             && "Removing non-existent component.");
 
-        // Swap & pop technique for O(1) removal
         size_t indexOfRemoved = m_EntityToIndexMap[entity];
         size_t indexOfLast = m_Size - 1;
         m_ComponentArray[indexOfRemoved] = m_ComponentArray[indexOfLast];
@@ -44,7 +38,6 @@ public:
     }
 
     T& GetData(Entity entity) {
-        // Ensure the entity currently has this component
         assert(m_EntityToIndexMap.find(entity) != m_EntityToIndexMap.end()
             && "Retrieving non-existent component.");
         return m_ComponentArray[m_EntityToIndexMap[entity]];
@@ -54,7 +47,6 @@ public:
         return (m_EntityToIndexMap.find(entity) != m_EntityToIndexMap.end());
     }
 
-    // Optional: Provide size/usage info
     size_t Size() const { return m_Size; }
 
 private:

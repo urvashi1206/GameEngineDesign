@@ -34,5 +34,3 @@ struct Input {
     bool moveUp;
     bool moveDown;
 };
-
-// Add other components as needed, e.g., Health, Sprite, etc.
