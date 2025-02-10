@@ -1,0 +1,13 @@
+# ninja log v6
+9	856	7608672706212486	CMakeFiles/ECSProject.dir/src/main.cpp.obj	f64b06f40072aa9c
+13	345	7608673450659404	CMakeFiles/ECSProject.dir/src/Systems.cpp.obj	e96decff8c58970b
+7	694	7608673450601046	CMakeFiles/ECSProject.dir/src/main.cpp.obj	f64b06f40072aa9c
+694	1425	7608673457466810	bin/ECSProject.exe	a2de138a910aace7
+11	359	7608677816897838	CMakeFiles/ECSProject.dir/src/Systems.cpp.obj	e96decff8c58970b
+6	749	7608677816850218	CMakeFiles/ECSProject.dir/src/main.cpp.obj	f64b06f40072aa9c
+749	1213	7608677824285999	bin/ECSProject.exe	a2de138a910aace7
+25	346	7608680302041413	CMakeFiles/ECSProject.dir/src/Systems.cpp.obj	e96decff8c58970b
+20	694	7608680301989791	CMakeFiles/ECSProject.dir/src/main.cpp.obj	f64b06f40072aa9c
+694	1096	7608680308730755	bin/ECSProject.exe	a2de138a910aace7
+18	343	7608680880657524	CMakeFiles/ECSProject.dir/src/Systems.cpp.obj	e96decff8c58970b
+343	748	7608680883913262	bin/ECSProject.exe	a2de138a910aace7

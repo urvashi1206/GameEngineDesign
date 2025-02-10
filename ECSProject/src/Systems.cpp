@@ -3,7 +3,6 @@
 #include <cmath>
 
 #include "ecs/Components.hpp"
-#include "ecs/RenderComponent.hpp"
 
 void MovementSystem(ECSCoordinator& ecs, float dt) {
     for (Entity e = 0; e < MAX_ENTITIES; e++) {
@@ -11,8 +10,9 @@ void MovementSystem(ECSCoordinator& ecs, float dt) {
             auto& pos = ecs.GetComponent<Position>(e);
             auto& vel = ecs.GetComponent<Velocity>(e);
 
-            pos.x += vel.dx * dt;
-            pos.y += vel.dy * dt;
+            pos.pos.x += vel.vel.x * dt;
+            pos.pos.y += vel.vel.y * dt;
+			pos.pos.z += vel.vel.z * dt;
         }
     }
 }
@@ -26,21 +26,21 @@ void InputSystem(ECSCoordinator& ecs, float dt) {
             auto& inp = ecs.GetComponent<Input>(e);
             auto& vel = ecs.GetComponent<Velocity>(e);
 
-            // Zero out old velocity
-            vel.dx = 0.0f;
-            vel.dy = 0.0f;
-
             // Check Raylib input
             if (IsKeyDown(KEY_LEFT))  inp.moveLeft  = true; else inp.moveLeft  = false;
             if (IsKeyDown(KEY_RIGHT)) inp.moveRight = true; else inp.moveRight = false;
             if (IsKeyDown(KEY_UP))    inp.moveUp    = true; else inp.moveUp    = false;
             if (IsKeyDown(KEY_DOWN))  inp.moveDown  = true; else inp.moveDown  = false;
 
+            // Set velocity based on input; adjust speed as needed.
+            const float speed = 1.0f;
+            vel.vel = { 0.0f, 0.0f, 0.0f };
+
             // Convert input booleans to velocity
-            if (inp.moveLeft)  vel.dx = -100.0f;
-            if (inp.moveRight) vel.dx = +100.0f;
-            if (inp.moveUp)    vel.dy = -100.0f;
-            if (inp.moveDown)  vel.dy = +100.0f;
+            if (inp.moveLeft)  vel.vel.x = -speed;
+            if (inp.moveRight) vel.vel.x = +speed;
+            if (inp.moveUp)    vel.vel.z = -speed;
+            if (inp.moveDown)  vel.vel.z = +speed;
         }
     }
 }
@@ -56,10 +56,12 @@ void CollisionSystem(ECSCoordinator& ecs, float dt) {
         auto& colA = ecs.GetComponent<Collider>(a);
 
         // A's bounding box
-        float leftA   = posA.x;
-        float rightA  = posA.x + colA.width;
-        float topA    = posA.y;
-        float bottomA = posA.y + colA.height;
+        float leftA   = posA.pos.x;
+        float rightA  = posA.pos.x + colA.width;
+        float bottomA = posA.pos.y;
+        float topA    = posA.pos.y + colA.height;
+		float backA   = posA.pos.z;
+		float frontA  = posA.pos.z + colA.depth;
 
         for (Entity b = a + 1; b < MAX_ENTITIES; b++) {
             if (!ecs.HasComponent<Position>(b) || !ecs.HasComponent<Collider>(b)) continue;
@@ -68,14 +70,17 @@ void CollisionSystem(ECSCoordinator& ecs, float dt) {
             auto& colB = ecs.GetComponent<Collider>(b);
 
             // B's bounding box
-            float leftB   = posB.x;
-            float rightB  = posB.x + colB.width;
-            float topB    = posB.y;
-            float bottomB = posB.y + colB.height;
+            float leftB   = posB.pos.x;
+            float rightB  = posB.pos.x + colB.width;
+            float bottomB = posB.pos.y;
+            float topB    = posB.pos.y + colB.height;
+			float backB   = posB.pos.z;
+			float frontB  = posB.pos.z + colB.depth;
 
-            // Check for overlap
+            // Check for overlap in x, y, and z axes
             bool overlap = (leftA < rightB && rightA > leftB &&
-                            topA < bottomB && bottomA > topB);
+                bottomA < topB && topA > bottomB &&
+                backA < frontB && frontA > backB);
 
             if (overlap) {
                 // Resolve collision, apply damage, or simply log it
@@ -92,32 +97,23 @@ void CollisionSystem(ECSCoordinator& ecs, float dt) {
 //   - Draw entities that have either: 
 //     - A Sprite, or 
 //     - A Render data with just color & size
-void RenderSystem(ECSCoordinator& ecs) {
+void RenderSystem(ECSCoordinator& ecs, Camera3D& camera) {
     BeginDrawing();
     ClearBackground(RAYWHITE);
+    BeginMode3D(camera);
 
     for (Entity e = 0; e < MAX_ENTITIES; e++) {
-        // If entity has a Sprite, draw that
-        if (ecs.HasComponent<Position>(e) && ecs.HasComponent<Sprite>(e)) {
-            auto& pos = ecs.GetComponent<Position>(e);
-            auto& spr = ecs.GetComponent<Sprite>(e);
-
-            DrawTextureEx(
-                spr.texture,
-                {pos.x, pos.y},
-                spr.rotation,
-                spr.scale,
-                WHITE
-            );
-        }
-        // Otherwise, if entity has a "Render" struct like your old circle,
-        // or if it doesn't have a sprite but has color, you can draw a fallback
-        else if (ecs.HasComponent<Position>(e) && ecs.HasComponent<Render>(e)) {
+        if (ecs.HasComponent<Position>(e) && ecs.HasComponent<Render>(e)) {
             auto& pos = ecs.GetComponent<Position>(e);
             auto& ren = ecs.GetComponent<Render>(e);
-            DrawCircle((int)pos.x, (int)pos.y, ren.size, ren.color);
+            DrawSphere(pos.pos, ren.size, ren.color);
+            if (ecs.HasComponent<Collider>(e)) {
+                auto& col = ecs.GetComponent<Collider>(e);
+                DrawCubeWires(pos.pos, col.width, col.height, col.depth, BLACK);
+            }
         }
     }
 
+    EndMode3D();
     EndDrawing();
 }

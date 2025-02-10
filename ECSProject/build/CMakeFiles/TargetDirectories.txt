@@ -1,3 +1,0 @@
-C:/Users/Owner/Documents/GameEngineDesign/ECSProject/build/CMakeFiles/ECSProject.dir
-C:/Users/Owner/Documents/GameEngineDesign/ECSProject/build/CMakeFiles/edit_cache.dir
-C:/Users/Owner/Documents/GameEngineDesign/ECSProject/build/CMakeFiles/rebuild_cache.dir
