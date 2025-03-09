@@ -47,17 +47,17 @@ public:
         return (m_EntityToIndexMap.find(entity) != m_EntityToIndexMap.end());
     }
 
+    void DestroyEntity(Entity entity) {
+        if (HasData(entity)) {
+            RemoveData(entity);
+        }
+    }
+
     size_t Size() const { return m_Size; }
 
 private:
-    // Packed array of components
     std::array<T, MAX_ENTITIES> m_ComponentArray{};
-
-    // Entity-to-index lookup
     std::unordered_map<Entity, size_t> m_EntityToIndexMap{};
-
-    // Index-to-entity lookup
     std::unordered_map<size_t, Entity> m_IndexToEntityMap{};
-
-    size_t m_Size = 0;  // How many valid entries are in the array
+    size_t m_Size = 0;
 };

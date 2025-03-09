@@ -11,6 +11,6 @@
     "\\include\\ecs",
     "\\src"
   ],
-  "SelectedNode": "\\include\\ecs\\EntityManager.hpp",
+  "SelectedNode": "\\include\\ecs\\ECSCoordinator.hpp",
   "PreviewInSolutionExplorer": false
 }

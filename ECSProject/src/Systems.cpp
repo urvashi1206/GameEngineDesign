@@ -1,42 +1,38 @@
 #include "Systems.hpp"
 #include <raylib.h>
+#include <raymath.h>
 #include <cmath>
 
 #include "ecs/Components.hpp"
+#include "ecs/ECSCoordinator.hpp"
 
 void MovementSystem(ECSCoordinator& ecs, float dt) {
     for (Entity e = 0; e < MAX_ENTITIES; e++) {
-        if (ecs.HasComponent<Position>(e) && ecs.HasComponent<Velocity>(e)) {
-            auto& pos = ecs.GetComponent<Position>(e);
-            auto& vel = ecs.GetComponent<Velocity>(e);
+        if (ecs.HasComponent<Transform3D>(e) && ecs.HasComponent<Velocity>(e)) {
+            auto& transform = ecs.GetComponent<Transform3D>(e);
+            auto& velocity = ecs.GetComponent<Velocity>(e);
 
-            pos.pos.x += vel.vel.x * dt;
-            pos.pos.y += vel.vel.y * dt;
-			pos.pos.z += vel.vel.z * dt;
+            transform.position.x += velocity.vel.x * dt;
+            transform.position.y += velocity.vel.y * dt;
+			transform.position.z += velocity.vel.z * dt;
         }
     }
 }
 
 void InputSystem(ECSCoordinator& ecs, float dt) {
-    // For simplicity, let's assume we have only one "player" entity
-    // In a real game, you might store or look up the player's entity ID
-    // or apply to all entities that have Input + Velocity.
     for (Entity e = 0; e < MAX_ENTITIES; e++) {
         if (ecs.HasComponent<Input>(e) && ecs.HasComponent<Velocity>(e)) {
             auto& inp = ecs.GetComponent<Input>(e);
             auto& vel = ecs.GetComponent<Velocity>(e);
 
-            // Check Raylib input
-            if (IsKeyDown(KEY_LEFT))  inp.moveLeft  = true; else inp.moveLeft  = false;
-            if (IsKeyDown(KEY_RIGHT)) inp.moveRight = true; else inp.moveRight = false;
-            if (IsKeyDown(KEY_UP))    inp.moveUp    = true; else inp.moveUp    = false;
-            if (IsKeyDown(KEY_DOWN))  inp.moveDown  = true; else inp.moveDown  = false;
+            inp.moveLeft = IsKeyDown(KEY_LEFT);
+            inp.moveRight = IsKeyDown(KEY_RIGHT);
+            inp.moveUp = IsKeyDown(KEY_UP);
+            inp.moveDown = IsKeyDown(KEY_DOWN);
 
-            // Set velocity based on input; adjust speed as needed.
-            const float speed = 1.0f;
+            const float speed = 20.0f;
             vel.vel = { 0.0f, 0.0f, 0.0f };
 
-            // Convert input booleans to velocity
             if (inp.moveLeft)  vel.vel.x = -speed;
             if (inp.moveRight) vel.vel.x = +speed;
             if (inp.moveUp)    vel.vel.z = -speed;
@@ -45,37 +41,42 @@ void InputSystem(ECSCoordinator& ecs, float dt) {
     }
 }
 
-// 3) Collision System (AABB Checking)
 void CollisionSystem(ECSCoordinator& ecs, float dt) {
-    // We'll do a naive O(n^2) approach: check every entity vs. every other
-    // In a real project, you might store a list of "collidable" entities or use a spatial partition.
     for (Entity a = 0; a < MAX_ENTITIES; a++) {
-        if (!ecs.HasComponent<Position>(a) || !ecs.HasComponent<Collider>(a)) continue;
+        if (!ecs.HasComponent<Transform3D>(a) || !ecs.HasComponent<Collider>(a)) continue;
 
-        auto& posA = ecs.GetComponent<Position>(a);
-        auto& colA = ecs.GetComponent<Collider>(a);
+        auto& transformA = ecs.GetComponent<Transform3D>(a);
+        auto& colliderA = ecs.GetComponent<Collider>(a);
+
+        float halfWidthA = colliderA.width * 0.5f;
+        float halfHeightA = colliderA.height * 0.5f;
+        float halfDepthA = colliderA.depth * 0.5f;
 
         // A's bounding box
-        float leftA   = posA.pos.x;
-        float rightA  = posA.pos.x + colA.width;
-        float bottomA = posA.pos.y;
-        float topA    = posA.pos.y + colA.height;
-		float backA   = posA.pos.z;
-		float frontA  = posA.pos.z + colA.depth;
+        float leftA = transformA.position.x - halfWidthA;
+        float rightA = transformA.position.x + halfWidthA;
+        float bottomA = transformA.position.y - halfHeightA;
+        float topA = transformA.position.y + halfHeightA;
+        float backA = transformA.position.z - halfDepthA;
+        float frontA = transformA.position.z + halfDepthA;
 
         for (Entity b = a + 1; b < MAX_ENTITIES; b++) {
-            if (!ecs.HasComponent<Position>(b) || !ecs.HasComponent<Collider>(b)) continue;
+            if (!ecs.HasComponent<Transform3D>(b) || !ecs.HasComponent<Collider>(b)) continue;
 
-            auto& posB = ecs.GetComponent<Position>(b);
-            auto& colB = ecs.GetComponent<Collider>(b);
+            auto& transformB = ecs.GetComponent<Transform3D>(b);
+            auto& colliderB = ecs.GetComponent<Collider>(b);
+
+            float halfWidthB = colliderB.width * 0.5f;
+            float halfHeightB = colliderB.height * 0.5f;
+            float halfDepthB = colliderB.depth * 0.5f;
 
             // B's bounding box
-            float leftB   = posB.pos.x;
-            float rightB  = posB.pos.x + colB.width;
-            float bottomB = posB.pos.y;
-            float topB    = posB.pos.y + colB.height;
-			float backB   = posB.pos.z;
-			float frontB  = posB.pos.z + colB.depth;
+            float leftB = transformB.position.x - halfWidthB;
+            float rightB = transformB.position.x + halfWidthB;
+			float bottomB = transformB.position.y - halfHeightB;
+			float topB = transformB.position.y + halfHeightB;
+			float backB = transformB.position.z - halfDepthB;
+			float frontB = transformB.position.z + halfDepthB;
 
             // Check for overlap in x, y, and z axes
             bool overlap = (leftA < rightB && rightA > leftB &&
@@ -83,34 +84,34 @@ void CollisionSystem(ECSCoordinator& ecs, float dt) {
                 backA < frontB && frontA > backB);
 
             if (overlap) {
-                // Resolve collision, apply damage, or simply log it
-                // For example, we can just print:
                 TraceLog(LOG_INFO, "Collision: Entity %d with Entity %d", a, b);
-
-                // Possibly a "DamageSystem" or immediate response here
             }
         }
     }
 }
 
-// 4) Render System
-//   - Draw entities that have either: 
-//     - A Sprite, or 
-//     - A Render data with just color & size
 void RenderSystem(ECSCoordinator& ecs, Camera3D& camera) {
     BeginDrawing();
     ClearBackground(RAYWHITE);
     BeginMode3D(camera);
+    DrawGrid(10, 1.0f);
 
     for (Entity e = 0; e < MAX_ENTITIES; e++) {
-        if (ecs.HasComponent<Position>(e) && ecs.HasComponent<Render>(e)) {
-            auto& pos = ecs.GetComponent<Position>(e);
+        bool hasTransform = ecs.HasComponent<Transform3D>(e);
+        bool hasMesh = ecs.HasComponent<MeshData>(e);
+        bool hasRenderer = ecs.HasComponent<Render>(e);
+
+        if (hasTransform && hasMesh && hasRenderer) 
+        {
+            auto& pos = ecs.GetComponent<Transform3D>(e);
             auto& ren = ecs.GetComponent<Render>(e);
-            DrawSphere(pos.pos, ren.size, ren.color);
-            if (ecs.HasComponent<Collider>(e)) {
-                auto& col = ecs.GetComponent<Collider>(e);
-                DrawCubeWires(pos.pos, col.width, col.height, col.depth, BLACK);
-            }
+			auto& mesh = ecs.GetComponent<MeshData>(e);
+
+            DrawSphere(pos.position, ren.size, ren.color);
+
+			if (ren.size > 0.0f) {
+				DrawSphereWires(pos.position, ren.size, 16, 16, BLACK);
+			}
         }
     }
 

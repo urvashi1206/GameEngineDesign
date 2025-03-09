@@ -1,28 +1,33 @@
 #pragma once
 
 #include <raylib.h> 
+#include <vector>
 
-struct Position {
-   /* float x;
-    float y;*/
-	Vector3 pos;
+struct Transform3D {
+    Vector3 position{ 0.0f, 0.0f, 0.0f };
+	Vector3 rotation{ 0.0f, 0.0f, 0.0f };
+	Vector3 scale{ 1.0f, 1.0f, 1.0f };
+};
+
+struct Vertex {
+	Vector3 position;
+	Vector2 texCoord;
+	Vector3 normal;
+};
+
+struct MeshData {
+	std::vector<Vertex> vertices;
+	std::vector<unsigned> indices;
 };
 
 struct Velocity {
-    /*float dx;
-    float dy;*/
 	Vector3 vel;
 };
 
-//struct Sprite {
-//    Texture2D texture;
-//    float rotation;
-//    float scale;
-//};
-
 struct Render {
-    Color color;
-    float size;
+	Color color{ 255, 255, 255, 255 };
+	bool wireframe = false;
+	float size = 1.0f;
 };
 
 struct Collider {

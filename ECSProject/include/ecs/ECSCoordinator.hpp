@@ -4,10 +4,6 @@
 #include "EntityManager.hpp"
 #include "ComponentManager.hpp"
 
-/**
- * High-level class to coordinate entities and components.
- * This is the main interface you'll use in your game/app.
- */
 class ECSCoordinator {
 public:
     ECSCoordinator() {
@@ -15,7 +11,6 @@ public:
         m_ComponentManager = std::make_unique<ComponentManager>();
     }
 
-    // ENTITY methods
     Entity CreateEntity() {
         return m_EntityManager->CreateEntity();
     }
@@ -25,7 +20,6 @@ public:
         m_ComponentManager->DestroyEntity(entity);
     }
 
-    // COMPONENT methods
     template <typename T>
     void RegisterComponent() {
         m_ComponentManager->RegisterComponent<T>();

@@ -6,44 +6,28 @@
 #include <cassert>
 #include "ComponentArray.hpp"
 
-/**
- * Base interface for all component arrays, so we can store them in a
- * single map without needing templates there.
- */
 class IComponentArray {
 public:
     virtual ~IComponentArray() = default;
     virtual void DestroyEntity(Entity entity) = 0;
 };
 
-/**
- * Concrete component array. Inherits from both IComponentArray
- * (so we can store it generically) and our templated ComponentArray<T>.
- */
 template <typename T>
 class ConcreteComponentArray : public IComponentArray, public ComponentArray<T> {
 public:
     void DestroyEntity(Entity entity) override {
-        if (this->HasData(entity)) {
-            this->RemoveData(entity);
-        }
+        this->DestroyEntity(entity);
     }
 };
-
-/**
- * Manages all component arrays. Provides functions to add/remove/get components.
- */
 class ComponentManager {
 public:
     template <typename T>
     void RegisterComponent() {
         std::type_index typeName = typeid(T);
 
-        // Ensure we haven't already registered this component type
         assert(m_ComponentArrays.find(typeName) == m_ComponentArrays.end()
             && "Registering component type more than once.");
 
-        // Create a pointer to our ConcreteComponentArray<T>
         m_ComponentArrays[typeName] = std::make_shared<ConcreteComponentArray<T>>();
     }
 
@@ -67,7 +51,6 @@ public:
         return GetComponentArray<T>()->HasData(entity);
     }
 
-    // Remove the entity from all component arrays
     void DestroyEntity(Entity entity) {
         for (auto const& pair : m_ComponentArrays) {
             auto const& componentArray = pair.second;
@@ -76,7 +59,6 @@ public:
     }
 
 private:
-    // Map from typeid to a shared pointer of IComponentArray
     std::unordered_map<std::type_index, std::shared_ptr<IComponentArray>> m_ComponentArrays{};
 
     template <typename T>
