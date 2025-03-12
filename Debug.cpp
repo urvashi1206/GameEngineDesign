@@ -9,6 +9,7 @@ namespace Debug
 	{
 		std::shared_ptr<Material> debugMaterial;
 		std::shared_ptr<Mesh> debugBoxMesh;
+		std::shared_ptr<Mesh> debugSphereMesh;
 
 		std::vector<DebugMesh*> debugMeshes;
 
@@ -24,10 +25,18 @@ void Debug::CreateDebugBox(Vector* location, Vector* rotation, Vector* scale)
 {
 
 }
+void Debug::CreateDebugSphere(Transform* transform, Vector offset, float radius)
+{
+	debugMeshes.push_back(new DebugSphere(transform, debugSphereMesh, offset, radius));
+}
 
 void Debug::CreateWireframe_Temp(Vector location, Vector rotation, Vector halfSize)
 {
 	debugWireframes.push_back(new DebugBox(debugBoxMesh, location, rotation, halfSize));
+}
+void Debug::CreateWireframeSphere_Temp(Vector location, Vector rotation, float radius)
+{
+	debugWireframes.push_back(new DebugSphere(debugSphereMesh, location, rotation, radius));
 }
 
 void Debug::DrawAllWireframes(std::shared_ptr<Camera> camera)
@@ -106,4 +115,8 @@ void Debug::SetDebugMaterial(std::shared_ptr<Material> material)
 void Debug::SetDebugBoxMesh(std::shared_ptr<Mesh> mesh)
 {
 	debugBoxMesh = mesh;
+}
+void Debug::SetDebugSphereMesh(std::shared_ptr<Mesh> mesh)
+{
+	debugSphereMesh = mesh;
 }

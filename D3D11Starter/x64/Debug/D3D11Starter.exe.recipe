@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <ProjectOutputs>
+    <ProjectOutput>
+      <FullPath>C:\Users\krims\Documents\GitHub\GameEngineDesign\x64\Debug\D3D11Starter.exe</FullPath>
+    </ProjectOutput>
+  </ProjectOutputs>
+  <ContentFiles>
+    <ContentFile>
+      <FullPath>C:\Users\krims\Documents\GitHub\GameEngineDesign\x64\Debug\PSBoxBlur.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\krims\Documents\GitHub\GameEngineDesign\x64\Debug\PSChromaticAberration.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\krims\Documents\GitHub\GameEngineDesign\x64\Debug\PSNormal.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\krims\Documents\GitHub\GameEngineDesign\x64\Debug\PixelShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\krims\Documents\GitHub\GameEngineDesign\x64\Debug\PSCustom.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\krims\Documents\GitHub\GameEngineDesign\x64\Debug\PSPixelization.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\krims\Documents\GitHub\GameEngineDesign\x64\Debug\PSSky.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\krims\Documents\GitHub\GameEngineDesign\x64\Debug\PSUV.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\krims\Documents\GitHub\GameEngineDesign\x64\Debug\PSVoxel.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\krims\Documents\GitHub\GameEngineDesign\x64\Debug\VertexShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\krims\Documents\GitHub\GameEngineDesign\x64\Debug\VSFullscreen.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\krims\Documents\GitHub\GameEngineDesign\x64\Debug\VSShadowMap.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\krims\Documents\GitHub\GameEngineDesign\x64\Debug\VSSky.cso</FullPath>
+    </ContentFile>
+  </ContentFiles>
+  <SatelliteDlls />
+  <NonRecipeFileRefs />
+</Project>

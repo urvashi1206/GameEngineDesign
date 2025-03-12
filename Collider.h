@@ -26,6 +26,8 @@ public:
 	Collider(Transform* transform);
 	~Collider();
 
+	virtual Matrix4x4 GetInertiaTensor(float mass) const = 0;
+
 	//virtual void CreateDebugWireframe(std::shared_ptr<Mesh> mesh, std::shared_ptr<Material> material) const = 0;
 
 	ColliderType GetColliderType() const { return colliderType; };

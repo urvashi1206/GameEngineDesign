@@ -25,25 +25,29 @@ public:
 	float bounciness = 0;
 
 public:
-	Rigidbody(Transform* transform, Collider* collider, Vector gravity = Vector(0, -9.81f, 0), bool isStatic = false);
+	Rigidbody(Transform* transform, Collider* collider, Vector gravity = Vector(0, -9.81f, 0), bool isStatic = false, float mass = 1);
 	~Rigidbody();
 
 	void UpdatePhysics(float deltaTime);
 
 	void AddForce(Vector force);
-	void AddTorque(Vector force, float distance);
+	void AddTorque(Vector axisAngle);
 	void ApplyGravity();
 
-	float GetMass() { return mass; };
-	Vector GetVelocity() { return velocity; };
+	float GetMass() const { return isStatic ? FLT_MAX : mass; }; // Static bodies should be treated as having infinite mass
+	Vector GetVelocity() const { return velocity; };
+	Vector GetAngularVelocity() const { return angularVelocity; };
 
-	Collider* GetCollider() { return collider; };
+	Collider* GetCollider() const { return collider; };
 	//Vector GetMin() { return Vector(transform.GetLocation().x + collider.min.x, transform.GetLocation().y + collider.min.y, transform.GetLocation().z + collider.min.z); };
 	//Vector GetMax() { return Vector(transform.GetLocation().x + collider.max.x, transform.GetLocation().y + collider.max.y, transform.GetLocation().z + collider.max.z); };
 
-	Transform* GetTransform() { return transform; };
+	Transform* GetTransform() const { return transform; };
+
+	Matrix4x4 GetInertiaTensor() const;
 
 	void SetVelocity(Vector value) { if(!isStatic) velocity = value; };
+	void SetAngularVelocity(Vector axisAngle) { if(!isStatic) angularVelocity = axisAngle; };
 
 	//friend void PhysicsSubsystem::Update(float deltaTime);
 };

@@ -7,6 +7,7 @@
 #include <memory>
 #include <iostream>
 #include "BoxCollider.h"
+#include "SphereCollider.h"
 #include "Debug.h"
 
 // From DirectX Tool Kit
@@ -64,12 +65,12 @@ void Game::Initialize()
 	/* Create Camera */
 
 	// First camera - this is the default active camera
-	cameras.push_back(std::make_shared<Camera>(XMFLOAT3(0, 0, -1), XMFLOAT3(0, 0, 0), (float) Window::Width() / Window::Height(), 60.0f));
+	cameras.push_back(std::make_shared<Camera>(Vector(0, 0, -1), Vector(0, 0, 0), (float) Window::Width() / Window::Height(), 60.0f));
 
 	// Low FOV camera from the left, looking 45 degrees to the right
-	cameras.push_back(std::make_shared<Camera>(XMFLOAT3(-1, 0, -1), XMFLOAT3(0, XM_PIDIV4, 0), (float) Window::Width() / Window::Height(), 45.0f));
+	cameras.push_back(std::make_shared<Camera>(Vector(-1, 0, -1), Vector(0, XM_PIDIV4, 0), (float) Window::Width() / Window::Height(), 45.0f));
 	// High FOV camera from the right, looking 45 degrees to the left
-	cameras.push_back(std::make_shared<Camera>(XMFLOAT3(1, 0, -1), XMFLOAT3(0, -XM_PIDIV4, 0), (float) Window::Width() / Window::Height(), 90.0f));
+	cameras.push_back(std::make_shared<Camera>(Vector(1, 0, -1), Vector(0, -XM_PIDIV4, 0), (float) Window::Width() / Window::Height(), 90.0f));
 
 	// Initialize ImGui
 	IMGUI_CHECKVERSION();
@@ -373,6 +374,7 @@ void Game::CreateGeometry()
 
 	/* Assign debug meshes */
 	Debug::SetDebugBoxMesh(meshes[0]);
+	Debug::SetDebugSphereMesh(meshes[3]);
 
 	/* Create skybox */
 	skybox = std::make_shared<Skybox>(skyboxVertexShader, skyboxPixelShader, meshes[0], sampler, textureSRVs[L"Cold Sunset"]);
@@ -384,11 +386,11 @@ void Game::CreateGeometry()
 	floor->GetTransform()->Scale(Vector(5, 5, 5));
 	entities.push_back(floor);
 
-	physics.AddRigidbody(Rigidbody(floor->GetTransform(), new BoxCollider(floor->GetTransform(), Vector(0, 0, 0), Vector(5.0f, 0.25f, 5.0f), true), Vector(), true));
+	physics.AddRigidbody(Rigidbody(floor->GetTransform(), new BoxCollider(floor->GetTransform(), Vector(0, 0, 0), Vector(5.0f, 0.25f, 5.0f), true), Vector(), false, 1000000));
 
 	std::shared_ptr<Entity> newEntity = std::make_shared<Entity>(meshes[7], materials[8]);
-	newEntity->GetTransform()->MoveAbsolute(Vector(0, -1.0f, 0));
-	newEntity->GetTransform()->SetRotation(Vector(0, 0, 0));
+	newEntity->GetTransform()->MoveAbsolute(Vector(0, 1, 4.75f));
+	newEntity->GetTransform()->SetRotationPitchYawRoll(Vector(0, 45, 40));
 	newEntity->GetTransform()->Scale(Vector(0.5f, 0.5f, 0.5f));
 	entities.push_back(newEntity);
 
@@ -396,13 +398,16 @@ void Game::CreateGeometry()
 	physics.AddRigidbody(Rigidbody(newEntity->GetTransform(), collider, Vector(0, -9.81f, 0)));
 
 	std::shared_ptr<Entity> newEntity2 = std::make_shared<Entity>(meshes[7], materials[8]);
-	newEntity2->GetTransform()->MoveAbsolute(Vector(3, -1.0f, 0));
-	newEntity2->GetTransform()->SetRotation(Vector(0, 0, 0));
+	newEntity2->GetTransform()->MoveAbsolute(Vector(0, -1.8f, 2));
+	newEntity2->GetTransform()->SetRotation(Vector(0, 0, 0, 1));
 	newEntity2->GetTransform()->Scale(Vector(0.5f, 0.5f, 0.5f));
-	entities.push_back(newEntity2);
+	//entities.push_back(newEntity2);
 
-	BoxCollider* collider2 = new BoxCollider(newEntity2->GetTransform(), Vector(0, 0, 0), Vector(0.75f, 0.5f, 0.75f), true);
-	physics.AddRigidbody(Rigidbody(newEntity2->GetTransform(), collider2));
+	//SphereCollider* sCollider = new SphereCollider(newEntity2->GetTransform(), Vector(), 0.5f, true);
+	//physics.AddRigidbody(Rigidbody(newEntity2->GetTransform(), sCollider, Vector(0, -9.81f, 0)));
+	
+	//BoxCollider* collider2 = new BoxCollider(newEntity2->GetTransform(), Vector(0, 0, 0), Vector(1.75f, 0.5f, 1.75f), true);
+	//physics.AddRigidbody(Rigidbody(newEntity2->GetTransform(), collider2, Vector(0, 0, 0), false, 10000));
 }
 
 void Game::CreateLights()
@@ -631,8 +636,13 @@ void Game::Update(float deltaTime, float totalTime)
 	UpdateImGui(deltaTime, totalTime);
 
 	// Example input checking: Quit if the escape key is pressed
-	if (Input::KeyDown(VK_ESCAPE))
+	if(Input::KeyDown(VK_ESCAPE))
 		Window::Quit();
+
+	if(Input::KeyDown('P'))
+		physics.Pause();
+	if(Input::KeyDown('O'))
+		physics.Unpause();
 
 	BuildUI();
 
@@ -675,10 +685,10 @@ void Game::BuildUI()
 	if(ImGui::Button("Toggle Demo Window"))
 		isDemoWindowHidden = !isDemoWindowHidden;
 
-	static Vector supportDirection;
+	static Vector supportDirection(1, 1, 1);
 	ImGui::DragFloat3("Support Direction", &supportDirection.x, 0.1f, -1, 1);
 	Vector supportPoint = ((ConvexCollider*) physics.GetRigidbody(1).GetCollider())->GJK_Support(supportDirection);
-	Debug::CreateWireframe_Temp(supportPoint);
+	//Debug::CreateWireframe_Temp(supportPoint);
 
 	if(ImGui::TreeNode("Post-Process Effects"))
 	{
@@ -779,7 +789,7 @@ void Game::BuildUI()
 				if(ImGui::DragFloat3("Location", &location.x, 0.1f))
 					transform->SetLocation(location);
 				if(ImGui::DragFloat3("Rotation", &rotation.x, 0.25f))
-					transform->SetRotation(rotation);
+					transform->SetRotationPitchYawRoll(rotation);
 				if(ImGui::DragFloat3("Scale", &scale.x, 0.1f))
 					transform->SetScale(scale);
 

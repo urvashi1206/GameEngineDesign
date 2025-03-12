@@ -11,6 +11,10 @@ Vector::Vector(DirectX::XMFLOAT3 vector) : Vector(vector.x, vector.y, vector.z)
 {
 
 }
+Vector::Vector(DirectX::XMFLOAT4 vector) : Vector(vector.x, vector.y, vector.z, vector.w)
+{
+
+}
 Vector::~Vector()
 {
 
@@ -112,6 +116,23 @@ Vector Vector::ProjectOnto(const Vector& other) const
 {
 	return other.Normalized() * (this->Dot(other) / other.Dot(other));
 }
+Vector Vector::ProjectOntoPlane(const Vector& normal) const
+{
+	// If vector is orthogonal to plane, return zero
+	if(!this->IsLinearlyIndependent(normal))
+		return Vector();
+
+	Vector v = this->Cross(normal);
+	Vector u = normal.Cross(v);
+
+	return this->ProjectOnto(v) + this->ProjectOnto(u);
+}
+Vector Vector::ProjectOntoPlane(const Vector& point, const Vector& normal) const
+{
+	Vector dir = (*this - point).ProjectOntoPlane(normal);
+
+	return point + dir;
+}
 
 Vector Vector::Normalized() const
 {
@@ -125,4 +146,29 @@ float Vector::GetMagnitude() const
 float Vector::GetSqrMagnitude() const
 {
 	return x*x + y*y + z*z + w*w;
+}
+float Vector::Distance(const Vector& other) const
+{
+	return (other - *this).GetMagnitude();
+}
+
+bool Vector::IsLinearlyIndependent(const Vector& other) const
+{
+	return !(this->Normalized() == other.Normalized() || this->Normalized() == -other.Normalized());
+}
+
+void Vector::GetOrthogonalPlane(Vector& out_u, Vector& out_v)
+{
+	// Arbitrary independent reference vector
+	Vector referenceVector(1, 0, 0);
+	if(!this->IsLinearlyIndependent(referenceVector))
+		referenceVector = Vector(0, 1, 0);
+
+	out_u = this->Cross(referenceVector);
+	out_v = this->Cross(out_u);
+}
+
+Vector Vector::Lerp(const Vector& a, const Vector& b, float t)
+{
+	return a * (1 - t) + b * t;
 }

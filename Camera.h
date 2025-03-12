@@ -17,10 +17,10 @@ private:
 	float farDistance = 100.0f;
 
 	float movementSpeed = 5.0f;
-	float lookSpeed = 0.25f;
+	float lookSpeed = 0.0075f;
 
 public:
-	Camera(DirectX::XMFLOAT3 location, DirectX::XMFLOAT3 rotation, float aspectRatio, float fov);
+	Camera(Vector location, Vector rotation, float aspectRatio, float fov);
 
 	void Update(float deltaTime);
 

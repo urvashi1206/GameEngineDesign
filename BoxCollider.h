@@ -19,9 +19,12 @@ public:
 	//void CreateDebugWireframe(std::shared_ptr<Mesh> mesh, std::shared_ptr<Material> material) const override;
 
 	virtual Vector GJK_Support(const Vector& direction) const override;
+	virtual std::vector<Vector> EPA_GetAlignedFace(const Vector& direction, Vector& out_faceNormal) const override;
 
-	Vector GetCenter() const { return transform->LocalToWorld(center); };
-	Vector GetHalfSize() const { return transform->LocalToWorld(halfSize); };
+	virtual Matrix4x4 GetInertiaTensor(float mass) const override;
+
+	Vector GetCenter() const { return transform->LocalToWorld_Point(center); };
+	Vector GetHalfSize() const { return transform->LocalToWorld_Point(halfSize); };
 
 	Vector GetWorldMin() const;
 	Vector GetWorldMax() const;

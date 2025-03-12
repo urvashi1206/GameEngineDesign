@@ -21,9 +21,9 @@ struct DebugMesh
 	}
 
 	virtual Transform GetTransform() { return Transform(
-		DirectX::XMFLOAT3(location->x, location->y, location->z),
-		DirectX::XMFLOAT3(rotation->x, rotation->y, rotation->z),
-		DirectX::XMFLOAT3(scale->x, scale->y, scale->z)); };
+		Vector(location->x, location->y, location->z),
+		Vector(rotation->x, rotation->y, rotation->z, rotation->w),
+		Vector(scale->x, scale->y, scale->z)); };
 };
 
 struct DebugBox : DebugMesh
@@ -56,16 +56,49 @@ struct DebugBox : DebugMesh
 		else return Transform(offset, rotationOffset, scaleOffset);
 	};
 };
+struct DebugSphere : DebugMesh
+{
+	Vector offset;
+	Vector rotationOffset;
+	Vector scaleOffset;
+	Vector radius;
+
+	DebugSphere(Transform* transform, std::shared_ptr<Mesh> mesh, Vector offset, float radius) : DebugMesh(transform, mesh),
+		offset(offset), radius(radius)
+	{
+
+	}
+	DebugSphere(std::shared_ptr<Mesh> mesh, Vector location, Vector rotation, float radius) : DebugMesh(nullptr, mesh),
+		offset(location), rotationOffset(rotation), scaleOffset(radius), radius(radius)
+	{
+
+	}
+
+	Transform GetTransform() override
+	{
+		if(location && rotation && scale)
+		{
+			Transform transform = DebugMesh::GetTransform();
+			transform.SetScale(radius);
+
+			return transform;
+		}
+		else return Transform(offset, rotationOffset, scaleOffset);
+	};
+};
 
 namespace Debug
 {
 	void CreateDebugBox(Transform* transform, Vector offset, Vector halfSize);
 	void CreateDebugBox(Vector* location, Vector* rotation, Vector* scale);
+	void CreateDebugSphere(Transform* transform, Vector offset, float radius);
 
 	void CreateWireframe_Temp(Vector location, Vector rotation = Vector(0, 0, 0), Vector halfSize = Vector(0.5f, 0.5f, 0.5f));
+	void CreateWireframeSphere_Temp(Vector location, Vector rotation = Vector(0, 0, 0), float radius = 0.5f);
 
 	void DrawAllWireframes(std::shared_ptr<Camera> camera);
 
 	void SetDebugMaterial(std::shared_ptr<Material> material);
 	void SetDebugBoxMesh(std::shared_ptr<Mesh> mesh);
+	void SetDebugSphereMesh(std::shared_ptr<Mesh> mesh);
 }

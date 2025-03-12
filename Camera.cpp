@@ -2,8 +2,8 @@
 
 using namespace DirectX;
 
-Camera::Camera(DirectX::XMFLOAT3 location, DirectX::XMFLOAT3 rotation, float aspectRatio, float fov) : 
-	transform(location, rotation, XMFLOAT3(1, 1, 1)), aspectRatio(aspectRatio), fov(fov)
+Camera::Camera(Vector location, Vector rotation, float aspectRatio, float fov) : 
+	transform(location, rotation, Vector(1, 1, 1)), aspectRatio(aspectRatio), fov(fov)
 {
 	UpdateViewMatrix();
 	UpdateProjectionMatrix(aspectRatio);
@@ -11,6 +11,9 @@ Camera::Camera(DirectX::XMFLOAT3 location, DirectX::XMFLOAT3 rotation, float asp
 
 void Camera::Update(float deltaTime)
 {
+	static float pitch = 0;
+	static float yaw = 0;
+
 	// Minecraft controls
 	if(Input::KeyDown('W'))
 		transform.MoveRelative(Vector(0, 0, deltaTime * movementSpeed));
@@ -31,13 +34,27 @@ void Camera::Update(float deltaTime)
 		float deltaX = Input::GetMouseXDelta() * lookSpeed;
 		float deltaY = Input::GetMouseYDelta() * lookSpeed;
 
-		transform.Rotate(Vector(deltaY, deltaX, 0));
+		pitch += deltaY;
+		yaw += deltaX;
 
-		// Clamp camera pitch between -90 PI and +90 degrees
-		if(transform.GetPitchYawRoll().x < -90)
-			transform.SetRotation(Vector(-90, transform.GetPitchYawRoll().y, transform.GetPitchYawRoll().z));
-		if(transform.GetPitchYawRoll().x > 90)
-			transform.SetRotation(Vector(90, transform.GetPitchYawRoll().y, transform.GetPitchYawRoll().z));
+		//transform.RotatePitchYawRoll(Vector(deltaY, deltaX, 0));
+		//transform.SetRotationPitchYawRoll(transform.GetPitchYawRoll() + Vector(deltaY, deltaX, 0));
+		//transform.RotateAxisAngle(transform.GetUp() * deltaX + transform.GetRight() * deltaY);
+		//transform.RotateAxisAngle(Vector(deltaY, deltaX, 0));
+
+		// Clamp camera pitch between -PI and +PI radians
+		if(pitch < -XM_PIDIV2)
+			pitch = -XM_PIDIV2;
+		if(pitch > XM_PIDIV2)
+			pitch = XM_PIDIV2;
+
+		XMVECTOR xmv_pitch = XMQuaternionRotationAxis(XMVectorSet(1, 0, 0, 0), pitch);
+		XMVECTOR xmv_yaw = XMQuaternionRotationAxis(XMVectorSet(0, 1, 0, 0), yaw);
+
+		XMFLOAT4 f4_rotation;
+		XMStoreFloat4(&f4_rotation, XMQuaternionMultiply(xmv_pitch, xmv_yaw));
+
+		transform.SetRotation(f4_rotation);
 	}
 
 	// Make sure the view matrix reflects any changes

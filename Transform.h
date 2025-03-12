@@ -23,7 +23,10 @@ public:
 
 	void MoveAbsolute(Vector vector);
 	void MoveRelative(Vector vector);
-	void Rotate(Vector pitchYawRoll);
+	void Rotate(Vector quaternion);
+	void RotateAxisAngle(Vector axisAngle);
+	void RotateAxisAngle(Vector axis, float angle);
+	void RotatePitchYawRoll(Vector pitchYawRoll);
 	void Scale(Vector vector);
 
 	Vector GetLocation() const;
@@ -39,11 +42,15 @@ public:
 	const Vector* GetPitchYawRollPtr() const { return &rotation; };
 	const Vector* GetScalePtr() const { return &scale; };
 
+	Matrix4x4 GetRotationMatrix() const;
+
 	void SetLocation(Vector location);
-	void SetRotation(Vector rotation);
+	void SetRotation(Vector quaternion);
+	void SetRotationPitchYawRoll(Vector pitchYawRoll);
 	void SetScale(Vector scale);
 
-	Vector LocalToWorld(const Vector& vector, bool includeScale = false);
+	Vector LocalToWorld_Point(const Vector& vector, bool includeScale = false);
+	Vector LocalToWorld_Direction(const Vector& vector, bool includeScale = false);
 	Vector WorldToLocal_Point(const Vector& vector);
 	Vector WorldToLocal_Direction(const Vector& vector);
 };

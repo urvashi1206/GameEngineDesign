@@ -22,6 +22,9 @@
     <Filter Include="Header Files\rapidobj">
       <UniqueIdentifier>{1ac4bc3c-af64-4e6e-91ab-475625b0557e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\stb_image">
+      <UniqueIdentifier>{e046dc21-38ad-4330-a8d8-79fd62fc713b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -238,6 +241,9 @@
     </ClInclude>
     <ClInclude Include="SphereCollider.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\std_image\stb_image.h">
+      <Filter>Header Files\stb_image</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

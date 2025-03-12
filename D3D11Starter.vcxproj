@@ -222,6 +222,7 @@
     <ClInclude Include="ImGui\imstb_textedit.h" />
     <ClInclude Include="ImGui\imstb_truetype.h" />
     <ClInclude Include="include\rapidobj\rapidobj.hpp" />
+    <ClInclude Include="include\std_image\stb_image.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Lights.h" />
     <ClInclude Include="Material.h" />
