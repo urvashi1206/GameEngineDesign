@@ -2,6 +2,7 @@
 
 #include <memory>
 
+#include "camera.hpp"
 #include "device.hpp"
 #include "game_object.hpp"
 #include "pipeline.hpp"
@@ -17,7 +18,7 @@ namespace minimal
         simple_renderer_system(const simple_renderer_system&) = delete;
         simple_renderer_system& operator=(const simple_renderer_system&) = delete;
 
-        void render_game_objects(VkCommandBuffer command_buffer, std::vector<game_object>& game_objects);
+        void render_game_objects(VkCommandBuffer command_buffer, std::vector<game_object>& game_objects, const camera& camera);
 
     private:
         void create_pipeline_layout();

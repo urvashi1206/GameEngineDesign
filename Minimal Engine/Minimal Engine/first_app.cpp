@@ -1,5 +1,6 @@
 #include "first_app.hpp"
 
+#include "camera.hpp"
 #include "simple_renderer_system.hpp"
 
 #define GLM_FORCE_RADIANS
@@ -21,14 +22,19 @@ namespace minimal
     void first_app::run()
     {
         simple_renderer_system simple_renderer_system{device_, renderer_.get_swap_chain_render_pass()};
+        camera camera{};
+
         while (!window_.should_close())
         {
             glfwPollEvents();
+            float aspect = renderer_.get_aspect_ratio();
+            // camera.set_othrographic_projection(-aspect, aspect, -1.0f, 1.0f, -1.0f, 1.0f);
+            camera.set_perspective_projection(glm::radians(50.0f), aspect, 0.1f, 10.0f);
 
             if (auto command_buffer = renderer_.begin_frame())
             {
                 renderer_.being_swap_chain_render_pass(command_buffer);
-                simple_renderer_system.render_game_objects(command_buffer, game_objects_);
+                simple_renderer_system.render_game_objects(command_buffer, game_objects_, camera);
                 renderer_.end_swap_chain_render_pass(command_buffer);
                 renderer_.end_frame();
             }
@@ -102,7 +108,7 @@ namespace minimal
 
         auto cube = game_object::create();
         cube.model = model;
-        cube.transform.translation= {0.0f, 0.0f, 0.5f};
+        cube.transform.translation = {0.0f, 0.0f, 2.5f};
         cube.transform.scale = {0.5f, 0.5f, 0.5f};
         game_objects_.push_back(std::move(cube));
     }

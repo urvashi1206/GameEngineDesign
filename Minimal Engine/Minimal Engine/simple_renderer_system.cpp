@@ -56,7 +56,7 @@ namespace minimal
         pipeline_ = std::make_unique<pipeline>(device_, "shaders/simple_shader.vert.spv", "shaders/simple_shader.frag.spv", pipeline_config);
     }
 
-    void simple_renderer_system::render_game_objects(VkCommandBuffer command_buffer, std::vector<game_object>& game_objects)
+    void simple_renderer_system::render_game_objects(VkCommandBuffer command_buffer, std::vector<game_object>& game_objects, const camera& camera)
     {
         pipeline_->bind(command_buffer);
 
@@ -67,7 +67,7 @@ namespace minimal
 
             simple_push_constant_data push{};
             push.color = obj.color;
-            push.transform = obj.transform.mat4();
+            push.transform = camera.get_projection() * obj.transform.mat4();
 
             vkCmdPushConstants(command_buffer,
                                pipeline_layout_,

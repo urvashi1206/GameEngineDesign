@@ -19,6 +19,7 @@ namespace minimal
         renderer& operator=(const renderer&) = delete;
 
         VkRenderPass get_swap_chain_render_pass()const{return swap_chain_->getRenderPass();}
+        float get_aspect_ratio() const { return swap_chain_->extentAspectRatio(); }
         bool is_frame_in_progress() const { return is_frame_started_; }
 
         VkCommandBuffer get_current_command_buffer() const
@@ -29,7 +30,7 @@ namespace minimal
 
         int get_current_frame_index() const
         {
-            assert(is_frame_started_);
+            assert(is_frame_started_ && "Cannot get frame index while frame is not in progress");
             return current_frame_index_;
         }
 
