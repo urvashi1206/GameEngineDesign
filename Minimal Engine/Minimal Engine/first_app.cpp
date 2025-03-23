@@ -23,13 +23,15 @@ namespace minimal
     {
         simple_renderer_system simple_renderer_system{device_, renderer_.get_swap_chain_render_pass()};
         camera camera{};
+        // camera.set_view_direction(glm::vec3(0.0f), glm::vec3(0.5f, 0.0f, 1.0f));
+        camera.set_view_target(glm::vec3(-1.0f, -2.0f, 2.0f), glm::vec3(0.0f,0.0f,2.5f));
 
         while (!window_.should_close())
         {
             glfwPollEvents();
             float aspect = renderer_.get_aspect_ratio();
             // camera.set_othrographic_projection(-aspect, aspect, -1.0f, 1.0f, -1.0f, 1.0f);
-            camera.set_perspective_projection(glm::radians(50.0f), aspect, 0.1f, 10.0f);
+            camera.set_perspective_projection(glm::radians(50.0f), aspect, 0.1f, 100.0f);
 
             if (auto command_buffer = renderer_.begin_frame())
             {

@@ -60,6 +60,8 @@ namespace minimal
     {
         pipeline_->bind(command_buffer);
 
+        auto projection_view = camera.get_projection() * camera.get_view();
+
         for (auto& obj : game_objects)
         {
             obj.transform.rotation.y = glm::mod(obj.transform.rotation.y + 0.001f, glm::two_pi<float>());
@@ -67,7 +69,7 @@ namespace minimal
 
             simple_push_constant_data push{};
             push.color = obj.color;
-            push.transform = camera.get_projection() * obj.transform.mat4();
+            push.transform = projection_view * obj.transform.mat4();
 
             vkCmdPushConstants(command_buffer,
                                pipeline_layout_,
