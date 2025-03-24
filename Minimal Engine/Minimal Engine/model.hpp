@@ -19,7 +19,13 @@ namespace minimal
             static std::vector<VkVertexInputAttributeDescription> get_attribute_descriptions();
         };
 
-        model(device& device, const std::vector<vertex>& vertices);
+        struct builder
+        {
+            std::vector<vertex> vertices;
+            std::vector<uint32_t> indices;
+        };
+
+        model(device& device, const builder& builder);
         ~model();
 
         model(const model&) = delete;
@@ -30,10 +36,17 @@ namespace minimal
 
     private:
         void create_vertex_buffer(const std::vector<vertex>& vertices);
+        void create_index_buffer(const std::vector<uint32_t>& indices);
 
         device& device_;
+
         VkBuffer vertex_buffer_;
         VkDeviceMemory vertex_buffer_memory_;
         uint32_t vertex_count_;
+
+        bool has_index_buffer_ = false;
+        VkBuffer index_buffer_;
+        VkDeviceMemory index_buffer_memory_;
+        uint32_t index_count_;
     };
 }
