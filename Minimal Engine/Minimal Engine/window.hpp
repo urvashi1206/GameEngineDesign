@@ -21,6 +21,8 @@ namespace minimal
         bool was_window_resized() { return frame_buffer_resized_; }
         void reset_window_resized_flag() { frame_buffer_resized_ = false; }
 
+        GLFWwindow* get_glfw_window() const{ return glfw_window_; }
+
         void create_window_surface(VkInstance instance, VkSurfaceKHR* surface);
 
     private:

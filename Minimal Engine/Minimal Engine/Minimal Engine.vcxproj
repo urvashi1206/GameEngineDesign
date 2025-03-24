@@ -137,6 +137,7 @@
   <ItemGroup>
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="game_object.cpp" />
+    <ClCompile Include="keyboard_movement_controller.cpp" />
     <ClCompile Include="model.cpp" />
     <ClCompile Include="first_app.cpp" />
     <ClCompile Include="main.cpp" />
@@ -151,6 +152,7 @@
   <ItemGroup>
     <ClInclude Include="camera.hpp" />
     <ClInclude Include="game_object.hpp" />
+    <ClInclude Include="keyboard_movement_controller.hpp" />
     <ClInclude Include="model.hpp" />
     <ClInclude Include="first_app.hpp" />
     <ClInclude Include="device.hpp" />
