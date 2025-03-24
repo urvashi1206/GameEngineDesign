@@ -19,7 +19,7 @@ namespace minimal
 
     void camera::set_perspective_projection(float fovy, float aspect, float near, float far)
     {
-        assert(glm::abs(aspect - std::numeric_limits<float>::epsilon()) > 0.0f);
+        assert(glm::abs(aspect - std::numeric_limits<float>::epsilon()) > 0.0f && "aspect cannot be zero");
         const float tanHalfFovy = tan(fovy / 2.f);
         projection_matrix_ = glm::mat4{0.0f};
         projection_matrix_[0][0] = 1.f / (aspect * tanHalfFovy);
