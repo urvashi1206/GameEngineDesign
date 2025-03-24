@@ -1,12 +1,16 @@
 #include "first_app.hpp"
 
+#include "keyboard_movement_controller.hpp"
 #include "camera.hpp"
 #include "simple_renderer_system.hpp"
 
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
-#include <algorithm>
 #include <glm/glm.hpp>
+#include <glm/gtc/constants.hpp>
+
+#include <algorithm>
+#include <chrono>
 
 namespace minimal
 {
@@ -24,11 +28,24 @@ namespace minimal
         simple_renderer_system simple_renderer_system{device_, renderer_.get_swap_chain_render_pass()};
         camera camera{};
         // camera.set_view_direction(glm::vec3(0.0f), glm::vec3(0.5f, 0.0f, 1.0f));
-        camera.set_view_target(glm::vec3(-1.0f, -2.0f, 2.0f), glm::vec3(0.0f,0.0f,2.5f));
+        camera.set_view_target(glm::vec3(-1.0f, -2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 2.5f));
 
+        auto viewer_object = game_object::create();
+        keyboard_movement_controller camera_controller{};
+
+        auto current_time = std::chrono::high_resolution_clock::now();
+        
         while (!window_.should_close())
         {
             glfwPollEvents();
+
+            auto new_time = std::chrono::high_resolution_clock::now();
+            float frame_time = std::chrono::duration<float, std::chrono::seconds::period>(new_time - current_time).count();
+            current_time = new_time;
+
+            camera_controller.move_in_plane_xz(window_.get_glfw_window(), frame_time, viewer_object);
+            camera.set_view_YXZ(viewer_object.transform.translation, viewer_object.transform.rotation);
+            
             float aspect = renderer_.get_aspect_ratio();
             // camera.set_othrographic_projection(-aspect, aspect, -1.0f, 1.0f, -1.0f, 1.0f);
             camera.set_perspective_projection(glm::radians(50.0f), aspect, 0.1f, 100.0f);

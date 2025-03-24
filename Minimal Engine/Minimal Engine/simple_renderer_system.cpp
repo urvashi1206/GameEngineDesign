@@ -64,9 +64,6 @@ namespace minimal
 
         for (auto& obj : game_objects)
         {
-            obj.transform.rotation.y = glm::mod(obj.transform.rotation.y + 0.001f, glm::two_pi<float>());
-            obj.transform.rotation.x = glm::mod(obj.transform.rotation.x + 0.0005f, glm::two_pi<float>());
-
             simple_push_constant_data push{};
             push.color = obj.color;
             push.transform = projection_view * obj.transform.mat4();
