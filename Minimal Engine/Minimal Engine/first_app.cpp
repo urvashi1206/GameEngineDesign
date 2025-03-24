@@ -34,7 +34,7 @@ namespace minimal
         keyboard_movement_controller camera_controller{};
 
         auto current_time = std::chrono::high_resolution_clock::now();
-        
+
         while (!window_.should_close())
         {
             glfwPollEvents();
@@ -45,7 +45,7 @@ namespace minimal
 
             camera_controller.move_in_plane_xz(window_.get_glfw_window(), frame_time, viewer_object);
             camera.set_view_YXZ(viewer_object.transform.translation, viewer_object.transform.rotation);
-            
+
             float aspect = renderer_.get_aspect_ratio();
             // camera.set_othrographic_projection(-aspect, aspect, -1.0f, 1.0f, -1.0f, 1.0f);
             camera.set_perspective_projection(glm::radians(50.0f), aspect, 0.1f, 100.0f);
@@ -60,65 +60,60 @@ namespace minimal
         }
 
         vkDeviceWaitIdle(device_.get_device());
-    } // temporary helper function, creates a 1x1x1 cube centered at offset
+    }
+
+    // temporary helper function, creates a 1x1x1 cube centered at offset with an index buffer
     std::unique_ptr<model> createCubeModel(device& device, glm::vec3 offset)
     {
-        std::vector<model::vertex> vertices{
-
+        model::builder modelBuilder{};
+        modelBuilder.vertices = {
             // left face (white)
             {{-.5f, -.5f, -.5f}, {.9f, .9f, .9f}},
             {{-.5f, .5f, .5f}, {.9f, .9f, .9f}},
             {{-.5f, -.5f, .5f}, {.9f, .9f, .9f}},
-            {{-.5f, -.5f, -.5f}, {.9f, .9f, .9f}},
             {{-.5f, .5f, -.5f}, {.9f, .9f, .9f}},
-            {{-.5f, .5f, .5f}, {.9f, .9f, .9f}},
 
             // right face (yellow)
             {{.5f, -.5f, -.5f}, {.8f, .8f, .1f}},
             {{.5f, .5f, .5f}, {.8f, .8f, .1f}},
             {{.5f, -.5f, .5f}, {.8f, .8f, .1f}},
-            {{.5f, -.5f, -.5f}, {.8f, .8f, .1f}},
             {{.5f, .5f, -.5f}, {.8f, .8f, .1f}},
-            {{.5f, .5f, .5f}, {.8f, .8f, .1f}},
 
             // top face (orange, remember y axis points down)
             {{-.5f, -.5f, -.5f}, {.9f, .6f, .1f}},
             {{.5f, -.5f, .5f}, {.9f, .6f, .1f}},
             {{-.5f, -.5f, .5f}, {.9f, .6f, .1f}},
-            {{-.5f, -.5f, -.5f}, {.9f, .6f, .1f}},
             {{.5f, -.5f, -.5f}, {.9f, .6f, .1f}},
-            {{.5f, -.5f, .5f}, {.9f, .6f, .1f}},
 
             // bottom face (red)
             {{-.5f, .5f, -.5f}, {.8f, .1f, .1f}},
             {{.5f, .5f, .5f}, {.8f, .1f, .1f}},
             {{-.5f, .5f, .5f}, {.8f, .1f, .1f}},
-            {{-.5f, .5f, -.5f}, {.8f, .1f, .1f}},
             {{.5f, .5f, -.5f}, {.8f, .1f, .1f}},
-            {{.5f, .5f, .5f}, {.8f, .1f, .1f}},
 
             // nose face (blue)
             {{-.5f, -.5f, 0.5f}, {.1f, .1f, .8f}},
             {{.5f, .5f, 0.5f}, {.1f, .1f, .8f}},
             {{-.5f, .5f, 0.5f}, {.1f, .1f, .8f}},
-            {{-.5f, -.5f, 0.5f}, {.1f, .1f, .8f}},
             {{.5f, -.5f, 0.5f}, {.1f, .1f, .8f}},
-            {{.5f, .5f, 0.5f}, {.1f, .1f, .8f}},
 
             // tail face (green)
             {{-.5f, -.5f, -0.5f}, {.1f, .8f, .1f}},
             {{.5f, .5f, -0.5f}, {.1f, .8f, .1f}},
             {{-.5f, .5f, -0.5f}, {.1f, .8f, .1f}},
-            {{-.5f, -.5f, -0.5f}, {.1f, .8f, .1f}},
             {{.5f, -.5f, -0.5f}, {.1f, .8f, .1f}},
-            {{.5f, .5f, -0.5f}, {.1f, .8f, .1f}},
-
         };
-        for (auto& v : vertices)
+        for (auto& v : modelBuilder.vertices)
         {
             v.position += offset;
         }
-        return std::make_unique<model>(device, vertices);
+
+        modelBuilder.indices = {
+            0, 1, 2, 0, 3, 1, 4, 5, 6, 4, 7, 5, 8, 9, 10, 8, 11, 9,
+            12, 13, 14, 12, 15, 13, 16, 17, 18, 16, 19, 17, 20, 21, 22, 20, 23, 21
+        };
+
+        return std::make_unique<model>(device, modelBuilder);
     }
 
     void first_app::load_game_objects()
