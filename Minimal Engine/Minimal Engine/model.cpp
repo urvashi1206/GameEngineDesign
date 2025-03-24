@@ -1,5 +1,10 @@
 #include "model.hpp"
 
+//libs
+#define TINYOBJLOADER_IMPLEMENTATION
+#include <tiny_obj_loader.h>
+#include <iostream>
+
 namespace minimal
 {
     std::vector<VkVertexInputBindingDescription> model::vertex::get_binding_descriptions()
@@ -29,6 +34,68 @@ namespace minimal
         return attribute_descriptions;
     }
 
+    void model::builder::load_model(const std::string& file_path)
+    {
+        tinyobj::attrib_t attrib;
+        std::vector<tinyobj::shape_t> shapes;
+        std::vector<tinyobj::material_t> materials;
+        std::string warn, err;
+        
+        // auto i_stream = std::ifstream{file_path};
+        // if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, &i_stream))
+        //     throw std::runtime_error(warn + err);
+        
+        if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, file_path.c_str()))
+            throw std::runtime_error(warn + err);
+
+        vertices.clear();
+        indices.clear();
+
+        for (const auto& shape : shapes)
+            for (const auto& index : shape.mesh.indices)
+            {
+                vertex vertex{};
+
+                if (index.vertex_index >= 0)
+                {
+                    vertex.position = {
+                        attrib.vertices[3 * index.vertex_index + 0],
+                        attrib.vertices[3 * index.vertex_index + 1],
+                        attrib.vertices[3 * index.vertex_index + 2]
+                    };
+
+                    auto color_index = 3 * index.vertex_index + 2;
+                    if (color_index < attrib.colors.size())
+                        vertex.color = {
+                            attrib.colors[color_index - 2],
+                            attrib.colors[color_index - 1],
+                            attrib.colors[color_index - 0]
+                        };
+                    else
+                        vertex.color = {1.0f, 1.0f, 1.0f};
+                }
+
+                if (index.normal_index >= 0)
+                {
+                    vertex.normal = {
+                        attrib.normals[3 * index.normal_index + 0],
+                        attrib.normals[3 * index.normal_index + 1],
+                        attrib.normals[3 * index.normal_index + 2]
+                    };
+                }
+
+                if (index.texcoord_index >= 0)
+                {
+                    vertex.uv = {
+                        attrib.texcoords[2 * index.texcoord_index + 0],
+                        attrib.texcoords[2 * index.texcoord_index + 1]
+                    };
+                }
+
+                vertices.push_back(vertex);
+            }
+    }
+
     model::model(device& device, const builder& builder) : device_{device}
     {
         create_vertex_buffer(builder.vertices);
@@ -45,6 +112,16 @@ namespace minimal
             vkDestroyBuffer(device_.get_device(), index_buffer_, nullptr);
             vkFreeMemory(device_.get_device(), index_buffer_memory_, nullptr);
         }
+    }
+
+    std::unique_ptr<model> model::create_model_from_file(device& device, const std::string& file_path)
+    {
+        builder builder{};
+        builder.load_model(file_path);
+
+        std::cout << "Vectex count: " << builder.vertices.size() << '\n';
+
+        return std::make_unique<model>(device, builder);
     }
 
     void model::bind(VkCommandBuffer command_buffer)
