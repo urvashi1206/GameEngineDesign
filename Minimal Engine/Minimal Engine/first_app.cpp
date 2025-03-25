@@ -65,12 +65,21 @@ namespace minimal
     void first_app::load_game_objects()
     {
         std::shared_ptr<model> model = model::create_model_from_file(
+            device_, "C:\\Users\\rohit\\Study\\Sem 4\\689\\Game Engine Project\\Minimal Engine\\Minimal Engine\\models\\flat_vase.obj");
+
+        auto flat_vase = game_object::create();
+        flat_vase.model = model;
+        flat_vase.transform.translation = {-0.5f, 0.5f, 2.5f};
+        flat_vase.transform.scale = {3.0f, 1.5f, 3.0f};
+        game_objects_.push_back(std::move(flat_vase));
+
+        model = model::create_model_from_file(
             device_, "C:\\Users\\rohit\\Study\\Sem 4\\689\\Game Engine Project\\Minimal Engine\\Minimal Engine\\models\\smooth_vase.obj");
 
-        auto game_obj = game_object::create();
-        game_obj.model = model;
-        game_obj.transform.translation = {0.0f, 0.0f, 2.5f};
-        game_obj.transform.scale = glm::vec3(3.0f);
-        game_objects_.push_back(std::move(game_obj));
+        auto smooth_vase = game_object::create();
+        smooth_vase.model = model;
+        smooth_vase.transform.translation = {0.5f, 0.5f, 2.5f};
+        smooth_vase.transform.scale = {3.0f, 1.5f, 3.0f};
+        game_objects_.push_back(std::move(smooth_vase));
     }
 }
