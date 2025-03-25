@@ -51,7 +51,7 @@ namespace minimal
         }
 
         auto global_set_layout = descriptor_set_layout::builder(device_)
-                                 .addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT)
+                                 .addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_ALL_GRAPHICS)
                                  .build();
 
         std::vector<VkDescriptorSet> global_descriptor_sets(swap_chain::MAX_FRAMES_IN_FLIGHT);
@@ -103,7 +103,8 @@ namespace minimal
                     frame_time,
                     command_buffer,
                     camera,
-                    global_descriptor_sets[frame_index]
+                    global_descriptor_sets[frame_index],
+                    game_objects_
                 };
 
                 // update
@@ -114,7 +115,7 @@ namespace minimal
 
                 // render
                 renderer_.being_swap_chain_render_pass(command_buffer);
-                simple_renderer_system.render_game_objects(frame_info, game_objects_);
+                simple_renderer_system.render_game_objects(frame_info);
                 renderer_.end_swap_chain_render_pass(command_buffer);
                 renderer_.end_frame();
             }
@@ -132,7 +133,7 @@ namespace minimal
         flat_vase.model = model;
         flat_vase.transform.translation = {-0.5f, 0.5f, 0.0f};
         flat_vase.transform.scale = {3.0f, 1.5f, 3.0f};
-        game_objects_.push_back(std::move(flat_vase));
+        game_objects_.emplace(flat_vase.get_id(), std::move(flat_vase));
 
         model = model::create_model_from_file(
             device_, "C:\\Users\\rohit\\Study\\Sem 4\\689\\Game Engine Project\\Minimal Engine\\Minimal Engine\\models\\smooth_vase.obj");
@@ -141,7 +142,7 @@ namespace minimal
         smooth_vase.model = model;
         smooth_vase.transform.translation = {0.5f, 0.5f, 0.0f};
         smooth_vase.transform.scale = {3.0f, 1.5f, 3.0f};
-        game_objects_.push_back(std::move(smooth_vase));
+        game_objects_.emplace(smooth_vase.get_id(), std::move(smooth_vase));
 
         model = model::create_model_from_file(
             device_, "C:\\Users\\rohit\\Study\\Sem 4\\689\\Game Engine Project\\Minimal Engine\\Minimal Engine\\models\\quad.obj");
@@ -150,6 +151,6 @@ namespace minimal
         floor.model = model;
         floor.transform.translation = {0.0f, 0.5f, 0.0f};
         floor.transform.scale = {3.0f, 1.0f, 3.0f};
-        game_objects_.push_back(std::move(floor));
+        game_objects_.emplace(floor.get_id(), std::move(floor));
     }
 }

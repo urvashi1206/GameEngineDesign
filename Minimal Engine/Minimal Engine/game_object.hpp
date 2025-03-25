@@ -4,6 +4,7 @@
 #include "model.hpp"
 
 //libs
+#include <unordered_map>
 #include <glm/gtc/matrix_transform.hpp>
 
 namespace minimal
@@ -26,6 +27,7 @@ namespace minimal
     {
     public:
         using id_t = unsigned int;
+        using map = std::unordered_map<id_t, game_object>;
 
         static game_object create()
         {

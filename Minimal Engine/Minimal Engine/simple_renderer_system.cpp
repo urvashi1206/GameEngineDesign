@@ -58,7 +58,7 @@ namespace minimal
         pipeline_ = std::make_unique<pipeline>(device_, "shaders/simple_shader.vert.spv", "shaders/simple_shader.frag.spv", pipeline_config);
     }
 
-    void simple_renderer_system::render_game_objects(frame_info& frame_info, std::vector<game_object>& game_objects)
+    void simple_renderer_system::render_game_objects(frame_info& frame_info)
     {
         pipeline_->bind(frame_info.command_buffer);
 
@@ -76,7 +76,7 @@ namespace minimal
         );
 
 
-        for (auto& obj : game_objects)
+        for (auto& [id, obj] : frame_info.game_objects)
         {
             simple_push_constant_data push{};
             push.model_matrix = obj.transform.mat4();
