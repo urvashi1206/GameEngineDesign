@@ -28,7 +28,7 @@ namespace minimal
             return command_buffers_[current_frame_index_];
         }
 
-        int get_current_frame_index() const
+        int get_frame_index() const
         {
             assert(is_frame_started_ && "Cannot get frame index while frame is not in progress");
             return current_frame_index_;

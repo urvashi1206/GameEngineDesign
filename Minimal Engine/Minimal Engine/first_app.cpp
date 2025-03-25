@@ -1,6 +1,7 @@
 #include "first_app.hpp"
 
 #include "keyboard_movement_controller.hpp"
+#include "buffer.hpp"
 #include "camera.hpp"
 #include "simple_renderer_system.hpp"
 
@@ -14,17 +15,32 @@
 
 namespace minimal
 {
+    struct global_ubo
+    {
+        glm::mat4 projection_view{1.0f};
+        glm::vec3 light_direction = normalize(glm::vec3(1.0f, -3.0f, -2.0f));
+    };
+
     first_app::first_app()
     {
         load_game_objects();
     }
 
-    first_app::~first_app()
-    {
-    }
+    first_app::~first_app() {}
 
     void first_app::run()
     {
+        buffer global_ubo_buffer{
+            device_,
+            sizeof(global_ubo),
+            swap_chain::MAX_FRAMES_IN_FLIGHT,
+            VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+            VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
+            device_.properties.limits.minUniformBufferOffsetAlignment
+        };
+
+        global_ubo_buffer.map();
+
         simple_renderer_system simple_renderer_system{device_, renderer_.get_swap_chain_render_pass()};
         camera camera{};
         // camera.set_view_direction(glm::vec3(0.0f), glm::vec3(0.5f, 0.0f, 1.0f));
@@ -52,8 +68,24 @@ namespace minimal
 
             if (auto command_buffer = renderer_.begin_frame())
             {
+                int frame_index = renderer_.get_frame_index();
+
+                frame_info frame_info{
+                    frame_index,
+                    frame_time,
+                    command_buffer,
+                    camera
+                };
+
+                // update
+                global_ubo ubo{};
+                ubo.projection_view = camera.get_projection() * camera.get_view();
+                global_ubo_buffer.writeToBuffer(&ubo, frame_index);
+                global_ubo_buffer.flushIndex(frame_index);
+
+                // render
                 renderer_.being_swap_chain_render_pass(command_buffer);
-                simple_renderer_system.render_game_objects(command_buffer, game_objects_, camera);
+                simple_renderer_system.render_game_objects(frame_info, game_objects_);
                 renderer_.end_swap_chain_render_pass(command_buffer);
                 renderer_.end_frame();
             }
