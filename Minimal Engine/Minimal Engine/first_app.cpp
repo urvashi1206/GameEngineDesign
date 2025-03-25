@@ -17,8 +17,10 @@ namespace minimal
 {
     struct global_ubo
     {
-        alignas(16) glm::mat4 projection_view{1.0f};
-        alignas(16) glm::vec3 light_direction = normalize(glm::vec3(1.0f, -3.0f, -2.0f));
+        glm::mat4 projection_view{1.0f};
+        glm::vec4 ambient_color{0.1f, 0.1f, 0.1f, 0.2f}; // w is intensity
+        glm::vec3 light_position{-1.0f};
+        alignas(16) glm::vec4 light_color{1.0f}; // w is light intensity
     };
 
     first_app::first_app()
@@ -71,6 +73,8 @@ namespace minimal
         camera.set_view_target(glm::vec3(-1.0f, -2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 2.5f));
 
         auto viewer_object = game_object::create();
+        viewer_object.transform.translation.z = -2.5f;
+
         keyboard_movement_controller camera_controller{};
 
         auto current_time = std::chrono::high_resolution_clock::now();
@@ -126,7 +130,7 @@ namespace minimal
 
         auto flat_vase = game_object::create();
         flat_vase.model = model;
-        flat_vase.transform.translation = {-0.5f, 0.5f, 2.5f};
+        flat_vase.transform.translation = {-0.5f, 0.5f, 0.0f};
         flat_vase.transform.scale = {3.0f, 1.5f, 3.0f};
         game_objects_.push_back(std::move(flat_vase));
 
@@ -135,8 +139,17 @@ namespace minimal
 
         auto smooth_vase = game_object::create();
         smooth_vase.model = model;
-        smooth_vase.transform.translation = {0.5f, 0.5f, 2.5f};
+        smooth_vase.transform.translation = {0.5f, 0.5f, 0.0f};
         smooth_vase.transform.scale = {3.0f, 1.5f, 3.0f};
         game_objects_.push_back(std::move(smooth_vase));
+
+        model = model::create_model_from_file(
+            device_, "C:\\Users\\rohit\\Study\\Sem 4\\689\\Game Engine Project\\Minimal Engine\\Minimal Engine\\models\\quad.obj");
+
+        auto floor = game_object::create();
+        floor.model = model;
+        floor.transform.translation = {0.0f, 0.5f, 0.0f};
+        floor.transform.scale = {3.0f, 1.0f, 3.0f};
+        game_objects_.push_back(std::move(floor));
     }
 }
