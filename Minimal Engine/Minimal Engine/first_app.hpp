@@ -33,6 +33,6 @@ namespace minimal
 
         // note: order of declarations matters
         std::unique_ptr<descriptor_pool> global_pool_{};
-        std::vector<game_object> game_objects_;
+        game_object::map game_objects_;
     };
 }

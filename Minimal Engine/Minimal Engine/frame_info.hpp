@@ -5,6 +5,8 @@
 // lib
 #include <vulkan/vulkan.h>
 
+#include "game_object.hpp"
+
 namespace minimal
 {
     struct frame_info
@@ -14,5 +16,6 @@ namespace minimal
         VkCommandBuffer command_buffer;
         camera& camera;
         VkDescriptorSet global_descriptor_set;
+        game_object::map& game_objects;
     };
 }

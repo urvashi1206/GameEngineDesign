@@ -19,7 +19,7 @@ namespace minimal
         simple_renderer_system(const simple_renderer_system&) = delete;
         simple_renderer_system& operator=(const simple_renderer_system&) = delete;
 
-        void render_game_objects(frame_info& frame_info, std::vector<game_object>& game_objects);
+        void render_game_objects(frame_info& frame_info);
 
     private:
         void create_pipeline_layout(VkDescriptorSetLayout global_set_layout);
