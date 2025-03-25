@@ -1,9 +1,29 @@
 #include "model.hpp"
 
+#include "utils.hpp"
+
 //libs
 #define TINYOBJLOADER_IMPLEMENTATION
 #include <tiny_obj_loader.h>
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/hash.hpp>
+
 #include <iostream>
+#include <unordered_map>
+
+namespace std
+{
+    template <>
+    struct hash<minimal::model::vertex>
+    {
+        size_t operator()(const minimal::model::vertex& v) const
+        {
+            size_t seed = 0;
+            minimal::hash_combine(seed, v.position, v.color, v.normal, v.uv);
+            return seed;
+        }
+    };
+}
 
 namespace minimal
 {
@@ -40,16 +60,18 @@ namespace minimal
         std::vector<tinyobj::shape_t> shapes;
         std::vector<tinyobj::material_t> materials;
         std::string warn, err;
-        
+
         // auto i_stream = std::ifstream{file_path};
         // if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, &i_stream))
         //     throw std::runtime_error(warn + err);
-        
+
         if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, file_path.c_str()))
             throw std::runtime_error(warn + err);
 
         vertices.clear();
         indices.clear();
+
+        std::unordered_map<vertex, uint32_t> unique_vertices{};
 
         for (const auto& shape : shapes)
             for (const auto& index : shape.mesh.indices)
@@ -92,7 +114,13 @@ namespace minimal
                     };
                 }
 
-                vertices.push_back(vertex);
+                if (unique_vertices.count(vertex) == 0)
+                {
+                    unique_vertices[vertex] = static_cast<uint32_t>(unique_vertices.size());
+                    vertices.push_back(vertex);
+                }
+
+                indices.push_back(unique_vertices[vertex]);
             }
     }
 
