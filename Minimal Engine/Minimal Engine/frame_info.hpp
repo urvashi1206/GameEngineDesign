@@ -13,5 +13,6 @@ namespace minimal
         float frame_time;
         VkCommandBuffer command_buffer;
         camera& camera;
+        VkDescriptorSet global_descriptor_set;
     };
 }

@@ -139,6 +139,7 @@
   <ItemGroup>
     <ClCompile Include="buffer.cpp" />
     <ClCompile Include="camera.cpp" />
+    <ClCompile Include="descriptors.cpp" />
     <ClCompile Include="game_object.cpp" />
     <ClCompile Include="keyboard_movement_controller.cpp" />
     <ClCompile Include="model.cpp" />
@@ -155,6 +156,7 @@
   <ItemGroup>
     <ClInclude Include="buffer.hpp" />
     <ClInclude Include="camera.hpp" />
+    <ClInclude Include="descriptors.hpp" />
     <ClInclude Include="frame_info.hpp" />
     <ClInclude Include="game_object.hpp" />
     <ClInclude Include="keyboard_movement_controller.hpp" />
