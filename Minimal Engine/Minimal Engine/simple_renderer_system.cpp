@@ -56,11 +56,11 @@ namespace minimal
         pipeline_ = std::make_unique<pipeline>(device_, "shaders/simple_shader.vert.spv", "shaders/simple_shader.frag.spv", pipeline_config);
     }
 
-    void simple_renderer_system::render_game_objects(VkCommandBuffer command_buffer, std::vector<game_object>& game_objects, const camera& camera)
+    void simple_renderer_system::render_game_objects(frame_info& frame_info, std::vector<game_object>& game_objects)
     {
-        pipeline_->bind(command_buffer);
+        pipeline_->bind(frame_info.command_buffer);
 
-        auto projection_view = camera.get_projection() * camera.get_view();
+        auto projection_view = frame_info.camera.get_projection() * frame_info.camera.get_view();
 
         for (auto& obj : game_objects)
         {
@@ -69,14 +69,14 @@ namespace minimal
             push.transform = projection_view * model_matrix;
             push.normal_matrix = obj.transform.normal_matrix();
 
-            vkCmdPushConstants(command_buffer,
+            vkCmdPushConstants(frame_info.command_buffer,
                                pipeline_layout_,
                                VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
                                0,
                                sizeof(push),
                                &push);
-            obj.model->bind(command_buffer);
-            obj.model->draw(command_buffer);
+            obj.model->bind(frame_info.command_buffer);
+            obj.model->draw(frame_info.command_buffer);
         }
     }
 }
