@@ -30,16 +30,18 @@ namespace minimal
 
     void first_app::run()
     {
-        buffer global_ubo_buffer{
-            device_,
-            sizeof(global_ubo),
-            swap_chain::MAX_FRAMES_IN_FLIGHT,
-            VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
-            VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT,
-            device_.properties.limits.minUniformBufferOffsetAlignment
-        };
-
-        global_ubo_buffer.map();
+        std::vector<std::unique_ptr<buffer>> ubo_buffers(swap_chain::MAX_FRAMES_IN_FLIGHT);
+        for (int i = 0; i < ubo_buffers.size(); i++)
+        {
+            ubo_buffers[i] = std::make_unique<buffer>(
+                device_,
+                sizeof(global_ubo),
+                1,
+                VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+                VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT
+            );
+            ubo_buffers[i]->map();
+        }
 
         simple_renderer_system simple_renderer_system{device_, renderer_.get_swap_chain_render_pass()};
         camera camera{};
@@ -80,8 +82,8 @@ namespace minimal
                 // update
                 global_ubo ubo{};
                 ubo.projection_view = camera.get_projection() * camera.get_view();
-                global_ubo_buffer.writeToBuffer(&ubo, frame_index);
-                global_ubo_buffer.flushIndex(frame_index);
+                ubo_buffers[frame_index]->writeToBuffer(&ubo);
+                ubo_buffers[frame_index]->flush();
 
                 // render
                 renderer_.being_swap_chain_render_pass(command_buffer);
