@@ -2,6 +2,7 @@
 
 #include <memory>
 
+#include "descriptors.hpp"
 #include "device.hpp"
 #include "game_object.hpp"
 #include "window.hpp"
@@ -29,7 +30,9 @@ namespace minimal
         window window_{"Hello Vulkan!", width, height};
         device device_{window_};
         renderer renderer_{window_, device_};
-        
+
+        // note: order of declarations matters
+        std::unique_ptr<descriptor_pool> global_pool_{};
         std::vector<game_object> game_objects_;
     };
 }

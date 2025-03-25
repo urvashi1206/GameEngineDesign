@@ -13,7 +13,7 @@ namespace minimal
     class simple_renderer_system
     {
     public:
-        simple_renderer_system(device& device, VkRenderPass render_pass);
+        simple_renderer_system(device& device, VkRenderPass render_pass, VkDescriptorSetLayout global_set_layout);
         ~simple_renderer_system();
 
         simple_renderer_system(const simple_renderer_system&) = delete;
@@ -22,7 +22,7 @@ namespace minimal
         void render_game_objects(frame_info& frame_info, std::vector<game_object>& game_objects);
 
     private:
-        void create_pipeline_layout();
+        void create_pipeline_layout(VkDescriptorSetLayout global_set_layout);
         void create_pipeline(VkRenderPass render_pass);
 
         device& device_;
