@@ -65,12 +65,12 @@ namespace minimal
     void first_app::load_game_objects()
     {
         std::shared_ptr<model> model = model::create_model_from_file(
-            device_, "C:\\Users\\rohit\\Study\\Sem 4\\689\\Game Engine Project\\Minimal Engine\\Minimal Engine\\models\\colored_cube.obj");
+            device_, "C:\\Users\\rohit\\Study\\Sem 4\\689\\Game Engine Project\\Minimal Engine\\Minimal Engine\\models\\smooth_vase.obj");
 
-        auto cube = game_object::create();
-        cube.model = model;
-        cube.transform.translation = {0.0f, 0.0f, 2.5f};
-        cube.transform.scale = {0.5f, 0.5f, 0.5f};
-        game_objects_.push_back(std::move(cube));
+        auto game_obj = game_object::create();
+        game_obj.model = model;
+        game_obj.transform.translation = {0.0f, 0.0f, 2.5f};
+        game_obj.transform.scale = glm::vec3(3.0f);
+        game_objects_.push_back(std::move(game_obj));
     }
 }

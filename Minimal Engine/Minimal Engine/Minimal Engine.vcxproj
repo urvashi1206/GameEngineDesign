@@ -162,6 +162,7 @@
     <ClInclude Include="simple_renderer_system.hpp" />
     <ClInclude Include="swap_chain.hpp" />
     <ClInclude Include="pipeline.hpp" />
+    <ClInclude Include="utils.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="compile.bat" />
