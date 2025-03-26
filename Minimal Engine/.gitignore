@@ -1,40 +1,14 @@
-# Prerequisites
-*.d
-
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
-
-# Precompiled Headers
-*.gch
-*.pch
-
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
-
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
-
-# Executables
-*.exe
-*.out
-*.app
-
-# Ingoring .spv files
+**/a.out
+build
+build/**
+.vscode
+**/.env
+**/.obj
 *.spv
-
-# Debug files
-**/Release/
-**/Debug/
-**/x6/
+littleVulkanEngine/sandbox/**
+*.a
+textures_
+models/viking_room.obj
+imgui.ini
+.env.cmake
+cmake-build-**
