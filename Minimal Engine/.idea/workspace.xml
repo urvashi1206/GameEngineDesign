@@ -31,74 +31,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="513207a9-b29f-4f47-8450-93cac6ec8b2c" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/.name" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/editor.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/external/tinyobjloader/tiny_obj_loader.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Minimal Engine/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Minimal Engine/.idea/indexLayout.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Minimal Engine/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.MinimalEngine/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.MinimalEngine/.idea/.name" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.MinimalEngine/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.MinimalEngine/.idea/indexLayout.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.MinimalEngine/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.Vulkan Tutorial/.idea/workspace.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Minimal Engine.sln" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Minimal Engine/Minimal Engine.vcxproj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Minimal Engine/Vulkan Tutorial.vcxproj.filters" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Minimal Engine/Vulkan Tutorial.vcxproj.user" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Minimal Engine/buffer.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Minimal Engine/buffer.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Minimal Engine/camera.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Minimal Engine/camera.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Minimal Engine/compile.bat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Minimal Engine/descriptors.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Minimal Engine/descriptors.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Minimal Engine/device.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Minimal Engine/device.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Minimal Engine/first_app.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Minimal Engine/first_app.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Minimal Engine/frame_info.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Minimal Engine/game_object.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Minimal Engine/game_object.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Minimal Engine/keyboard_movement_controller.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Minimal Engine/keyboard_movement_controller.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Minimal Engine/main.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Minimal Engine/model.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Minimal Engine/model.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Minimal Engine/pipeline.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Minimal Engine/pipeline.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Minimal Engine/renderer.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Minimal Engine/renderer.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Minimal Engine/shaders/simple_shader.frag" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Minimal Engine/shaders/simple_shader.frag.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Minimal Engine/shaders/simple_shader.vert" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Minimal Engine/shaders/simple_shader.vert.spv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Minimal Engine/simple_renderer_system.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Minimal Engine/simple_renderer_system.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Minimal Engine/swap_chain.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Minimal Engine/swap_chain.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Minimal Engine/utils.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Minimal Engine/window.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Minimal Engine/window.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Minimal Engine/x64/Debug/CodeAnalysisResultManifest.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Minimal Engine/x64/Debug/Vulkan Tutorial.Build.CppClean.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Minimal Engine/x64/Debug/Vulkan Tutorial.exe.recipe" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Minimal Engine/x64/Debug/Vulkan Tutorial.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Minimal Engine/x64/Debug/Vulkan Tutorial.tlog/CL.command.1.tlog" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Minimal Engine/x64/Debug/Vulkan Tutorial.tlog/CL.read.1.tlog" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Minimal Engine/x64/Debug/Vulkan Tutorial.tlog/CL.write.1.tlog" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Minimal Engine/x64/Debug/Vulkan Tutorial.tlog/Cl.items.tlog" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Minimal Engine/x64/Debug/Vulkan Tutorial.tlog/Vulkan Tutorial.lastbuildstate" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Minimal Engine/x64/Debug/Vulkan Tutorial.tlog/link.command.1.tlog" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Minimal Engine/x64/Debug/Vulkan Tutorial.tlog/link.read.1.tlog" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Minimal Engine/x64/Debug/Vulkan Tutorial.tlog/link.secondary.1.tlog" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Minimal Engine/x64/Debug/Vulkan Tutorial.tlog/link.write.1.tlog" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Minimal Engine/x64/Debug/Vulkan Tutorial.vcxproj.FileListAbsolute.txt" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/shaders/point_light.frag" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/shaders/point_light.vert" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/systems/simple_renderer_system.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/systems/simple_renderer_system.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shaders/simple_shader.frag" beforeDir="false" afterPath="$PROJECT_DIR$/shaders/simple_shader.frag" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shaders/simple_shader.vert" beforeDir="false" afterPath="$PROJECT_DIR$/shaders/simple_shader.vert" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/first_app.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/first_app.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pipeline.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/pipeline.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pipeline.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/pipeline.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/simple_renderer_system.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/systems/point_light_system.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/simple_renderer_system.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/systems/point_light_system.hpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -109,6 +53,13 @@
     <option name="formatViaClangd" value="false" />
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug-Visual Studio" />
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="GLSL Shader" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
@@ -156,7 +107,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "CMake Application.MinimalEngine.executor": "Debug",
+    "CMake Application.MinimalEngine.executor": "Run",
     "CMake Application.Shaders.executor": "Run",
     "RunOnceActivity.RadMigrateCodeStyle": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
@@ -167,15 +118,24 @@
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
     "git-widget-placeholder": "Rendering",
+    "last_opened_file_path": "C:/Users/rohit/Study/Sem 4/689/Game Engine Project/Minimal Engine/src/systems",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "CMakeSettings",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\rohit\Study\Sem 4\689\Game Engine Project\Minimal Engine\src\systems" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\rohit\Study\Sem 4\689\Game Engine Project\Minimal Engine\src\systems" />
+    </key>
+  </component>
   <component name="RunManager" selected="CMake Application.MinimalEngine">
     <configuration name="MinimalEngine" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="MinimalEngine" TARGET_NAME="MinimalEngine" CONFIG_NAME="Debug-Visual Studio" RUN_TARGET_PROJECT_NAME="MinimalEngine" RUN_TARGET_NAME="MinimalEngine">
       <method v="2">
@@ -206,7 +166,7 @@
       <option name="presentableId" value="Default" />
       <updated>1742949938734</updated>
       <workItem from="1742949940186" duration="1254000" />
-      <workItem from="1742951239268" duration="467000" />
+      <workItem from="1742951239268" duration="4273000" />
     </task>
     <servers />
   </component>
