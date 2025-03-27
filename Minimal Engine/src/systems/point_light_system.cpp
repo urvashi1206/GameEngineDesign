@@ -2,6 +2,7 @@
 
 #include <array>
 #include <iostream>
+#include <map>
 #include <stdexcept>
 
 #define GLM_FORCE_RADIANS
@@ -50,6 +51,7 @@ namespace minimal {
 
         pipeline_config_info pipeline_config{};
         pipeline::default_pipeline_config_info(pipeline_config);
+        pipeline::enable_alpha_blending(pipeline_config);
         pipeline_config.binding_descriptions.clear();
         pipeline_config.attribute_descriptions.clear();
         pipeline_config.render_pass = render_pass;
@@ -86,6 +88,18 @@ namespace minimal {
     }
 
     void point_light_system::render(frame_info &frame_info) {
+        // sort lights
+        std::map<float, game_object::id_t> sorted_lights;
+        for (auto &kv: frame_info.game_objects) {
+            auto &obj = kv.second;
+            if (obj.point_light == nullptr) continue;
+
+            // calculate distance
+            auto offset = frame_info.camera.get_position() - obj.transform.translation;
+            float distanceSquared = glm::dot(offset, offset);
+            sorted_lights[distanceSquared] = obj.get_id();
+        }
+
         pipeline_->bind(frame_info.command_buffer);
 
         auto projection_view = frame_info.camera.get_projection() * frame_info.camera.get_view();
@@ -101,10 +115,9 @@ namespace minimal {
             nullptr
         );
 
-
-        for (auto &kv: frame_info.game_objects) {
-            auto &obj = kv.second;
-            if (obj.point_light == nullptr) continue;
+        // iterate through sorted lights in reverse order
+        for (auto it = sorted_lights.rbegin(); it != sorted_lights.rend(); ++it) {
+            auto &obj = frame_info.game_objects.at(it->second);
 
             point_light_push_constants push{};
 
