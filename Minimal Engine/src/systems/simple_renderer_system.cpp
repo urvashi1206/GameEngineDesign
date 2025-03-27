@@ -50,8 +50,8 @@ namespace minimal {
         pipeline_config.render_pass = render_pass;
         pipeline_config.pipeline_layout = pipeline_layout_;
         pipeline_ = std::make_unique<pipeline>(device_,
-                                               "shaders\\simple_shader.vert.spv",
-                                               "shaders\\simple_shader.frag.spv",
+                                               "shaders/simple_shader.vert.spv",
+                                               "shaders/simple_shader.frag.spv",
                                                pipeline_config);
     }
 
@@ -72,8 +72,12 @@ namespace minimal {
         );
 
 
-        for (auto &[id, obj]: frame_info.game_objects) {
+        for (auto &kv: frame_info.game_objects) {
+            auto &obj = kv.second;
+            if (obj.model == nullptr) continue;
+
             simple_push_constant_data push{};
+
             push.model_matrix = obj.transform.mat4();
             push.normal_matrix = obj.transform.normal_matrix();
 

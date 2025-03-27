@@ -13,37 +13,24 @@
 
 #include <algorithm>
 #include <chrono>
+#include <iostream>
 
-namespace minimal
-{
-    struct global_ubo
-    {
-        glm::mat4 projection{1.0f};
-        glm::mat4 view{1.0f};
-        glm::vec4 ambient_color{0.1f, 0.1f, 0.1f, 0.2f}; // w is intensity
-        glm::vec3 light_position{-1.0f};
-        alignas(16) glm::vec4 light_color{1.0f}; // w is light intensity
-    };
-
-    first_app::first_app()
-    {
+namespace minimal {
+    first_app::first_app() {
         global_pool_ = descriptor_pool::builder(device_)
-                       .setMaxSets(swap_chain::MAX_FRAMES_IN_FLIGHT)
-                       .addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, swap_chain::MAX_FRAMES_IN_FLIGHT)
-                       .build();
+                .setMaxSets(swap_chain::MAX_FRAMES_IN_FLIGHT)
+                .addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, swap_chain::MAX_FRAMES_IN_FLIGHT)
+                .build();
 
         load_game_objects();
     }
 
-    first_app::~first_app()
-    {
+    first_app::~first_app() {
     }
 
-    void first_app::run()
-    {
-        std::vector<std::unique_ptr<buffer>> ubo_buffers(swap_chain::MAX_FRAMES_IN_FLIGHT);
-        for (int i = 0; i < ubo_buffers.size(); i++)
-        {
+    void first_app::run() {
+        std::vector<std::unique_ptr<buffer> > ubo_buffers(swap_chain::MAX_FRAMES_IN_FLIGHT);
+        for (int i = 0; i < ubo_buffers.size(); i++) {
             ubo_buffers[i] = std::make_unique<buffer>(
                 device_,
                 sizeof(global_ubo),
@@ -55,16 +42,15 @@ namespace minimal
         }
 
         auto global_set_layout = descriptor_set_layout::builder(device_)
-                                 .addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_ALL_GRAPHICS)
-                                 .build();
+                .addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_ALL_GRAPHICS)
+                .build();
 
         std::vector<VkDescriptorSet> global_descriptor_sets(swap_chain::MAX_FRAMES_IN_FLIGHT);
-        for (int i = 0; i < swap_chain::MAX_FRAMES_IN_FLIGHT; i++)
-        {
+        for (int i = 0; i < swap_chain::MAX_FRAMES_IN_FLIGHT; i++) {
             auto buffer_info = ubo_buffers[i]->descriptorInfo();
             descriptor_writer(*global_set_layout, *global_pool_)
-                .writeBuffer(0, &buffer_info)
-                .build(global_descriptor_sets[i]);
+                    .writeBuffer(0, &buffer_info)
+                    .build(global_descriptor_sets[i]);
         }
 
         simple_renderer_system simple_renderer_system{
@@ -90,13 +76,12 @@ namespace minimal
 
         auto current_time = std::chrono::high_resolution_clock::now();
 
-        while (!window_.should_close())
-        {
+        while (!window_.should_close()) {
             glfwPollEvents();
 
             auto new_time = std::chrono::high_resolution_clock::now();
             float frame_time = std::chrono::duration<float, std::chrono::seconds::period>(new_time - current_time).
-                count();
+                    count();
             current_time = new_time;
 
             camera_controller.move_in_plane_xz(window_.get_glfw_window(), frame_time, viewer_object);
@@ -106,8 +91,7 @@ namespace minimal
             // camera.set_othrographic_projection(-aspect, aspect, -1.0f, 1.0f, -1.0f, 1.0f);
             camera.set_perspective_projection(glm::radians(50.0f), aspect, 0.1f, 100.0f);
 
-            if (auto command_buffer = renderer_.begin_frame())
-            {
+            if (auto command_buffer = renderer_.begin_frame()) {
                 int frame_index = renderer_.get_frame_index();
 
                 frame_info frame_info{
@@ -123,6 +107,7 @@ namespace minimal
                 global_ubo ubo{};
                 ubo.projection = camera.get_projection();
                 ubo.view = camera.get_view();
+                point_light_system.update(frame_info, ubo);
                 ubo_buffers[frame_index]->writeToBuffer(&ubo);
                 ubo_buffers[frame_index]->flush();
 
@@ -140,10 +125,8 @@ namespace minimal
         vkDeviceWaitIdle(device_.get_device());
     }
 
-    void first_app::load_game_objects()
-    {
-        std::shared_ptr<model> model = model::create_model_from_file(
-            device_, "models\\flat_vase.obj");
+    void first_app::load_game_objects() {
+        std::shared_ptr<model> model = model::create_model_from_file(device_, "models/flat_vase.obj");
 
         auto flat_vase = game_object::create();
         flat_vase.model = model;
@@ -151,8 +134,8 @@ namespace minimal
         flat_vase.transform.scale = {3.0f, 1.5f, 3.0f};
         game_objects_.emplace(flat_vase.get_id(), std::move(flat_vase));
 
-        model = model::create_model_from_file(
-            device_, "models\\smooth_vase.obj");
+        model = model::create_model_from_file(device_, "models/smooth_vase.obj");
+
 
         auto smooth_vase = game_object::create();
         smooth_vase.model = model;
@@ -160,13 +143,19 @@ namespace minimal
         smooth_vase.transform.scale = {3.0f, 1.5f, 3.0f};
         game_objects_.emplace(smooth_vase.get_id(), std::move(smooth_vase));
 
-        model = model::create_model_from_file(
-            device_, "models\\quad.obj");
+        model = model::create_model_from_file(device_, "models/quad.obj");
 
         auto floor = game_object::create();
         floor.model = model;
         floor.transform.translation = {0.0f, 0.5f, 0.0f};
         floor.transform.scale = {3.0f, 1.0f, 3.0f};
         game_objects_.emplace(floor.get_id(), std::move(floor));
+
+        {
+            auto point_light = game_object::make_point_light(0.2f);
+            game_objects_.emplace(point_light.get_id(), std::move(point_light));
+        }
+
+        // using point_light again invalid...
     }
 }

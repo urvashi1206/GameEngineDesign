@@ -10,26 +10,22 @@
 #define ENGINE_DIR "../"
 #endif
 
-namespace minimal
-{
-    pipeline::pipeline(device& device,
-                       const std::string& vert_path,
-                       const std::string& frag_path,
-                       const pipeline_config_info& config_info) : device_{device}
-    {
+namespace minimal {
+    pipeline::pipeline(device &device,
+                       const std::string &vert_path,
+                       const std::string &frag_path,
+                       const pipeline_config_info &config_info) : device_{device} {
         create_graphics_pipeline(vert_path, frag_path, config_info);
     }
 
-    pipeline::~pipeline()
-    {
+    pipeline::~pipeline() {
         vkDestroyShaderModule(device_.get_device(), vert_shader_module_, nullptr);
         vkDestroyShaderModule(device_.get_device(), frag_shader_module_, nullptr);
 
         vkDestroyPipeline(device_.get_device(), graphics_pipeline_, nullptr);
     }
 
-    std::vector<char> pipeline::read_file(const std::string& file_path)
-    {
+    std::vector<char> pipeline::read_file(const std::string &file_path) {
         std::string engine_dir = ENGINE_DIR + file_path;
         std::ifstream file{engine_dir, std::ios::ate | std::ios::binary};
 
@@ -47,16 +43,11 @@ namespace minimal
         return buffer;
     }
 
-    void pipeline::create_graphics_pipeline(const std::string& vert_path,
-                                            const std::string& frag_path,
-                                            const pipeline_config_info& config_info)
-    {
-        assert(
-            config_info.pipeline_layout != VK_NULL_HANDLE &&
-            "Cannot create graphics pipeline:: no pipelineLayout provided in config_info");
-        assert(
-            config_info.render_pass != VK_NULL_HANDLE &&
-            "Cannot create graphics pipeline:: no renderPass provided in config_info");
+    void pipeline::create_graphics_pipeline(const std::string &vert_path,
+                                            const std::string &frag_path,
+                                            const pipeline_config_info &config_info) {
+        assert(config_info.pipeline_layout != VK_NULL_HANDLE && "Cannot create graphics pipeline:: no pipelineLayout provided in config_info");
+        assert(config_info.render_pass != VK_NULL_HANDLE && "Cannot create graphics pipeline:: no renderPass provided in config_info");
 
         auto vert_code = read_file(vert_path);
         auto frag_code = read_file(frag_path);
@@ -81,8 +72,8 @@ namespace minimal
         shader_stages[1].pNext = nullptr;
         shader_stages[1].pSpecializationInfo = nullptr;
 
-        auto& binding_description = config_info.binding_descriptions;
-        auto& attribute_descriptions = config_info.attribute_descriptions;
+        auto &binding_description = config_info.binding_descriptions;
+        auto &attribute_descriptions = config_info.attribute_descriptions;
 
         VkPipelineVertexInputStateCreateInfo vertex_input_info{};
         vertex_input_info.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
@@ -116,24 +107,21 @@ namespace minimal
             throw std::runtime_error("failed to create graphics pipeline!");
     }
 
-    void pipeline::create_shader_module(const std::vector<char>& code, VkShaderModule* shader_module)
-    {
+    void pipeline::create_shader_module(const std::vector<char> &code, VkShaderModule *shader_module) {
         VkShaderModuleCreateInfo create_info{};
         create_info.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
         create_info.codeSize = code.size();
-        create_info.pCode = reinterpret_cast<const uint32_t*>(code.data());
+        create_info.pCode = reinterpret_cast<const uint32_t *>(code.data());
 
         if (vkCreateShaderModule(device_.get_device(), &create_info, nullptr, shader_module) != VK_SUCCESS)
             throw std::runtime_error("failed to create shader module!");
     }
 
-    void pipeline::bind(VkCommandBuffer command_buffer)
-    {
+    void pipeline::bind(VkCommandBuffer command_buffer) {
         vkCmdBindPipeline(command_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphics_pipeline_);
     }
 
-    void pipeline::default_pipeline_config_info(pipeline_config_info& config_info)
-    {
+    void pipeline::default_pipeline_config_info(pipeline_config_info &config_info) {
         config_info.input_assembly_info.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
         config_info.input_assembly_info.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
         config_info.input_assembly_info.primitiveRestartEnable = VK_FALSE;
@@ -165,8 +153,8 @@ namespace minimal
         config_info.multisample_info.alphaToOneEnable = VK_FALSE; // Optional
 
         config_info.color_blend_attachment.colorWriteMask =
-            VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT |
-            VK_COLOR_COMPONENT_A_BIT;
+                VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT |
+                VK_COLOR_COMPONENT_A_BIT;
         config_info.color_blend_attachment.blendEnable = VK_FALSE;
         config_info.color_blend_attachment.srcColorBlendFactor = VK_BLEND_FACTOR_ONE; // Optional
         config_info.color_blend_attachment.dstColorBlendFactor = VK_BLEND_FACTOR_ZERO; // Optional

@@ -55,10 +55,10 @@ namespace minimal {
         std::string warn, err;
 
         // auto i_stream = std::ifstream{file_path};
-        // if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, &i_stream))
+        // if (!LoadObj(&attrib, &shapes, &materials, &warn, &err, &i_stream))
         //     throw std::runtime_error(warn + err);
 
-        if (!tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, (ENGINE_DIR + file_path).c_str()))
+        if (!LoadObj(&attrib, &shapes, &materials, &warn, &err, (ENGINE_DIR + file_path).c_str()))
             throw std::runtime_error(warn + err);
 
         vertices.clear();
