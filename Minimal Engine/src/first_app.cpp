@@ -107,6 +107,7 @@ namespace minimal {
                 global_ubo ubo{};
                 ubo.projection = camera.get_projection();
                 ubo.view = camera.get_view();
+                ubo.inverse_view = camera.get_inverse_view();
                 point_light_system.update(frame_info, ubo);
                 ubo_buffers[frame_index]->writeToBuffer(&ubo);
                 ubo_buffers[frame_index]->flush();

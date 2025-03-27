@@ -18,6 +18,7 @@ namespace minimal {
     struct global_ubo {
         glm::mat4 projection{1.0f};
         glm::mat4 view{1.0f};
+        glm::mat4 inverse_view{1.0f};
         glm::vec4 ambient_color{0.1f, 0.1f, 0.1f, 0.2f}; // w is intensity
         point_light point_lights[MAX_LIGHTS];
         int num_lights;
