@@ -20,6 +20,7 @@ namespace minimal {
         const glm::mat4 &get_projection() const { return projection_matrix_; }
         const glm::mat4 &get_view() const { return view_matrix_; }
         const glm::mat4 &get_inverse_view() const { return inverse_view_matrix_; }
+        const glm::vec3 &get_position() const { return glm::vec3(inverse_view_matrix_[3]); }
 
     private:
         glm::mat4 projection_matrix_{1.0f};
