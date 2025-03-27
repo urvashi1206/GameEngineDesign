@@ -31,8 +31,14 @@
   <component name="ChangeListManager">
     <list default="true" id="ff6dfa8c-eb6c-408e-98c4-a7d0c45c3a71" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shaders/point_light.frag" beforeDir="false" afterPath="$PROJECT_DIR$/shaders/point_light.frag" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shaders/point_light.vert" beforeDir="false" afterPath="$PROJECT_DIR$/shaders/point_light.vert" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shaders/simple_shader.frag" beforeDir="false" afterPath="$PROJECT_DIR$/shaders/simple_shader.frag" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shaders/simple_shader.vert" beforeDir="false" afterPath="$PROJECT_DIR$/shaders/simple_shader.vert" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/camera.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/camera.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/camera.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/camera.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/first_app.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/first_app.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/systems/point_light_system.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/systems/point_light_system.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frame_info.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/frame_info.hpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,6 +66,7 @@
     <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/buffer.hpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/camera.hpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/first_app.hpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/frame_info.hpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/game_object.hpp" root0="FORCE_HIGHLIGHTING" />
@@ -136,7 +143,7 @@
       <workItem from="1743026017692" duration="1431000" />
       <workItem from="1743028543121" duration="3439000" />
       <workItem from="1743032061978" duration="1240000" />
-      <workItem from="1743033668647" duration="3192000" />
+      <workItem from="1743033668647" duration="4804000" />
     </task>
     <servers />
   </component>
