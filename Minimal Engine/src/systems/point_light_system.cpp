@@ -61,10 +61,19 @@ namespace minimal {
     }
 
     void point_light_system::update(frame_info &frame_info, global_ubo &ubo) {
+        auto rotate_light = glm::rotate(glm::mat4(1.0f),
+                                        frame_info.frame_time,
+                                        {0.0f, -1.0f, 0.0f}
+        );
         int light_index = 0;
         for (auto &kv: frame_info.game_objects) {
             auto &obj = kv.second;
             if (obj.point_light == nullptr) continue;
+
+            assert(light_index< MAX_LIGHTS && "Point lights exceed maximum specified");
+
+            // update light position
+            obj.transform.translation = glm::vec3(rotate_light * glm::vec4(obj.transform.translation, 1.0f));
 
             // copy light to ubo
             ubo.point_lights[light_index].position = glm::vec4(obj.transform.translation, 1.0f);

@@ -126,33 +126,48 @@ namespace minimal {
     }
 
     void first_app::load_game_objects() {
+        // Flat vase
         std::shared_ptr<model> model = model::create_model_from_file(device_, "models/flat_vase.obj");
-
         auto flat_vase = game_object::create();
         flat_vase.model = model;
         flat_vase.transform.translation = {-0.5f, 0.5f, 0.0f};
         flat_vase.transform.scale = {3.0f, 1.5f, 3.0f};
         game_objects_.emplace(flat_vase.get_id(), std::move(flat_vase));
 
+        // Smooth vase
         model = model::create_model_from_file(device_, "models/smooth_vase.obj");
-
-
         auto smooth_vase = game_object::create();
         smooth_vase.model = model;
         smooth_vase.transform.translation = {0.5f, 0.5f, 0.0f};
         smooth_vase.transform.scale = {3.0f, 1.5f, 3.0f};
         game_objects_.emplace(smooth_vase.get_id(), std::move(smooth_vase));
 
+        // Floor
         model = model::create_model_from_file(device_, "models/quad.obj");
-
         auto floor = game_object::create();
         floor.model = model;
         floor.transform.translation = {0.0f, 0.5f, 0.0f};
         floor.transform.scale = {3.0f, 1.0f, 3.0f};
         game_objects_.emplace(floor.get_id(), std::move(floor));
 
-        {
+        // Point lights
+        std::vector<glm::vec3> light_colors{
+            {1.f, .1f, .1f},
+            {.1f, .1f, 1.f},
+            {.1f, 1.f, .1f},
+            {1.f, 1.f, .1f},
+            {.1f, 1.f, 1.f},
+            {1.f, 1.f, 1.f} //
+        };
+
+        for (int i = 0; i < light_colors.size(); i++) {
             auto point_light = game_object::make_point_light(0.2f);
+            point_light.color = light_colors[i];
+            auto rotate_light = glm::rotate(glm::mat4(1.0f),
+                                            i * glm::two_pi<float>() / light_colors.size(),
+                                            {0.0f, -1.0f, 0.0f}
+            );
+            point_light.transform.translation = glm::vec3(rotate_light * glm::vec4(-1.0f, -1.0f, -1.0f, 1.0f));
             game_objects_.emplace(point_light.get_id(), std::move(point_light));
         }
 
