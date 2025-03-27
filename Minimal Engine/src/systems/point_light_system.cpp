@@ -8,26 +8,28 @@
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include <glm/glm.hpp>
 
-namespace minimal
-{
-    point_light_system::point_light_system(device& device, VkRenderPass render_pass,
-                                           VkDescriptorSetLayout global_set_layout) : device_{device}
-    {
+namespace minimal {
+    struct point_light_push_constants {
+        glm::vec4 position{};
+        glm::vec4 color{};
+        float radius;
+    };
+
+    point_light_system::point_light_system(device &device, VkRenderPass render_pass,
+                                           VkDescriptorSetLayout global_set_layout) : device_{device} {
         create_pipeline_layout(global_set_layout);
         create_pipeline(render_pass);
     }
 
-    point_light_system::~point_light_system()
-    {
+    point_light_system::~point_light_system() {
         vkDestroyPipelineLayout(device_.get_device(), pipeline_layout_, nullptr);
     }
 
-    void point_light_system::create_pipeline_layout(VkDescriptorSetLayout global_set_layout)
-    {
-        //        VkPushConstantRange push_constant_range{};
-        //        push_constant_range.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
-        //        push_constant_range.offset = 0;
-        //        push_constant_range.size = sizeof(simple_push_constant_data);
+    void point_light_system::create_pipeline_layout(VkDescriptorSetLayout global_set_layout) {
+        VkPushConstantRange push_constant_range{};
+        push_constant_range.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
+        push_constant_range.offset = 0;
+        push_constant_range.size = sizeof(point_light_push_constants);
 
         std::vector<VkDescriptorSetLayout> descriptor_set_layouts{global_set_layout};
 
@@ -35,18 +37,15 @@ namespace minimal
         pipeline_layout_info.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
         pipeline_layout_info.setLayoutCount = static_cast<uint32_t>(descriptor_set_layouts.size());
         pipeline_layout_info.pSetLayouts = descriptor_set_layouts.data();
-        //        pipeline_layout_info.pushConstantRangeCount = 1;
-        //        pipeline_layout_info.pPushConstantRanges = &push_constant_range;
-        pipeline_layout_info.pushConstantRangeCount = 0;
-        pipeline_layout_info.pPushConstantRanges = nullptr;
+        pipeline_layout_info.pushConstantRangeCount = 1;
+        pipeline_layout_info.pPushConstantRanges = &push_constant_range;
 
         if (vkCreatePipelineLayout(device_.get_device(), &pipeline_layout_info, nullptr, &pipeline_layout_) !=
             VK_SUCCESS)
             throw std::runtime_error("failed to create pipeline layout!");
     }
 
-    void point_light_system::create_pipeline(VkRenderPass render_pass)
-    {
+    void point_light_system::create_pipeline(VkRenderPass render_pass) {
         assert(pipeline_layout_ != nullptr && "Cannot create pipeline before pipeline layout");
 
         pipeline_config_info pipeline_config{};
@@ -61,8 +60,23 @@ namespace minimal
                                                pipeline_config);
     }
 
-    void point_light_system::render(frame_info& frame_info)
-    {
+    void point_light_system::update(frame_info &frame_info, global_ubo &ubo) {
+        int light_index = 0;
+        for (auto &kv: frame_info.game_objects) {
+            auto &obj = kv.second;
+            if (obj.point_light == nullptr) continue;
+
+            // copy light to ubo
+            ubo.point_lights[light_index].position = glm::vec4(obj.transform.translation, 1.0f);
+            ubo.point_lights[light_index].color = glm::vec4(obj.color, obj.point_light->lightIntensity);
+
+            light_index++;
+        }
+
+        ubo.num_lights = light_index;
+    }
+
+    void point_light_system::render(frame_info &frame_info) {
         pipeline_->bind(frame_info.command_buffer);
 
         auto projection_view = frame_info.camera.get_projection() * frame_info.camera.get_view();
@@ -78,6 +92,26 @@ namespace minimal
             nullptr
         );
 
-        vkCmdDraw(frame_info.command_buffer, 6, 1, 0, 0);
+
+        for (auto &kv: frame_info.game_objects) {
+            auto &obj = kv.second;
+            if (obj.point_light == nullptr) continue;
+
+            point_light_push_constants push{};
+
+            push.position = glm::vec4(obj.transform.translation, 1.0f);
+            push.color = glm::vec4(obj.color, obj.point_light->lightIntensity);
+            push.radius = obj.transform.scale.x;
+
+            vkCmdPushConstants(
+                frame_info.command_buffer,
+                pipeline_layout_,
+                VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
+                0,
+                sizeof(point_light_push_constants),
+                &push
+            );
+            vkCmdDraw(frame_info.command_buffer, 6, 1, 0, 0);
+        }
     }
 }

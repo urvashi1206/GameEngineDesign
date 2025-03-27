@@ -1,9 +1,7 @@
 #include "game_object.hpp"
 
-namespace minimal
-{
-    glm::mat4 transform_component::mat4()
-    {
+namespace minimal {
+    glm::mat4 transform_component::mat4() {
         const float c3 = glm::cos(rotation.z);
         const float s3 = glm::sin(rotation.z);
         const float c2 = glm::cos(rotation.x);
@@ -33,8 +31,7 @@ namespace minimal
         };
     }
 
-    glm::mat3 transform_component::normal_matrix()
-    {
+    glm::mat3 transform_component::normal_matrix() {
         const float c3 = glm::cos(rotation.z);
         const float s3 = glm::sin(rotation.z);
         const float c2 = glm::cos(rotation.x);
@@ -59,5 +56,15 @@ namespace minimal
                 inverse_scale.z * (c1 * c2)
             }
         };
+    }
+
+    game_object game_object::make_point_light(float intensity, float radius, glm::vec3 color) {
+        auto light_object = create();
+        light_object.color = color;
+        light_object.transform.scale.x = radius;
+        light_object.point_light = std::make_unique<point_light_component>();
+        light_object.point_light->lightIntensity = intensity;
+
+        return light_object;
     }
 }

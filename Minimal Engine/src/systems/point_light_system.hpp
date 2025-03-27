@@ -19,6 +19,7 @@ namespace minimal
         point_light_system(const point_light_system&) = delete;
         point_light_system& operator=(const point_light_system&) = delete;
 
+        void update(frame_info& frame_info, global_ubo& ubo);
         void render(frame_info& frame_info);
 
     private:

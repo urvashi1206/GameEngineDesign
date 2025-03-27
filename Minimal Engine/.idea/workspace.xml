@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="BackendCodeEditorMiscSettings">
-    <option name="/Default/RiderDebugger/RiderRestoreDecompile/RestoreDecompileSetting/@EntryValue" value="false" type="bool" />
     <option name="/Default/Housekeeping/FeatureSuggestion/FeatureSuggestionManager/DisabledSuggesters/=SwitchToGoToActionSuggester/@EntryIndexedValue" value="true" type="bool" />
-    <option name="/Default/Housekeeping/FeatureSuggestion/FeatureSuggestionManager/DisabledSuggesters/=SwitchToGoToActionSuggester/@EntryIndexRemoved" />
+    <option name="/Default/Housekeeping/LiveTemplatesHousekeeping/HotspotSessionHintIsShown/@EntryValue" value="true" type="bool" />
   </component>
   <component name="CMakePresetLoader">{
   &quot;useNewFormat&quot;: true
@@ -30,19 +29,22 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="513207a9-b29f-4f47-8450-93cac6ec8b2c" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/shaders/point_light.frag" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/shaders/point_light.vert" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/systems/simple_renderer_system.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/systems/simple_renderer_system.hpp" afterDir="false" />
+    <list default="true" id="ff6dfa8c-eb6c-408e-98c4-a7d0c45c3a71" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/editor.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/editor.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shaders/point_light.frag" beforeDir="false" afterPath="$PROJECT_DIR$/shaders/point_light.frag" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shaders/point_light.vert" beforeDir="false" afterPath="$PROJECT_DIR$/shaders/point_light.vert" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/shaders/simple_shader.frag" beforeDir="false" afterPath="$PROJECT_DIR$/shaders/simple_shader.frag" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/shaders/simple_shader.vert" beforeDir="false" afterPath="$PROJECT_DIR$/shaders/simple_shader.vert" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/first_app.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/first_app.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/frame_info.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/frame_info.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/game_object.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/game_object.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/game_object.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/game_object.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/model.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pipeline.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/pipeline.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pipeline.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/pipeline.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/simple_renderer_system.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/systems/point_light_system.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/simple_renderer_system.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/systems/point_light_system.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/systems/point_light_system.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/systems/point_light_system.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/systems/point_light_system.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/systems/point_light_system.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/systems/simple_renderer_system.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/systems/simple_renderer_system.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,25 +55,9 @@
     <option name="formatViaClangd" value="false" />
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug-Visual Studio" />
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="GLSL Shader" />
-      </list>
-    </option>
-  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
-  <component name="GitHubPullRequestSearchHistory">{
-  &quot;lastFilter&quot;: {}
-}</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/urvashi1206/GameEngineDesign.git&quot;,
-    &quot;accountId&quot;: &quot;cf5bd4b5-d091-41e9-9a36-5ea4ea3649cf&quot;
-  }
-}</component>
   <component name="HighlightingSettingsPerFile">
     <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
@@ -85,22 +71,24 @@
     <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/buffer.hpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/first_app.hpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/frame_info.hpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/game_object.hpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/model.hpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/systems/point_light_system.hpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/systems/simple_renderer_system.hpp" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="ProjectApplicationVersion">
     <option name="ide" value="CLion" />
-    <option name="majorVersion" value="2024" />
-    <option name="minorVersion" value="3.5" />
+    <option name="majorVersion" value="2025" />
+    <option name="minorVersion" value="1" />
     <option name="productBranch" value="Classic" />
   </component>
   <component name="ProjectColorInfo">{
-  &quot;customColor&quot;: &quot;&quot;,
-  &quot;associatedIndex&quot;: 5
+  &quot;associatedIndex&quot;: 3
 }</component>
-  <component name="ProjectId" id="2upeRoflHJbCdY3pxKvLzogEHbh" />
+  <component name="ProjectId" id="2us8eItkQRcY1JD4Zn7Tz1Osm9r" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -109,6 +97,7 @@
   "keyToString": {
     "CMake Application.MinimalEngine.executor": "Run",
     "CMake Application.Shaders.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.RadMigrateCodeStyle": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.cidr.known.project.marker": "true",
@@ -118,7 +107,7 @@
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
     "git-widget-placeholder": "Rendering",
-    "last_opened_file_path": "C:/Users/rohit/Study/Sem 4/689/Game Engine Project/Minimal Engine/src/systems",
+    "last_opened_file_path": "C:/Users/rohit/Study/Sem 4/689/Game Engine Project/Minimal Engine",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -128,14 +117,6 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\rohit\Study\Sem 4\689\Game Engine Project\Minimal Engine\src\systems" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\rohit\Study\Sem 4\689\Game Engine Project\Minimal Engine\src\systems" />
-    </key>
-  </component>
   <component name="RunManager" selected="CMake Application.MinimalEngine">
     <configuration name="MinimalEngine" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="MinimalEngine" TARGET_NAME="MinimalEngine" CONFIG_NAME="Debug-Visual Studio" RUN_TARGET_PROJECT_NAME="MinimalEngine" RUN_TARGET_NAME="MinimalEngine">
       <method v="2">
@@ -157,16 +138,17 @@
       <item itemvalue="CMake Application.Shaders" />
     </list>
   </component>
-  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="513207a9-b29f-4f47-8450-93cac6ec8b2c" name="Changes" comment="" />
-      <created>1742949938734</created>
+      <changelist id="ff6dfa8c-eb6c-408e-98c4-a7d0c45c3a71" name="Changes" comment="" />
+      <created>1743026015823</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1742949938734</updated>
-      <workItem from="1742949940186" duration="1254000" />
-      <workItem from="1742951239268" duration="4273000" />
+      <updated>1743026015823</updated>
+      <workItem from="1743026017692" duration="1431000" />
+      <workItem from="1743028543121" duration="3439000" />
+      <workItem from="1743032061978" duration="1240000" />
+      <workItem from="1743033668647" duration="2092000" />
     </task>
     <servers />
   </component>
