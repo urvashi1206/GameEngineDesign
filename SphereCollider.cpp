@@ -1,19 +1,18 @@
 #include "SphereCollider.h"
 #include "Debug.h"
 
-SphereCollider::SphereCollider(Transform* transform, Vector offset, float radius, bool showDebug) : 
+SphereCollider::SphereCollider(Vector offset, float radius, bool showDebug) : 
 	offset(offset), radius(radius), showDebug(showDebug)
 {
-    this->transform = transform;
-    colliderType = ColliderType::Sphere;
+    colliderType = ColliderType::Convex;
 
     if(showDebug)
-        Debug::CreateDebugSphere(transform, offset, radius);
+        Debug::CreateDebugSphere(GetTransform(), offset, radius);
 }
 
 Vector SphereCollider::GJK_Support(const Vector& direction) const
 {
-    return transform->GetLocation() + offset + direction.Normalized() * radius;
+    return GetTransform()->GetLocation() + offset + direction.Normalized() * radius;
 }
 std::vector<Vector> SphereCollider::EPA_GetAlignedFace(const Vector& direction, Vector& out_faceNormal) const
 {

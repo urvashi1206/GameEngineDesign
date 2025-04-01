@@ -20,10 +20,10 @@ public:
 
 	Vector operator*(const Vector& vector) const;
 
+	operator DirectX::XMFLOAT4X4() const;
+
 	Matrix4x4 Transpose() const;
 	Matrix4x4 Inverse() const;
-
-	DirectX::XMFLOAT4X4 ToXMFLOAT4X4() const;
 
 	static Matrix4x4 Identity()
 	{
@@ -35,4 +35,6 @@ public:
 	};
 
 	static Matrix4x4 Scale(const Vector& scale);
+
+	static Matrix4x4 Transform(const Vector& translation, const Vector& rotation, const Vector& scale);
 };

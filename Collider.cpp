@@ -4,11 +4,16 @@ Collider::Collider() : colliderType(ColliderType::None)
 {
 
 }
-Collider::Collider(Transform* transform) : colliderType(ColliderType::None), transform(transform)
+Collider::~Collider()
 {
 
 }
-Collider::~Collider()
+
+void Collider::Initialize()
+{
+
+}
+void Collider::Update(float deltaTime)
 {
 
 }

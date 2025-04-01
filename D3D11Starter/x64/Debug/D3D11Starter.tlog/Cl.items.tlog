@@ -1,10 +1,13 @@
 C:\Users\krims\Documents\GitHub\GameEngineDesign\BoxCollider.cpp;C:\Users\krims\Documents\GitHub\GameEngineDesign\D3D11Starter\x64\Debug\BoxCollider.obj
 C:\Users\krims\Documents\GitHub\GameEngineDesign\Camera.cpp;C:\Users\krims\Documents\GitHub\GameEngineDesign\D3D11Starter\x64\Debug\Camera.obj
 C:\Users\krims\Documents\GitHub\GameEngineDesign\Collider.cpp;C:\Users\krims\Documents\GitHub\GameEngineDesign\D3D11Starter\x64\Debug\Collider.obj
+C:\Users\krims\Documents\GitHub\GameEngineDesign\Color.cpp;C:\Users\krims\Documents\GitHub\GameEngineDesign\D3D11Starter\x64\Debug\Color.obj
+C:\Users\krims\Documents\GitHub\GameEngineDesign\Component.cpp;C:\Users\krims\Documents\GitHub\GameEngineDesign\D3D11Starter\x64\Debug\Component.obj
+C:\Users\krims\Documents\GitHub\GameEngineDesign\CompositeCollider.cpp;C:\Users\krims\Documents\GitHub\GameEngineDesign\D3D11Starter\x64\Debug\CompositeCollider.obj
 C:\Users\krims\Documents\GitHub\GameEngineDesign\ConvexCollider.cpp;C:\Users\krims\Documents\GitHub\GameEngineDesign\D3D11Starter\x64\Debug\ConvexCollider.obj
 C:\Users\krims\Documents\GitHub\GameEngineDesign\Debug.cpp;C:\Users\krims\Documents\GitHub\GameEngineDesign\D3D11Starter\x64\Debug\Debug.obj
-C:\Users\krims\Documents\GitHub\GameEngineDesign\DebugEntity.cpp;C:\Users\krims\Documents\GitHub\GameEngineDesign\D3D11Starter\x64\Debug\DebugEntity.obj
 C:\Users\krims\Documents\GitHub\GameEngineDesign\Entity.cpp;C:\Users\krims\Documents\GitHub\GameEngineDesign\D3D11Starter\x64\Debug\Entity.obj
+C:\Users\krims\Documents\GitHub\GameEngineDesign\EntityManager.cpp;C:\Users\krims\Documents\GitHub\GameEngineDesign\D3D11Starter\x64\Debug\EntityManager.obj
 C:\Users\krims\Documents\GitHub\GameEngineDesign\Game.cpp;C:\Users\krims\Documents\GitHub\GameEngineDesign\D3D11Starter\x64\Debug\Game.obj
 C:\Users\krims\Documents\GitHub\GameEngineDesign\Graphics.cpp;C:\Users\krims\Documents\GitHub\GameEngineDesign\D3D11Starter\x64\Debug\Graphics.obj
 C:\Users\krims\Documents\GitHub\GameEngineDesign\ImGui\imgui.cpp;C:\Users\krims\Documents\GitHub\GameEngineDesign\D3D11Starter\x64\Debug\imgui.obj
@@ -15,6 +18,7 @@ C:\Users\krims\Documents\GitHub\GameEngineDesign\ImGui\imgui_impl_win32.cpp;C:\U
 C:\Users\krims\Documents\GitHub\GameEngineDesign\ImGui\imgui_tables.cpp;C:\Users\krims\Documents\GitHub\GameEngineDesign\D3D11Starter\x64\Debug\imgui_tables.obj
 C:\Users\krims\Documents\GitHub\GameEngineDesign\ImGui\imgui_widgets.cpp;C:\Users\krims\Documents\GitHub\GameEngineDesign\D3D11Starter\x64\Debug\imgui_widgets.obj
 C:\Users\krims\Documents\GitHub\GameEngineDesign\Input.cpp;C:\Users\krims\Documents\GitHub\GameEngineDesign\D3D11Starter\x64\Debug\Input.obj
+C:\Users\krims\Documents\GitHub\GameEngineDesign\IntVector.cpp;C:\Users\krims\Documents\GitHub\GameEngineDesign\D3D11Starter\x64\Debug\IntVector.obj
 C:\Users\krims\Documents\GitHub\GameEngineDesign\Main.cpp;C:\Users\krims\Documents\GitHub\GameEngineDesign\D3D11Starter\x64\Debug\Main.obj
 C:\Users\krims\Documents\GitHub\GameEngineDesign\Material.cpp;C:\Users\krims\Documents\GitHub\GameEngineDesign\D3D11Starter\x64\Debug\Material.obj
 C:\Users\krims\Documents\GitHub\GameEngineDesign\Matrix.cpp;C:\Users\krims\Documents\GitHub\GameEngineDesign\D3D11Starter\x64\Debug\Matrix.obj
@@ -22,6 +26,8 @@ C:\Users\krims\Documents\GitHub\GameEngineDesign\Mesh.cpp;C:\Users\krims\Documen
 C:\Users\krims\Documents\GitHub\GameEngineDesign\PathHelpers.cpp;C:\Users\krims\Documents\GitHub\GameEngineDesign\D3D11Starter\x64\Debug\PathHelpers.obj
 C:\Users\krims\Documents\GitHub\GameEngineDesign\PhysicsEntity.cpp;C:\Users\krims\Documents\GitHub\GameEngineDesign\D3D11Starter\x64\Debug\PhysicsEntity.obj
 C:\Users\krims\Documents\GitHub\GameEngineDesign\PhysicsSubsystem.cpp;C:\Users\krims\Documents\GitHub\GameEngineDesign\D3D11Starter\x64\Debug\PhysicsSubsystem.obj
+C:\Users\krims\Documents\GitHub\GameEngineDesign\Renderer.cpp;C:\Users\krims\Documents\GitHub\GameEngineDesign\D3D11Starter\x64\Debug\Renderer.obj
+C:\Users\krims\Documents\GitHub\GameEngineDesign\ResourceManager.cpp;C:\Users\krims\Documents\GitHub\GameEngineDesign\D3D11Starter\x64\Debug\ResourceManager.obj
 C:\Users\krims\Documents\GitHub\GameEngineDesign\Rigidbody.cpp;C:\Users\krims\Documents\GitHub\GameEngineDesign\D3D11Starter\x64\Debug\Rigidbody.obj
 C:\Users\krims\Documents\GitHub\GameEngineDesign\SimpleShader.cpp;C:\Users\krims\Documents\GitHub\GameEngineDesign\D3D11Starter\x64\Debug\SimpleShader.obj
 C:\Users\krims\Documents\GitHub\GameEngineDesign\Skybox.cpp;C:\Users\krims\Documents\GitHub\GameEngineDesign\D3D11Starter\x64\Debug\Skybox.obj
@@ -29,6 +35,8 @@ C:\Users\krims\Documents\GitHub\GameEngineDesign\SphereCollider.cpp;C:\Users\kri
 C:\Users\krims\Documents\GitHub\GameEngineDesign\Transform.cpp;C:\Users\krims\Documents\GitHub\GameEngineDesign\D3D11Starter\x64\Debug\Transform.obj
 C:\Users\krims\Documents\GitHub\GameEngineDesign\Vector.cpp;C:\Users\krims\Documents\GitHub\GameEngineDesign\D3D11Starter\x64\Debug\Vector.obj
 C:\Users\krims\Documents\GitHub\GameEngineDesign\Vertex.cpp;C:\Users\krims\Documents\GitHub\GameEngineDesign\D3D11Starter\x64\Debug\Vertex.obj
-C:\Users\krims\Documents\GitHub\GameEngineDesign\Voxel.cpp;C:\Users\krims\Documents\GitHub\GameEngineDesign\D3D11Starter\x64\Debug\Voxel.obj
+C:\Users\krims\Documents\GitHub\GameEngineDesign\VoxelCollider.cpp;C:\Users\krims\Documents\GitHub\GameEngineDesign\D3D11Starter\x64\Debug\VoxelCollider.obj
+C:\Users\krims\Documents\GitHub\GameEngineDesign\VoxelDestructable.cpp;C:\Users\krims\Documents\GitHub\GameEngineDesign\D3D11Starter\x64\Debug\VoxelDestructable.obj
 C:\Users\krims\Documents\GitHub\GameEngineDesign\VoxelGrid.cpp;C:\Users\krims\Documents\GitHub\GameEngineDesign\D3D11Starter\x64\Debug\VoxelGrid.obj
+C:\Users\krims\Documents\GitHub\GameEngineDesign\VoxelRenderer.cpp;C:\Users\krims\Documents\GitHub\GameEngineDesign\D3D11Starter\x64\Debug\VoxelRenderer.obj
 C:\Users\krims\Documents\GitHub\GameEngineDesign\Window.cpp;C:\Users\krims\Documents\GitHub\GameEngineDesign\D3D11Starter\x64\Debug\Window.obj

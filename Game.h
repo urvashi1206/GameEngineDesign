@@ -146,13 +146,10 @@ private:
 
 	std::vector<std::shared_ptr<Material>> materials;
 	std::vector<std::shared_ptr<Mesh>> meshes;
-	std::vector<std::shared_ptr<Entity>> entities;
 
 	std::vector<std::shared_ptr<Entity>> wireframes;
 
 	std::vector<Light> lights;
-
-	PhysicsSubsystem physics;
 
 	float totalTime;
 

@@ -8,22 +8,23 @@
 
 struct DebugMesh
 {
-	//Transform* transform;
-	const Vector* location;
-	const Vector* rotation;
-	const Vector* scale;
+	Vector location;
+	Vector rotation;
+	Vector scale;
 	std::shared_ptr<Mesh> mesh;
 
 	DebugMesh(Transform* transform, std::shared_ptr<Mesh> mesh) : 
-		location(transform->GetLocationPtr()), rotation(transform->GetPitchYawRollPtr()), scale(transform->GetScalePtr()), mesh(mesh)
+		location(transform->GetLocation()), rotation(transform->GetPitchYawRoll()), scale(transform->GetScale()), mesh(mesh)
 	{
 		
 	}
+	DebugMesh(Vector location, Vector rotation, Vector scale, std::shared_ptr<Mesh> mesh) :
+		location(location), rotation(rotation), scale(scale), mesh(mesh)
+	{
 
-	virtual Transform GetTransform() { return Transform(
-		Vector(location->x, location->y, location->z),
-		Vector(rotation->x, rotation->y, rotation->z, rotation->w),
-		Vector(scale->x, scale->y, scale->z)); };
+	}
+
+	virtual Matrix4x4 GetWorldMatrix() { return Matrix4x4::Transform(location, rotation, scale); };
 };
 
 struct DebugBox : DebugMesh
@@ -38,22 +39,15 @@ struct DebugBox : DebugMesh
 	{
 
 	}
-	DebugBox(std::shared_ptr<Mesh> mesh, Vector location, Vector rotation, Vector halfSize) : DebugMesh(nullptr, mesh),
+	DebugBox(std::shared_ptr<Mesh> mesh, Vector location, Vector rotation, Vector halfSize) : DebugMesh(location, rotation, halfSize, mesh),
 		offset(location), rotationOffset(rotation), scaleOffset(halfSize), halfSize(halfSize)
 	{
 
 	}
 
-	Transform GetTransform() override
+	Matrix4x4 GetWorldMatrix() override
 	{
-		if(location && rotation && scale)
-		{
-			Transform transform = DebugMesh::GetTransform();
-			transform.SetScale(halfSize);
-
-			return transform;
-		}
-		else return Transform(offset, rotationOffset, scaleOffset);
+		return DebugMesh::GetWorldMatrix();
 	};
 };
 struct DebugSphere : DebugMesh
@@ -74,16 +68,9 @@ struct DebugSphere : DebugMesh
 
 	}
 
-	Transform GetTransform() override
+	Matrix4x4 GetWorldMatrix() override
 	{
-		if(location && rotation && scale)
-		{
-			Transform transform = DebugMesh::GetTransform();
-			transform.SetScale(radius);
-
-			return transform;
-		}
-		else return Transform(offset, rotationOffset, scaleOffset);
+		return DebugMesh::GetWorldMatrix();
 	};
 };
 

@@ -1,5 +1,10 @@
 #include "Game.h"
+
+#include "ResourceManager.h"
 #include "Graphics.h"
+#include "PhysicsSubsystem.h"
+#include "EntityManager.h"
+
 #include "Vertex.h"
 #include "Input.h"
 #include "PathHelpers.h"
@@ -9,6 +14,10 @@
 #include "BoxCollider.h"
 #include "SphereCollider.h"
 #include "Debug.h"
+#include "VoxelGrid.h"
+#include "VoxelRenderer.h"
+#include "CompositeCollider.h"
+#include "VoxelCollider.h"
 
 // From DirectX Tool Kit
 #include "WICTextureLoader.h"
@@ -32,6 +41,10 @@ using namespace DirectX;
 // --------------------------------------------------------
 void Game::Initialize()
 {
+	ResourceManager::Startup();
+	PhysicsSubsystem::Startup();
+	EntityManager::Startup();
+
 	// Helper methods for loading shaders, creating some basic
 	// geometry to draw and some simple camera matrices.
 	//  - You'll be expanding and/or replacing these later
@@ -90,6 +103,10 @@ void Game::Initialize()
 // --------------------------------------------------------
 Game::~Game()
 {
+	EntityManager::Shutdown();
+	PhysicsSubsystem::Shutdown();
+	ResourceManager::Shutdown();
+
 	// Clean up for ImGui
 	ImGui_ImplDX11_Shutdown();
 	ImGui_ImplWin32_Shutdown();
@@ -326,26 +343,26 @@ void Game::CreateMaterials()
 	materials[5]->AddSampler("BasicSampler", sampler);
 	materials[5]->AddSampler("ShadowSampler", shadowSampler);
 
-	materials[6]->AddTextureSRV("AlbedoTexture", textureSRVs[L"wood_albedo.png"]);
-	materials[6]->AddTextureSRV("NormalMap", textureSRVs[L"wood_normals.png"]);
-	materials[6]->AddTextureSRV("RoughnessMap", textureSRVs[L"wood_roughness.png"]);
-	materials[6]->AddTextureSRV("MetalnessMap", textureSRVs[L"wood_metal.png"]);
+	materials[6]->AddTextureSRV("AlbedoTexture", ResourceManager::GetTexture(L"PBR\\wood_albedo"));
+	materials[6]->AddTextureSRV("NormalMap", ResourceManager::GetTexture(L"PBR\\wood_normals"));
+	materials[6]->AddTextureSRV("RoughnessMap", ResourceManager::GetTexture(L"PBR\\wood_roughness"));
+	materials[6]->AddTextureSRV("MetalnessMap", ResourceManager::GetTexture(L"PBR\\wood_metal"));
 	materials[6]->AddTextureSRV("ShadowMap", shadowSRV);
 	materials[6]->AddSampler("BasicSampler", sampler);
 	materials[6]->AddSampler("ShadowSampler", shadowSampler);
 
-	materials[7]->AddTextureSRV("AlbedoTexture", textureSRVs[L"wood_albedo.png"]);
-	materials[7]->AddTextureSRV("NormalMap", textureSRVs[L"wood_normals.png"]);
-	materials[7]->AddTextureSRV("RoughnessMap", textureSRVs[L"wood_roughness.png"]);
-	materials[7]->AddTextureSRV("MetalnessMap", textureSRVs[L"wood_metal.png"]);
+	materials[7]->AddTextureSRV("AlbedoTexture", ResourceManager::GetTexture(L"PBR\\wood_albedo"));
+	materials[7]->AddTextureSRV("NormalMap", ResourceManager::GetTexture(L"PBR\\wood_normals"));
+	materials[7]->AddTextureSRV("RoughnessMap", ResourceManager::GetTexture(L"PBR\\wood_roughness"));
+	materials[7]->AddTextureSRV("MetalnessMap", ResourceManager::GetTexture(L"PBR\\wood_metal"));
 	materials[7]->AddTextureSRV("ShadowMap", shadowSRV);
 	materials[7]->AddSampler("BasicSampler", sampler);
 	materials[7]->AddSampler("ShadowSampler", shadowSampler);
 
-	materials[8]->AddTextureSRV("AlbedoTexture", textureSRVs[L"KhaimBook.png"]);
-	materials[8]->AddTextureSRV("NormalMap", textureSRVs[L"wood_normals.png"]);
-	materials[8]->AddTextureSRV("RoughnessMap", textureSRVs[L"wood_roughness.png"]);
-	materials[8]->AddTextureSRV("MetalnessMap", textureSRVs[L"wood_metal.png"]);
+	materials[8]->AddTextureSRV("AlbedoTexture", ResourceManager::GetTexture(L"KhaimBook"));
+	materials[8]->AddTextureSRV("NormalMap", ResourceManager::GetTexture(L"PBR\\wood_normals"));
+	materials[8]->AddTextureSRV("RoughnessMap", ResourceManager::GetTexture(L"PBR\\wood_roughness"));
+	materials[8]->AddTextureSRV("MetalnessMap", ResourceManager::GetTexture(L"PBR\\wood_metal"));
 	materials[8]->AddTextureSRV("ShadowMap", shadowSRV);
 	materials[8]->AddSampler("BasicSampler", sampler);
 	materials[8]->AddSampler("ShadowSampler", shadowSampler);
@@ -381,33 +398,40 @@ void Game::CreateGeometry()
 
 	/* Create entities */
 
-	std::shared_ptr<Entity> floor = std::make_shared<Entity>(meshes[5], materials[7]);
-	floor->GetTransform()->MoveAbsolute(Vector(0, -10, 0));
-	floor->GetTransform()->Scale(Vector(5, 5, 5));
-	entities.push_back(floor);
+	Entity* floor = new Entity();
+	floor->AddComponent(new Transform(Vector(0, -10, 0), Vector::Zero(), Vector(5, 5, 5)));
+	floor->AddComponent(new Renderer(meshes[5], materials[7]));
+	floor->AddComponent(new BoxCollider(Vector(0, 0, 0), Vector(5.0f, 0.25f, 5.0f), true));
+	floor->AddComponent(new Rigidbody(Vector::Zero(), true));
+	EntityManager::AddEntity(floor);
 
-	physics.AddRigidbody(Rigidbody(floor->GetTransform(), new BoxCollider(floor->GetTransform(), Vector(0, 0, 0), Vector(5.0f, 0.25f, 5.0f), true), Vector(), false, 1000000));
+	Entity* newEntity = new Entity();
+	newEntity->AddComponent(new Transform(Vector(0, 1.00f, 0.00f), Vector(0, 45, 40), Vector(0.5f, 0.5f, 0.5f)));
+	newEntity->AddComponent(new Renderer(meshes[7], materials[8]));
+	newEntity->AddComponent(new BoxCollider(Vector(0, 0, 0), Vector(0.75f, 0.5f, 0.75f), true));
+	//newEntity->AddComponent(new CompositeCollider({ new BoxCollider(Vector(0, 0, 0), Vector(0.75f, 0.5f, 0.75f), true) }));
+	newEntity->AddComponent(new Rigidbody(Vector(0, -9.81f, 0)));
+	EntityManager::AddEntity(newEntity);
 
-	std::shared_ptr<Entity> newEntity = std::make_shared<Entity>(meshes[7], materials[8]);
-	newEntity->GetTransform()->MoveAbsolute(Vector(0, 1, 4.75f));
-	newEntity->GetTransform()->SetRotationPitchYawRoll(Vector(0, 45, 40));
-	newEntity->GetTransform()->Scale(Vector(0.5f, 0.5f, 0.5f));
-	entities.push_back(newEntity);
+	srand(time(NULL));
 
-	BoxCollider* collider = new BoxCollider(newEntity->GetTransform(), Vector(0, 0, 0), Vector(0.75f, 0.5f, 0.75f), true);
-	physics.AddRigidbody(Rigidbody(newEntity->GetTransform(), collider, Vector(0, -9.81f, 0)));
+	VoxelGrid* grid = ResourceManager::LoadVoxelGrid("KhaimBook7.png", 12, "palette.png");
+	grid->GenerateCollisionOctree();
+	grid->GenerateColorOctree();
 
-	std::shared_ptr<Entity> newEntity2 = std::make_shared<Entity>(meshes[7], materials[8]);
-	newEntity2->GetTransform()->MoveAbsolute(Vector(0, -1.8f, 2));
-	newEntity2->GetTransform()->SetRotation(Vector(0, 0, 0, 1));
-	newEntity2->GetTransform()->Scale(Vector(0.5f, 0.5f, 0.5f));
-	//entities.push_back(newEntity2);
+	meshes.push_back(grid->GenerateMesh(materials[8].get()));
+	grid->GenerateCollisionOctree();
 
-	//SphereCollider* sCollider = new SphereCollider(newEntity2->GetTransform(), Vector(), 0.5f, true);
-	//physics.AddRigidbody(Rigidbody(newEntity2->GetTransform(), sCollider, Vector(0, -9.81f, 0)));
-	
-	//BoxCollider* collider2 = new BoxCollider(newEntity2->GetTransform(), Vector(0, 0, 0), Vector(1.75f, 0.5f, 1.75f), true);
-	//physics.AddRigidbody(Rigidbody(newEntity2->GetTransform(), collider2, Vector(0, 0, 0), false, 10000));
+	Entity* newEntity3 = new Entity();
+	newEntity3->AddComponent(new Transform(Vector(0, 3, 0), Vector::Zero(), Vector::One()));
+	//newEntity3->AddComponent(new Renderer(meshes[8], materials[8]));
+	newEntity3->AddComponent(new VoxelRenderer(grid, materials[8]));
+	//newEntity3->AddComponent(grid->GetBoxColliderHull());
+	//newEntity3->AddComponent(new CompositeCollider({ grid->GetBoxColliderHull() }));
+	newEntity3->AddComponent(new VoxelCollider(grid));
+	newEntity3->AddComponent(new Rigidbody(Vector(0, -9.81f, 0)));
+	//colliderl = new BoxCollider(newEntity3->GetTransform(), Vector(0, 0, 0), Vector(0.75f, 0.5f, 0.75f), true);
+	EntityManager::AddEntity(newEntity3);
 }
 
 void Game::CreateLights()
@@ -640,13 +664,19 @@ void Game::Update(float deltaTime, float totalTime)
 		Window::Quit();
 
 	if(Input::KeyDown('P'))
-		physics.Pause();
+		PhysicsSubsystem::Pause();
 	if(Input::KeyDown('O'))
-		physics.Unpause();
+		PhysicsSubsystem::Unpause();
 
 	BuildUI();
 
-	physics.Update(deltaTime);
+	for(int x = 0 ; x < 5; x++)
+		for(int y = 0 ; y < 5; y++)
+			for(int z = 0 ; z < 5; z++)
+				Debug::CreateWireframe_Temp(Vector(x, y, z), Vector(), Vector::One() * 0.1f);
+
+	PhysicsSubsystem::Update(deltaTime);
+	EntityManager::Update(deltaTime);
 
 	GetCamera()->Update(deltaTime);
 }
@@ -685,9 +715,9 @@ void Game::BuildUI()
 	if(ImGui::Button("Toggle Demo Window"))
 		isDemoWindowHidden = !isDemoWindowHidden;
 
-	static Vector supportDirection(1, 1, 1);
-	ImGui::DragFloat3("Support Direction", &supportDirection.x, 0.1f, -1, 1);
-	Vector supportPoint = ((ConvexCollider*) physics.GetRigidbody(1).GetCollider())->GJK_Support(supportDirection);
+	//static Vector supportDirection(1, 1, 1);
+	//ImGui::DragFloat3("Support Direction", &supportDirection.x, 0.1f, -1, 1);
+	//Vector supportPoint = ((ConvexCollider*) physics.GetRigidbody(1).GetCollider())->GJK_Support(supportDirection);
 	//Debug::CreateWireframe_Temp(supportPoint);
 
 	if(ImGui::TreeNode("Post-Process Effects"))
@@ -771,16 +801,16 @@ void Game::BuildUI()
 	if(ImGui::TreeNode("Entities"))
 	{
 		// Display the transform information for each entity
-		for(int i = 0; i < entities.size(); i++)
+		for(int i = 0; i < EntityManager::GetEntities().size(); i++)
 		{
-			std::shared_ptr<Entity> entity = entities[i];
+			Entity* entity = EntityManager::GetEntities()[i];
 
-			ImGui::PushID(entity.get());
+			ImGui::PushID(entity);
 			if(ImGui::TreeNode("Entity", "Entity %i", i))
 			{
-				ImGui::Text("Mesh: %s", entity->GetMesh()->GetName().c_str());
+				ImGui::Text("Mesh: %s", entity->GetComponent<Renderer>()->GetMesh()->GetName().c_str());
 
-				Transform* transform = entity->GetTransform();
+				Transform* transform = entity->GetComponent<Transform>();
 
 				Vector location = transform->GetLocation();
 				Vector rotation = transform->GetPitchYawRoll();
@@ -793,7 +823,7 @@ void Game::BuildUI()
 				if(ImGui::DragFloat3("Scale", &scale.x, 0.1f))
 					transform->SetScale(scale);
 
-				ImGui::Text("Mesh Index Count: %i", entity->GetMesh()->GetIndexCount());
+				ImGui::Text("Mesh Index Count: %i", entity->GetComponent<Renderer>()->GetMesh()->GetIndexCount());
 
 				ImGui::TreePop();
 			}
@@ -875,13 +905,13 @@ void Game::Draw(float deltaTime, float totalTime)
 		shadowVertexShader->SetMatrix4x4("view", shadowViewMatrix);
 		shadowVertexShader->SetMatrix4x4("projection", shadowProjectionMatrix);
 		// Loop and draw all entities
-		for(auto& e : entities)
+		for(auto& e : EntityManager::GetEntities())
 		{
-			shadowVertexShader->SetMatrix4x4("world", e->GetTransform()->GetWorldMatrix());
+			shadowVertexShader->SetMatrix4x4("world", e->GetComponent<Transform>()->GetWorldMatrix());
 			shadowVertexShader->CopyAllBufferData();
 
 			// Draw the mesh directly to avoid the entity's material
-			e->GetMesh()->Draw();
+			e->GetComponent<Renderer>()->GetMesh()->Draw();
 		}
 
 		Graphics::Context->RSSetState(0);
@@ -898,17 +928,17 @@ void Game::Draw(float deltaTime, float totalTime)
 	// - Other Direct3D calls will also be necessary to do more complex things
 	{
 		// Draw all entities
-		for(std::shared_ptr<Entity> e : entities)
+		for(Entity* e : EntityManager::GetEntities())
 		{
 			// Give light data for main (shadow-casting) directional light
-			e->GetMaterial()->GetVertexShader()->SetMatrix4x4("lightView", shadowViewMatrix);
-			e->GetMaterial()->GetVertexShader()->SetMatrix4x4("lightProj", shadowProjectionMatrix);
+			e->GetComponent<Renderer>()->GetMaterial()->GetVertexShader()->SetMatrix4x4("lightView", shadowViewMatrix);
+			e->GetComponent<Renderer>()->GetMaterial()->GetVertexShader()->SetMatrix4x4("lightProj", shadowProjectionMatrix);
 
 			// Give all light data
-			e->GetMaterial()->GetPixelShader()->SetInt("lightCount", (int) lights.size());
-			e->GetMaterial()->GetPixelShader()->SetData("lights", &lights[0], sizeof(Light) * (int) lights.size());
+			e->GetComponent<Renderer>()->GetMaterial()->GetPixelShader()->SetInt("lightCount", (int) lights.size());
+			e->GetComponent<Renderer>()->GetMaterial()->GetPixelShader()->SetData("lights", &lights[0], sizeof(Light) * (int)lights.size());
 
-			e->Draw(GetCamera(), totalTime);
+			e->GetComponent<Renderer>()->Draw(GetCamera(), totalTime);
 		}
 
 		// Draw wireframes
@@ -918,7 +948,7 @@ void Game::Draw(float deltaTime, float totalTime)
 
 		for(std::shared_ptr<Entity> e : wireframes)
 		{
-			e->Draw(GetCamera(), totalTime);
+			e->GetComponent<Renderer>()->Draw(GetCamera(), totalTime);
 		}
 
 		Debug::DrawAllWireframes(cameras[activeCameraIndex]);
@@ -1011,6 +1041,3 @@ void Game::Draw(float deltaTime, float totalTime)
 		Graphics::Context->PSSetShaderResources(0, 128, nullSRVs);
 	}
 }
-
-
-

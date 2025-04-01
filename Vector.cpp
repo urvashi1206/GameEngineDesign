@@ -1,9 +1,14 @@
 #include "Vector.h"
+#include "IntVector.h"
 
 #include <math.h>
 
 Vector::Vector(float x, float y, float z, float w) : 
 	x(x), y(y), z(z), w(w)
+{
+	
+}
+Vector::Vector(IntVector vector) : x(vector.x), y(vector.y), z(vector.z), w(vector.w)
 {
 	
 }
@@ -134,8 +139,16 @@ Vector Vector::ProjectOntoPlane(const Vector& point, const Vector& normal) const
 	return point + dir;
 }
 
+Vector Vector::Reflect(const Vector& axis, const Vector& origin) const
+{
+	return *this + (origin - *this).ProjectOntoPlane(axis) * 2;
+}
+
 Vector Vector::Normalized() const
 {
+	if(*this == Vector::Zero())
+		return Vector::Zero();
+
 	return Vector(x, y, z, w) / GetMagnitude();
 }
 
@@ -166,6 +179,11 @@ void Vector::GetOrthogonalPlane(Vector& out_u, Vector& out_v)
 
 	out_u = this->Cross(referenceVector);
 	out_v = this->Cross(out_u);
+}
+
+Vector Vector::Ceil() const
+{
+	return Vector(ceilf(x), ceilf(y), ceilf(z), ceilf(w));
 }
 
 Vector Vector::Lerp(const Vector& a, const Vector& b, float t)

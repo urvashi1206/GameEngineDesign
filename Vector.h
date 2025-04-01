@@ -4,12 +4,15 @@
 
 #include <DirectXMath.h>
 
+struct IntVector;
+
 struct Vector
 {
 public:
 	float x, y, z, w;
 
 	Vector(float x = 0, float y = 0, float z = 0, float w = 0);
+	Vector(IntVector vector);
 	Vector(DirectX::XMFLOAT3 vector);
 	Vector(DirectX::XMFLOAT4 vector);
 	~Vector();
@@ -39,6 +42,8 @@ public:
 	Vector ProjectOntoPlane(const Vector& normal) const;
 	Vector ProjectOntoPlane(const Vector& point, const Vector& normal) const;
 
+	Vector Reflect(const Vector& axis, const Vector& origin) const;
+
 	Vector Normalized() const;
 
 	float GetMagnitude() const;
@@ -49,7 +54,15 @@ public:
 
 	void GetOrthogonalPlane(Vector& out_u, Vector& out_v);
 
+	Vector Ceil() const;
+
 	static Vector Lerp(const Vector& a, const Vector& b, float t);
+
+	static Vector Zero() { return Vector(0, 0, 0); };
+	static Vector One() { return Vector(1, 1, 1); };
+	static Vector Right() { return Vector(1, 0, 0); };
+	static Vector Up() { return Vector(0, 1, 0); };
+	static Vector Forward() { return Vector(0, 0, 1); };
 };
 
 namespace std

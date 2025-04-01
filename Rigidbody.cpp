@@ -2,10 +2,13 @@
 
 #include <iostream>
 
+#include "ConvexCollider.h"
+#include "PhysicsSubsystem.h"
+
 #include "DirectXMath.h"
 
-Rigidbody::Rigidbody(Transform* transform, Collider* collider, Vector gravity, bool isStatic, float mass) : 
-	transform(transform), collider(collider), gravity(gravity), isStatic(isStatic), mass(mass), velocity(), angularVelocity(), netForce(), netTorque()
+Rigidbody::Rigidbody(Vector gravity, bool isStatic, float mass) : 
+	gravity(gravity), isStatic(isStatic), mass(mass), velocity(), angularVelocity(), netForce(), netTorque()
 {
 
 }
@@ -16,29 +19,20 @@ Rigidbody::~Rigidbody()
 
 void Rigidbody::UpdatePhysics(float deltaTime)
 {
-	/*DirectX::XMFLOAT3 f3_axis(1, 1, 1);
-	DirectX::XMVECTOR q = DirectX::XMQuaternionRotationAxis(DirectX::XMLoadFloat3(&f3_axis), 1);
+	// Minimum velocity allowed for a body's velocity to be considered non-zero. Basically acts as a global static coefficient of friction.
+	static const float VELOCITY_THRESHOLD = 0.02f;
 
-	DirectX::XMFLOAT4 f4_q;
-	DirectX::XMStoreFloat4(&f4_q, q);
-	angularVelocity = f4_q;*/
+	// Velocity threshold to prevent small movements from accumulating
+    if(velocity.GetMagnitude() < VELOCITY_THRESHOLD)
+        velocity = Vector::Zero();
+    if(angularVelocity.GetMagnitude() < VELOCITY_THRESHOLD)
+        angularVelocity = Vector::Zero();
 
-	//transform.MoveAbsolute(velocity.x, velocity.y, deltaTime);
-	transform->MoveAbsolute(velocity * deltaTime);
-	//transform->RotateAxisAngle(Vector(1, 1, 1), deltaTime);
-	transform->RotateAxisAngle(angularVelocity * deltaTime);
-	
-	if(!isStatic)
-	{
-		auto k = transform->GetLocation();
-		/*std::cout << "Velocity: " << velocity.x << " " << velocity.y << " " << velocity.z << std::endl;
-		std::cout << "Position: " << k.x << " " << k.y << " " << k.z << std::endl;*/
-	}
+	GetTransform()->MoveAbsolute(velocity * deltaTime);
+	GetTransform()->RotateAxisAngle(angularVelocity * deltaTime);
 
 	velocity += netForce * deltaTime;
 	angularVelocity += netTorque * deltaTime;
-
-	//transform.MoveAbsolute(1, 1, 1);
 
 	netForce = Vector();
 	netTorque = Vector();
@@ -63,9 +57,32 @@ void Rigidbody::ApplyGravity()
 	AddForce(gravity);
 }
 
+void Rigidbody::ApplyImpulse(const Vector& impulse, const Vector& location)
+{
+	if(isStatic)
+		return;
+
+	// Apply linear impulse
+	velocity += impulse / mass;
+	
+	Vector r = location - ((ConvexCollider*) GetCollider())->GetCenter();
+
+	// Apply angular impulse
+	angularVelocity += GetInertiaTensor().Inverse() * r.Cross(impulse);
+}
+
+void Rigidbody::Initialize()
+{
+	PhysicsSubsystem::AddRigidbody(this);
+}
+void Rigidbody::Update(float deltaTime)
+{
+
+}
+
 Matrix4x4 Rigidbody::GetInertiaTensor() const
 {
-	Matrix4x4 inertiaTensor = collider->GetInertiaTensor(mass);
+	Matrix4x4 inertiaTensor = GetCollider()->GetInertiaTensor(mass);
 
-	return transform->GetRotationMatrix() * (inertiaTensor * transform->GetRotationMatrix().Transpose());
+	return entity->GetComponent<Transform>()->GetRotationMatrix() * (inertiaTensor * entity->GetComponent<Transform>()->GetRotationMatrix().Transpose());
 }

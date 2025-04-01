@@ -89,7 +89,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>C:\Users\krims\Documents\GitHub\D3D11 - Copy\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -110,7 +110,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>C:\Users\krims\Documents\GitHub\D3D11 - Copy\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -131,7 +131,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>C:\Users\krims\Documents\GitHub\EngineTest\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -152,7 +152,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>C:\Users\krims\Documents\GitHub\EngineTest\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -170,10 +170,13 @@
     <ClCompile Include="BoxCollider.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Collider.cpp" />
+    <ClCompile Include="Color.cpp" />
+    <ClCompile Include="Component.cpp" />
+    <ClCompile Include="CompositeCollider.cpp" />
     <ClCompile Include="ConvexCollider.cpp" />
     <ClCompile Include="Debug.cpp" />
-    <ClCompile Include="DebugEntity.cpp" />
     <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="EntityManager.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="ImGui\imgui.cpp" />
@@ -184,6 +187,7 @@
     <ClCompile Include="ImGui\imgui_tables.cpp" />
     <ClCompile Include="ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Input.cpp" />
+    <ClCompile Include="IntVector.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Matrix.cpp" />
@@ -191,6 +195,8 @@
     <ClCompile Include="PathHelpers.cpp" />
     <ClCompile Include="PhysicsEntity.cpp" />
     <ClCompile Include="PhysicsSubsystem.cpp" />
+    <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Rigidbody.cpp" />
     <ClCompile Include="SimpleShader.cpp" />
     <ClCompile Include="Skybox.cpp" />
@@ -198,19 +204,24 @@
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="Vector.cpp" />
     <ClCompile Include="Vertex.cpp" />
-    <ClCompile Include="Voxel.cpp" />
+    <ClCompile Include="VoxelCollider.cpp" />
+    <ClCompile Include="VoxelDestructable.cpp" />
     <ClCompile Include="VoxelGrid.cpp" />
+    <ClCompile Include="VoxelRenderer.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BoxCollider.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Collider.h" />
+    <ClInclude Include="Color.h" />
+    <ClInclude Include="Component.h" />
+    <ClInclude Include="CompositeCollider.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="ConvexCollider.h" />
     <ClInclude Include="Debug.h" />
-    <ClInclude Include="DebugEntity.h" />
     <ClInclude Include="Entity.h" />
+    <ClInclude Include="EntityManager.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="ImGui\imconfig.h" />
@@ -224,13 +235,17 @@
     <ClInclude Include="include\rapidobj\rapidobj.hpp" />
     <ClInclude Include="include\std_image\stb_image.h" />
     <ClInclude Include="Input.h" />
+    <ClInclude Include="IntVector.h" />
     <ClInclude Include="Lights.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="Mesh.h" />
+    <ClInclude Include="Octree.h" />
     <ClInclude Include="PathHelpers.h" />
     <ClInclude Include="PhysicsEntity.h" />
     <ClInclude Include="PhysicsSubsystem.h" />
+    <ClInclude Include="Renderer.h" />
+    <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Rigidbody.h" />
     <ClInclude Include="SimpleShader.h" />
     <ClInclude Include="Skybox.h" />
@@ -239,7 +254,10 @@
     <ClInclude Include="Vector.h" />
     <ClInclude Include="Vertex.h" />
     <ClInclude Include="Voxel.h" />
+    <ClInclude Include="VoxelCollider.h" />
+    <ClInclude Include="VoxelDestructable.h" />
     <ClInclude Include="VoxelGrid.h" />
+    <ClInclude Include="VoxelRenderer.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>

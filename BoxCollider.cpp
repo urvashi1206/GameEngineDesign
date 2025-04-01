@@ -1,23 +1,20 @@
 #include "BoxCollider.h"
 
+#include <vector>
+
 #include "Debug.h"
 
 BoxCollider::BoxCollider()
 {
-	colliderType = ColliderType::Box;
+	colliderType = ColliderType::Convex;
 }
-BoxCollider::BoxCollider(Transform* transform, Vector center, Vector halfSize, bool showDebug) : 
-	center(center), halfSize(halfSize)
+BoxCollider::BoxCollider(Vector center, Vector halfSize, bool showDebug) : 
+	center(center), halfSize(halfSize), showDebug(showDebug)
 {
-	this->transform = transform;
-	colliderType = ColliderType::Box;
+	colliderType = ColliderType::Convex;
 
-	if(showDebug)
-	{
-		Debug::CreateDebugBox(transform, Vector(), halfSize);
-
-		//Debug::CreateDebugBox(, );
-	}
+	//if(showDebug)
+		//Debug::CreateDebugBox(GetTransform(), center, halfSize);
 }
 BoxCollider::~BoxCollider()
 {
@@ -26,6 +23,8 @@ BoxCollider::~BoxCollider()
 
 Vector BoxCollider::GJK_Support(const Vector& direction) const
 {
+	Transform* transform = GetTransform();
+
 	Vector min = center - halfSize;
 	Vector max = center + halfSize;
 	std::vector<Vector> vertices = 
@@ -44,7 +43,7 @@ Vector BoxCollider::GJK_Support(const Vector& direction) const
 	float maxDot = 0;
 	for(Vector vertex : vertices)
 	{
-		float dot = direction.Dot(vertex - transform->GetLocation());
+		float dot = direction.Dot(vertex - GetCenter());
 		if(dot > maxDot)
 		{
 			supportPoint = vertex;
@@ -56,6 +55,8 @@ Vector BoxCollider::GJK_Support(const Vector& direction) const
 }
 std::vector<Vector> BoxCollider::EPA_GetAlignedFace(const Vector& direction, Vector& out_faceNormal) const
 {
+	Transform* transform = GetTransform();
+
 	std::vector<Vector> face;
 
 	Vector dominant;
@@ -106,7 +107,7 @@ std::vector<Vector> BoxCollider::EPA_GetAlignedFace(const Vector& direction, Vec
 		dotDominant = dotForward;
 	}
 
-	Vector faceCenter = transform->GetLocation() + dominant * halfSizeDominant;
+	Vector faceCenter = GetCenter() + dominant * halfSizeDominant;
 
 	face.push_back(faceCenter - u * halfSizeU - v * halfSizeV);
 	face.push_back(faceCenter + u * halfSizeU - v * halfSizeV);
@@ -116,6 +117,16 @@ std::vector<Vector> BoxCollider::EPA_GetAlignedFace(const Vector& direction, Vec
 	out_faceNormal = dominant;
 
 	return face;
+}
+
+void BoxCollider::Initialize()
+{
+
+}
+void BoxCollider::Update(float deltaTime)
+{
+	if(showDebug)
+		Debug::CreateWireframe_Temp(GetCenter(), GetTransform()->GetRotation(), halfSize);
 }
 
 Matrix4x4 BoxCollider::GetInertiaTensor(float mass) const
@@ -129,13 +140,13 @@ Matrix4x4 BoxCollider::GetInertiaTensor(float mass) const
 
 Vector BoxCollider::GetWorldMin() const
 {
-	Vector w = transform->LocalToWorld_Point(center - halfSize);
+	Vector w = GetTransform()->LocalToWorld_Point(center - halfSize);
 	Debug::CreateWireframe_Temp(w, Vector(), Vector(0.125f, 0.125f, 0.125f));
 	return w;
 }
 Vector BoxCollider::GetWorldMax() const
 {
-	Vector w = transform->LocalToWorld_Point(center + halfSize);
+	Vector w = GetTransform()->LocalToWorld_Point(center + halfSize);
 	Debug::CreateWireframe_Temp(w, Vector(), Vector(0.125f, 0.125f, 0.125f));
 	return w;
 }

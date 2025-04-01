@@ -1,7 +1,6 @@
 #include "Debug.h"
 
 #include "Mesh.h"
-#include "DebugEntity.h"
 
 namespace Debug
 {
@@ -43,7 +42,7 @@ void Debug::DrawAllWireframes(std::shared_ptr<Camera> camera)
 {
 	for(auto& e : debugMeshes)
 	{
-		Transform transform = e->GetTransform();
+		Matrix4x4 worldMatrix = e->GetWorldMatrix();
 
 		std::shared_ptr<SimpleVertexShader> vs = debugMaterial->GetVertexShader();
 		std::shared_ptr<SimplePixelShader> ps = debugMaterial->GetPixelShader();
@@ -55,8 +54,8 @@ void Debug::DrawAllWireframes(std::shared_ptr<Camera> camera)
 		debugMaterial->PrepareMaterial();
 
 		// Create data to be sent to the vertex shader
-		vs->SetMatrix4x4("worldMatrix", transform.GetWorldMatrix());
-		vs->SetMatrix4x4("worldInvTranspose", transform.GetWorldInverseTransposeMatrix());
+		vs->SetMatrix4x4("worldMatrix", worldMatrix);
+		vs->SetMatrix4x4("worldInvTranspose", worldMatrix.Inverse().Transpose());
 		vs->SetMatrix4x4("viewMatrix", camera->GetViewMatrix());
 		vs->SetMatrix4x4("projMatrix", camera->GetProjectionMatrix());
 
@@ -73,7 +72,7 @@ void Debug::DrawAllWireframes(std::shared_ptr<Camera> camera)
 
 	for(auto& e : debugWireframes)
 	{
-		Transform transform = e->GetTransform();
+		Matrix4x4 worldMatrix = e->GetWorldMatrix();
 
 		std::shared_ptr<SimpleVertexShader> vs = debugMaterial->GetVertexShader();
 		std::shared_ptr<SimplePixelShader> ps = debugMaterial->GetPixelShader();
@@ -85,8 +84,8 @@ void Debug::DrawAllWireframes(std::shared_ptr<Camera> camera)
 		debugMaterial->PrepareMaterial();
 
 		// Create data to be sent to the vertex shader
-		vs->SetMatrix4x4("worldMatrix", transform.GetWorldMatrix());
-		vs->SetMatrix4x4("worldInvTranspose", transform.GetWorldInverseTransposeMatrix());
+		vs->SetMatrix4x4("worldMatrix", worldMatrix);
+		vs->SetMatrix4x4("worldInvTranspose", worldMatrix.Inverse().Transpose());
 		vs->SetMatrix4x4("viewMatrix", camera->GetViewMatrix());
 		vs->SetMatrix4x4("projMatrix", camera->GetProjectionMatrix());
 

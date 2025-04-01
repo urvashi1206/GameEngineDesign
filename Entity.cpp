@@ -1,42 +1,37 @@
 #include "Entity.h"
-#include "Graphics.h"
 
-using namespace DirectX;
+#include "Component.h"
 
-Entity::Entity(std::shared_ptr<Mesh> mesh, std::shared_ptr<Material> material) :
-	mesh(mesh), material(material)
+Entity::Entity() :
+	components()
 {
 	
 }
-
-void Entity::Draw(std::shared_ptr<Camera> camera, float totalTime)
+Entity::~Entity()
 {
-	std::shared_ptr<SimpleVertexShader> vs = material->GetVertexShader();
-	std::shared_ptr<SimplePixelShader> ps = material->GetPixelShader();
+	for(Component* c : components)
+		if(c)
+		{
+			delete c;
+			c = nullptr;
+		}
 
-	material->GetVertexShader()->SetShader();
-	material->GetPixelShader()->SetShader();
-
-	// Have the material set up the shader with its private values
-	material->PrepareMaterial();
-
-	// Create data to be sent to the vertex shader
-	vs->SetMatrix4x4("worldMatrix", transform.GetWorldMatrix());
-	vs->SetMatrix4x4("worldInvTranspose", transform.GetWorldInverseTransposeMatrix());
-	vs->SetMatrix4x4("viewMatrix", camera->GetViewMatrix());
-	vs->SetMatrix4x4("projMatrix", camera->GetProjectionMatrix());
-	
-	ps->SetFloat3("cameraLocation", DirectX::XMFLOAT3(
-		camera->GetTransform().GetLocation().x,
-		camera->GetTransform().GetLocation().y,
-		camera->GetTransform().GetLocation().z));
-	ps->SetFloat("totalTime", totalTime);
-
-	vs->CopyAllBufferData();
-	ps->CopyAllBufferData();
-
-	mesh->Draw();
+	components.clear();
 }
 
-Transform* Entity::GetTransform() { return &transform; }
-std::shared_ptr<Mesh> Entity::GetMesh() { return mesh; }
+void Entity::AddComponent(Component* component)
+{
+	components.push_back(component);
+	component->SetEntity(this);
+}
+
+void Entity::Initialize()
+{
+	for(Component* c : components)
+		c->Initialize();
+}
+void Entity::Update(float deltaTime)
+{
+	for(Component* c : components)
+		c->Update(deltaTime);
+}

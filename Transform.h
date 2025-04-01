@@ -1,10 +1,12 @@
 #pragma once
 
+#include "Component.h"
+
 #include "Matrix.h"
 
 #include <DirectXMath.h>
 
-class Transform
+class Transform : public Component
 {
 private:
 	Vector location;
@@ -20,6 +22,7 @@ private:
 public:
 	Transform();
 	Transform(Vector location, Vector rotation, Vector scale);
+	~Transform();
 
 	void MoveAbsolute(Vector vector);
 	void MoveRelative(Vector vector);
@@ -29,7 +32,13 @@ public:
 	void RotatePitchYawRoll(Vector pitchYawRoll);
 	void Scale(Vector vector);
 
+protected:
+	virtual void Initialize() override;
+	virtual void Update(float deltaTime) override;
+
+public:
 	Vector GetLocation() const;
+	Vector GetRotation() const;
 	Vector GetPitchYawRoll() const;
 	Vector GetScale() const;
 	Vector GetRight() const;

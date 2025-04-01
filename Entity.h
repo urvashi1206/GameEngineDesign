@@ -1,27 +1,39 @@
 #pragma once
 
-#include <memory>
+#include <vector>
 
-#include "Transform.h"
-#include "Mesh.h"
-#include "Camera.h"
-#include "Material.h"
+class Component;
 
 class Entity
 {
 protected:
-	Transform transform;
-	std::shared_ptr<Mesh> mesh;
-	std::shared_ptr<Material> material;
+	std::vector<Component*> components;
 
 public:
-	Entity(std::shared_ptr<Mesh> mesh, std::shared_ptr<Material> material);
+	Entity();
+	~Entity();
 
-	void Draw(std::shared_ptr<Camera> camera, float totalTime);
+	void AddComponent(Component* component);
+	
+	template<class T>
+	T* GetComponent();
 
-	Transform* GetTransform();
-	std::shared_ptr<Mesh> GetMesh();
-	std::shared_ptr<Material> GetMaterial() { return material; };
+protected:
+	virtual void Initialize();
+	virtual void Update(float deltaTime);
 
-	void SetMaterial(std::shared_ptr<Material> value) { material = value; };
+	friend class EntityManager;
+
+public:
+	std::vector<Component*> GetComponents() const { return components; };
 };
+
+template<class T>
+inline T* Entity::GetComponent()
+{
+	for(Component* c : components)
+		if(T* t = dynamic_cast<T*>(c))
+			return t;
+
+	return nullptr;
+}

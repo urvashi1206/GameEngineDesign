@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <deque>
+#include <unordered_map>
 
 #include "Rigidbody.h"
 #include "BoxCollider.h"
@@ -78,7 +79,7 @@ struct CollisionData
 class PhysicsSubsystem
 {
 private:
-	std::vector<Rigidbody> rigidbodies;
+	std::vector<Rigidbody*> rigidbodies;
 
 	std::unordered_map<CollisionPair, std::vector<ContactPoint>> cachedContacts;
 
@@ -88,13 +89,17 @@ public:
 	PhysicsSubsystem();
 	~PhysicsSubsystem();
 
-	void Update(float deltaTime);
+	static void Startup();
+	static void Shutdown();
 
-	void Pause();
-	void Unpause();
+	static void Update(float deltaTime);
 
-	void AddRigidbody(Rigidbody rigidbody);
+	static void Pause();
+	static void Unpause();
 
+	static void AddRigidbody(Rigidbody* rigidbody);
+
+private:
 	void TestCollision_Box_Box(const BoxCollider* a, const BoxCollider* b, bool& out_colliding, std::vector<ContactPoint>& out_contactPoints);
 
 	bool GJK(const ConvexCollider* a, const ConvexCollider* b, std::vector<ContactPoint>& out_contactPoints);
@@ -114,5 +119,6 @@ public:
 
 	bool AreContactsValidInCache(CollisionPair colliderPair, std::vector<ContactPoint> newContacts);
 
-	Rigidbody GetRigidbody(unsigned int index) { return rigidbodies[index]; };
+public:
+	Rigidbody* GetRigidbody(unsigned int index) { return rigidbodies[index]; };
 };

@@ -4,12 +4,9 @@
 #include "Transform.h"
 #include "Collider.h"
 
-class Rigidbody
+class Rigidbody : public Component
 {
 private:
-	Transform* transform;
-	Collider* collider;
-
 	Vector velocity;
 	Vector angularVelocity;
 
@@ -25,7 +22,7 @@ public:
 	float bounciness = 0;
 
 public:
-	Rigidbody(Transform* transform, Collider* collider, Vector gravity = Vector(0, -9.81f, 0), bool isStatic = false, float mass = 1);
+	Rigidbody(Vector gravity = Vector(0, -9.81f, 0), bool isStatic = false, float mass = 1);
 	~Rigidbody();
 
 	void UpdatePhysics(float deltaTime);
@@ -34,15 +31,24 @@ public:
 	void AddTorque(Vector axisAngle);
 	void ApplyGravity();
 
+	void ApplyImpulse(const Vector& impulse, const Vector& location);
+
+protected:
+	virtual void Initialize() override;
+	virtual void Update(float deltaTime) override;
+
+public:
 	float GetMass() const { return isStatic ? FLT_MAX : mass; }; // Static bodies should be treated as having infinite mass
+	float GetInverseMass() const { return isStatic ? 0 : 1.0f / mass; };
 	Vector GetVelocity() const { return velocity; };
 	Vector GetAngularVelocity() const { return angularVelocity; };
+	
+	float GetStaticFriction() const { return 0.3f; };
+	float GetDynamicFriction() const { return 0.5f; };
 
-	Collider* GetCollider() const { return collider; };
-	//Vector GetMin() { return Vector(transform.GetLocation().x + collider.min.x, transform.GetLocation().y + collider.min.y, transform.GetLocation().z + collider.min.z); };
-	//Vector GetMax() { return Vector(transform.GetLocation().x + collider.max.x, transform.GetLocation().y + collider.max.y, transform.GetLocation().z + collider.max.z); };
+	Collider* GetCollider() const { return entity->GetComponent<Collider>(); };
 
-	Transform* GetTransform() const { return transform; };
+	Transform* GetTransform() const { return entity->GetComponent<Transform>(); };
 
 	Matrix4x4 GetInertiaTensor() const;
 

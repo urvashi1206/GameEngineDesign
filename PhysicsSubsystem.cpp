@@ -1,10 +1,16 @@
 #include "PhysicsSubsystem.h"
 
-#include "BoxCollider.h"
+#include "ConvexCollider.h"
+#include "CompositeCollider.h"
 
 #include <iostream>
 
 #include "Debug.h"
+
+namespace
+{
+	PhysicsSubsystem* Instance;
+}
 
 PhysicsSubsystem::PhysicsSubsystem()
 {
@@ -13,6 +19,15 @@ PhysicsSubsystem::PhysicsSubsystem()
 PhysicsSubsystem::~PhysicsSubsystem()
 {
 
+}
+
+void PhysicsSubsystem::Startup()
+{
+	Instance = new PhysicsSubsystem();
+}
+void PhysicsSubsystem::Shutdown()
+{
+	delete Instance;
 }
 
 void PhysicsSubsystem::Update(float deltaTime)
@@ -29,34 +44,65 @@ void PhysicsSubsystem::Update(float deltaTime)
 
 		/* Physics Update */
 	
-		for(Rigidbody& rb : rigidbodies)
+		for(Rigidbody* rb : Instance->rigidbodies)
 		{
-			rb.ApplyGravity();
+			rb->ApplyGravity();
 
-			//rb.AddTorque(Vector(1, 1, 1));
-
-			rb.UpdatePhysics(tickPhysics ? PHYSICS_TICK : 0);
+			rb->UpdatePhysics(Instance->tickPhysics ? PHYSICS_TICK : 0);
 		}
 
 		/* Collision Detection and Contact Generation */
 
-		for(size_t i = 0; i < rigidbodies.size(); i++)
-			for(size_t j = 0; j < rigidbodies.size(); j++)
+		for(size_t i = 0; i < Instance->rigidbodies.size(); i++)
+			for(size_t j = 0; j < Instance->rigidbodies.size(); j++)
 			{
 				if(i == j)
 					continue;
 
-				std::vector<ContactPoint> contactPoints;
-				if(GJK((ConvexCollider*) rigidbodies[i].GetCollider(), (ConvexCollider*) rigidbodies[j].GetCollider(), contactPoints))
-				{
-					CollisionData collisionData {};
-					collisionData.bodyA = &rigidbodies[i];
-					collisionData.bodyB = &rigidbodies[j];
-					collisionData.colliderPair = CollisionPair((ConvexCollider*) rigidbodies[i].GetCollider(), (ConvexCollider*) rigidbodies[j].GetCollider());
-					collisionData.contacts = contactPoints;
+				// Colliders involved in this pair to check collision for
+				std::vector<ConvexCollider*> convexCollidersA;
+				std::vector<ConvexCollider*> convexCollidersB;
 
-					collisions.push_back(collisionData);
+				switch(Instance->rigidbodies[i]->GetCollider()->GetColliderType())
+				{
+					case ColliderType::None: break;
+					case ColliderType::Convex:
+						convexCollidersA.push_back((ConvexCollider*) Instance->rigidbodies[i]->GetCollider());
+						break;
+					case ColliderType::Composite:
+						for(ConvexCollider* c : ((CompositeCollider*) Instance->rigidbodies[i]->GetCollider())->GetColliders())
+							convexCollidersA.push_back(c);
+						break;
+					default: break;
 				}
+				switch(Instance->rigidbodies[j]->GetCollider()->GetColliderType())
+				{
+					case ColliderType::None: break;
+					case ColliderType::Convex:
+						convexCollidersB.push_back((ConvexCollider*) Instance->rigidbodies[j]->GetCollider());
+						break;
+					case ColliderType::Composite:
+						for(ConvexCollider* c : ((CompositeCollider*) Instance->rigidbodies[j]->GetCollider())->GetColliders())
+							convexCollidersB.push_back(c);
+						break;
+					default: break;
+				}
+
+				for(ConvexCollider* a : convexCollidersA)
+					for(ConvexCollider* b : convexCollidersB)
+					{
+						std::vector<ContactPoint> contactPoints;
+						if(Instance->GJK(a, b, contactPoints))
+						{
+							CollisionData collisionData {};
+							collisionData.bodyA = Instance->rigidbodies[i];
+							collisionData.bodyB = Instance->rigidbodies[j];
+							collisionData.colliderPair = CollisionPair(a, b);
+							collisionData.contacts = contactPoints;
+
+							collisions.push_back(collisionData);
+						}
+					}
 			}
 
 		/* Collision Resolution */
@@ -69,50 +115,89 @@ void PhysicsSubsystem::Update(float deltaTime)
 			Transform* transformA = bodyA->GetTransform();
 			Transform* transformB = bodyB->GetTransform();
 
-			float restitution = sqrt(bodyA->bounciness * bodyB->bounciness);
+			Vector initialLocationA = collisionData.colliderPair.GetFirst()->GetCenter();
+			Vector initialLocationB = collisionData.colliderPair.GetSecond()->GetCenter();
+			Vector initialVelocityA = bodyA->GetVelocity();
+			Vector initialVelocityB = bodyB->GetVelocity();
+			Vector initialAngularVelocityA = bodyA->GetAngularVelocity();
+			Vector initialAngularVelocityB = bodyB->GetAngularVelocity();
 
-			for(ContactPoint& contact : collisionData.contacts)
+			for(const ContactPoint& contact : collisionData.contacts)
 			{
-				/* Linear collision resolution */
+				Debug::CreateWireframe_Temp(contact.location, Vector(), Vector(0.1f, 0.1f, 0.1f));
 
-				Vector r1 = contact.location - transformA->GetLocation();
-				Vector r2 = contact.location - transformB->GetLocation();
-				Vector v1 = bodyA->GetVelocity() + bodyA->GetAngularVelocity().Cross(r1);
-				Vector v2 = bodyB->GetVelocity() + bodyB->GetAngularVelocity().Cross(r2);
-				Vector relativeVelocity = v1 - v2;
+				// Location and velocity relative to center of mass
+				Vector rA = contact.location - collisionData.colliderPair.GetFirst()->GetCenter();
+				Vector rB = contact.location - collisionData.colliderPair.GetSecond()->GetCenter();
+				Vector relativeVelocity = bodyB->GetVelocity() + bodyB->GetAngularVelocity().Cross(rB) - bodyA->GetVelocity() - bodyA->GetAngularVelocity().Cross(rA);
 
-				//if(relativeVelocity.Dot(contact.normal.Normalized()) < 0)
-					//continue;
+				// Calculate relative velocity along the normal
+				float velocityAlongNormal = relativeVelocity.Dot(contact.normal);
 
-				float e = restitution;
-				float numerator = -(1 + e) * relativeVelocity.Dot(contact.normal.Normalized());
-				Vector cross_r1_n = r1.Cross(contact.normal.Normalized());
-				Vector cross_r2_n = r2.Cross(contact.normal.Normalized());
-				float term1 = cross_r1_n.Dot(bodyA->GetInertiaTensor().Inverse() * cross_r1_n);
-				float term2 = cross_r2_n.Dot(bodyB->GetInertiaTensor().Inverse() * cross_r2_n);
-				float denominator = (1.0f / bodyA->GetMass()) + (1.0f / bodyB->GetMass()) + term1 + term2;
-				float impulse = numerator / denominator;
+				// If the velocities are separating, no need to resolve
+				if(velocityAlongNormal > 0)
+					continue;
 
-				Vector targetVelocity = bodyA->GetVelocity() + contact.normal.Normalized() * (impulse / bodyA->GetMass());
-				Vector otherVelocity = bodyB->GetVelocity() - contact.normal.Normalized() * (impulse / bodyB->GetMass());
+				// Calculate restitution (bounciness)
+				float e = min(bodyA->bounciness, bodyB->bounciness);
 
-				bodyA->SetVelocity(targetVelocity);
-				bodyB->SetVelocity(otherVelocity);
+				// Calculate impulse scalar
+				float j = -(1 + e) * velocityAlongNormal;
+				j /= bodyA->GetInverseMass() + bodyB->GetInverseMass() +
+					contact.normal.Dot((bodyA->GetInertiaTensor().Inverse() * rA.Cross(contact.normal)).Cross(rA)) +
+					contact.normal.Dot((bodyB->GetInertiaTensor().Inverse() * rB.Cross(contact.normal)).Cross(rB));
 
-				/* Angular collision resolution */
+				// Apply impulse
+				Vector impulse = contact.normal * j;
+				bodyA->ApplyImpulse(-impulse, contact.location);
+				bodyB->ApplyImpulse(impulse, contact.location);
 
-				Vector delta = bodyA->GetInertiaTensor().Inverse() * r1.Cross(contact.normal.Normalized() * impulse);
-				bodyA->SetAngularVelocity(bodyA->GetAngularVelocity() + delta);
-				bodyB->SetAngularVelocity(bodyB->GetAngularVelocity() - bodyB->GetInertiaTensor().Inverse() * r2.Cross(contact.normal.Normalized() * impulse));
+				/* Friction */
+				
+				// Use original location and velocity values for friction
+				rA = contact.location - initialLocationA;
+				rB = contact.location - initialLocationB;
+				relativeVelocity = initialVelocityB + initialAngularVelocityB.Cross(rB) - initialVelocityA - initialAngularVelocityA.Cross(rA);
 
-				float percent = 0.002f;
-				float slop = 0.01f;
-				Vector correction = contact.normal.Normalized() * max(contact.penetrationDepth - slop, 0) * percent;
-				float totalInvMass = 1 / bodyA->GetMass() + 1 / bodyB->GetMass();
+				// Determine tangential velocity
+				Vector tangentialVelocity = relativeVelocity - contact.normal * velocityAlongNormal;
+				if(tangentialVelocity.GetSqrMagnitude() > 1e-6f)
+					tangentialVelocity = tangentialVelocity.Normalized();
+				else
+					tangentialVelocity = Vector::Zero();
 
-				transformA->MoveAbsolute(-(correction / totalInvMass) / bodyA->GetMass());
-				transformB->MoveAbsolute((correction / totalInvMass) / bodyB->GetMass());
+				// Determine whether to use static or dynamic friction and scale max impulse
+				float coefficient = tangentialVelocity == Vector::Zero() ? 
+					sqrt(pow(bodyA->GetStaticFriction(), 2) + pow(bodyB->GetStaticFriction(), 2)) 
+					: sqrt(pow(bodyA->GetDynamicFriction(), 2) + pow(bodyB->GetDynamicFriction(), 2));
+				float maxFrictionImpulse = coefficient * j;
+
+				Vector rA_cross_t = rA.Cross(tangentialVelocity);
+				Vector rB_cross_t = rB.Cross(tangentialVelocity);
+				float angularEffectFrictionA = rA_cross_t.Dot(bodyA->GetInertiaTensor().Inverse() * rA_cross_t);
+				float angularEffectFrictionB = rB_cross_t.Dot(bodyB->GetInertiaTensor().Inverse() * rB_cross_t);
+
+				float frictionInertia = bodyA->GetInverseMass() + bodyB->GetInverseMass() + angularEffectFrictionA + angularEffectFrictionB;
+				float frictionImpulseMagnitude = -relativeVelocity.Dot(tangentialVelocity) / frictionInertia;
+				frictionImpulseMagnitude = std::clamp(frictionImpulseMagnitude, -maxFrictionImpulse, maxFrictionImpulse);
+
+				Vector frictionImpulse = tangentialVelocity * frictionImpulseMagnitude;
+
+				// Apply friction impulse
+				bodyA->ApplyImpulse(-frictionImpulse, contact.location);
+				bodyB->ApplyImpulse(frictionImpulse, contact.location);
+
+				// Positional correction to prevent sinking
+				const float percent = 0.2f; // Usually 20% to 80%
+				const float slop = 0.01f; // Usually 0.01 to 0.1
+				Vector correction = contact.normal * max(contact.penetrationDepth - slop, 0.0f) / (bodyA->GetInverseMass() + bodyB->GetInverseMass()) * percent;
+				transformA->MoveAbsolute(-correction * bodyA->GetInverseMass());
+				transformB->MoveAbsolute(correction * bodyB->GetInverseMass());
 			}
+
+			//Pause();
+
+			//break;
 		}
 
 		simulationTimeLeft -= PHYSICS_TICK;
@@ -121,16 +206,16 @@ void PhysicsSubsystem::Update(float deltaTime)
 
 void PhysicsSubsystem::Pause()
 {
-	tickPhysics = false;
+	Instance->tickPhysics = false;
 }
 void PhysicsSubsystem::Unpause()
 {
-	tickPhysics = true;
+	Instance->tickPhysics = true;
 }
 
-void PhysicsSubsystem::AddRigidbody(Rigidbody rigidbody)
+void PhysicsSubsystem::AddRigidbody(Rigidbody* rigidbody)
 {
-	rigidbodies.push_back(rigidbody);
+	Instance->rigidbodies.push_back(rigidbody);
 }
 
 void PhysicsSubsystem::TestCollision_Box_Box(const BoxCollider* a, const BoxCollider* b, bool& out_colliding, std::vector<ContactPoint>& out_contactPoints)
@@ -443,9 +528,6 @@ std::vector<ContactPoint> PhysicsSubsystem::EPA(std::deque<Vector> simplex, std:
 	Vector normalB;
 	std::vector<Vector> faceB = b->EPA_GetAlignedFace(-minNormal, normalB);
 
-	if(b->transform->GetScale().x <= 0.5f)
-		int l = 0;
-
 	std::vector<Vector> clipAB = GetContactPoints(faceA, faceB, normalB);
 	std::vector<Vector> clipBA = GetContactPoints(faceB, faceA, normalA);
 
@@ -465,7 +547,7 @@ std::vector<ContactPoint> PhysicsSubsystem::EPA(std::deque<Vector> simplex, std:
 		contactPoints.push_back(contact);
 
 		//if(a->transform->GetScale().x <= 0.5f)
-			Debug::CreateWireframe_Temp(point, Vector(), Vector(0.125f, 0.125f, 0.125f));
+			//Debug::CreateWireframe_Temp(point, Vector(), Vector(0.125f, 0.125f, 0.125f));
 	}
 
 	//assert(contactPoints.size() > 0);
@@ -488,7 +570,7 @@ std::vector<ContactPoint> PhysicsSubsystem::EPA(std::deque<Vector> simplex, std:
 		return cachedContacts[colliderPair];
 
 	// Cache the contacts between these two colliders so they aren't regenerated if there is no significant difference in locations ("resting contact")
-	cachedContacts.emplace(colliderPair, contactPoints);
+	cachedContacts[colliderPair] = contactPoints;
 
 	return contactPoints;
 }
@@ -548,14 +630,25 @@ std::vector<Vector> PhysicsSubsystem::GetContactPoints(std::vector<Vector> incid
 
 	Vector incidentNormal = (incidentFace[1] - incidentFace[0]).Cross(incidentFace[2] - incidentFace[0]).Normalized();
 
+	Vector referenceCenter = Vector::Zero();
+	for(int i = 0; i < referenceFace.size(); i++)
+		referenceCenter += referenceFace[i];
+	referenceCenter /= referenceFace.size();
+
 	std::unordered_map<Vector, float> edgePlanes;
 	for(size_t i = 0; i < referenceFace.size(); i++)
 	{
 		Vector currentVertex = referenceFace[i];
 		Vector nextVertex = referenceFace[(i + 1) % referenceFace.size()];
 
-		Vector edgeNormal = (nextVertex - currentVertex).Cross(referenceNormal);
-		edgePlanes.emplace(-edgeNormal.Normalized(), -edgeNormal.Normalized().Dot(currentVertex));
+		Vector edgeNormal = (nextVertex - currentVertex).Cross(referenceNormal).Normalized();
+		float planeOffset = edgeNormal.Dot(currentVertex);
+		if(edgeNormal.Dot(currentVertex - referenceCenter) > 0)
+		{
+			edgeNormal = -edgeNormal;
+			planeOffset = -planeOffset;
+		}
+		edgePlanes.emplace(edgeNormal, planeOffset);
 	}
 
 	// All edge normals should be unique for convex shapes; if not, vertex order is incorrect
@@ -563,7 +656,7 @@ std::vector<Vector> PhysicsSubsystem::GetContactPoints(std::vector<Vector> incid
 
 	float referencePlaneOffset = referenceNormal.Dot(referenceFace[0]);
 	float k = referencePlaneOffset / abs(referencePlaneOffset) * THICKNESS;
-	ClipPolygonAgainstPlane(incidentFace, -referenceNormal, -(referencePlaneOffset - k));
+	ClipPolygonAgainstPlane(incidentFace, -referenceNormal, -(referencePlaneOffset + k));
 
 	for(auto& plane : edgePlanes)
 		ClipPolygonAgainstPlane(incidentFace, plane.first, plane.second);

@@ -28,6 +28,10 @@ Transform::Transform(Vector location, Vector rotation, Vector scale) :
 	XMStoreFloat4x4(&worldMatrix, XMMatrixIdentity());
 	XMStoreFloat4x4(&worldInverseTransposeMatrix, XMMatrixIdentity());
 }
+Transform::~Transform()
+{
+	
+}
 
 void Transform::MoveAbsolute(Vector vector)
 {
@@ -98,8 +102,24 @@ void Transform::Scale(Vector vector)
 	SetScale(scale * vector);
 }
 
+void Transform::Initialize()
+{
+
+}
+void Transform::Update(float deltaTime)
+{
+
+}
+
 #pragma region Getters
-Vector Transform::GetLocation() const { return location; }
+Vector Transform::GetLocation() const
+{
+	return location;
+}
+Vector Transform::GetRotation() const
+{
+	return rotation;
+}
 Vector Transform::GetPitchYawRoll() const
 {
 	XMFLOAT4 f4_rotation(rotation.x, rotation.y, rotation.z, rotation.w);
