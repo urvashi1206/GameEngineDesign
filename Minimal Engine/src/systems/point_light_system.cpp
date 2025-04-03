@@ -16,7 +16,7 @@ namespace minimal {
         float radius;
     };
 
-    point_light_system::point_light_system(device &device, VkRenderPass render_pass,
+    point_light_system::point_light_system(vulkan_device &device, VkRenderPass render_pass,
                                            VkDescriptorSetLayout global_set_layout) : device_{device} {
         create_pipeline_layout(global_set_layout);
         create_pipeline(render_pass);
@@ -49,16 +49,16 @@ namespace minimal {
     void point_light_system::create_pipeline(VkRenderPass render_pass) {
         assert(pipeline_layout_ != nullptr && "Cannot create pipeline before pipeline layout");
 
-        pipeline_config_info pipeline_config{};
-        pipeline::default_pipeline_config_info(pipeline_config);
-        pipeline::enable_alpha_blending(pipeline_config);
+        vulkan_pipeline_config_info pipeline_config{};
+        vulkan_pipeline::default_pipeline_config_info(pipeline_config);
+        vulkan_pipeline::enable_alpha_blending(pipeline_config);
         pipeline_config.binding_descriptions.clear();
         pipeline_config.attribute_descriptions.clear();
         pipeline_config.render_pass = render_pass;
         pipeline_config.pipeline_layout = pipeline_layout_;
-        pipeline_ = std::make_unique<pipeline>(device_,
-                                               "shaders\\point_light.vert.spv",
-                                               "shaders\\point_light.frag.spv",
+        pipeline_ = std::make_unique<vulkan_pipeline>(device_,
+                                               "shaders/point_light.vert.spv",
+                                               "shaders/point_light.frag.spv",
                                                pipeline_config);
     }
 

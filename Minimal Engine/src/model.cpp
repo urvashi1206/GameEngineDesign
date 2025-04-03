@@ -108,7 +108,7 @@ namespace minimal {
             }
     }
 
-    model::model(device &device, const builder &builder) : device_{device} {
+    model::model(vulkan_device &device, const builder &builder) : device_{device} {
         create_vertex_buffer(builder.vertices);
         create_index_buffer(builder.indices);
     }
@@ -116,7 +116,7 @@ namespace minimal {
     model::~model() {
     }
 
-    std::unique_ptr<model> model::create_model_from_file(device &device, const std::string &file_path) {
+    std::unique_ptr<model> model::create_model_from_file(vulkan_device &device, const std::string &file_path) {
         builder builder{};
         builder.load_model(file_path);
 
@@ -148,7 +148,7 @@ namespace minimal {
         VkDeviceSize buffer_size = sizeof(vertices[0]) * vertex_count_;
         uint32_t vertex_size = sizeof(vertices[0]);
 
-        buffer staging_buffer{
+        vulkan_buffer staging_buffer{
             device_,
             vertex_size,
             vertex_count_,
@@ -159,7 +159,7 @@ namespace minimal {
         staging_buffer.map();
         staging_buffer.writeToBuffer((void *) vertices.data());
 
-        vertex_buffer_ = std::make_unique<buffer>(
+        vertex_buffer_ = std::make_unique<vulkan_buffer>(
             device_,
             vertex_size,
             vertex_count_,
@@ -179,7 +179,7 @@ namespace minimal {
         VkDeviceSize buffer_size = sizeof(indices[0]) * index_count_;
         uint32_t index_size = sizeof(indices[0]);
 
-        buffer staging_buffer{
+        vulkan_buffer staging_buffer{
             device_,
             index_size,
             index_count_,
@@ -190,7 +190,7 @@ namespace minimal {
         staging_buffer.map();
         staging_buffer.writeToBuffer((void *) indices.data());
 
-        index_buffer_ = std::make_unique<buffer>(
+        index_buffer_ = std::make_unique<vulkan_buffer>(
             device_,
             index_size,
             index_count_,

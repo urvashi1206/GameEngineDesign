@@ -5,14 +5,13 @@
  * https://github.com/SaschaWillems/Vulkan/blob/master/base/VulkanBuffer.h
  */
 
-#include "buffer.hpp"
+#include "vulkan_buffer.hpp"
 
 // std
 #include <cassert>
 #include <cstring>
 
-namespace minimal
-{
+namespace minimal {
     /**
      * Returns the minimum instance size required to be compatible with devices minOffsetAlignment
      *
@@ -22,17 +21,15 @@ namespace minimal
      *
      * @return VkResult of the buffer mapping call
      */
-    VkDeviceSize buffer::getAlignment(VkDeviceSize instanceSize, VkDeviceSize minOffsetAlignment)
-    {
-        if (minOffsetAlignment > 0)
-        {
+    VkDeviceSize vulkan_buffer::getAlignment(VkDeviceSize instanceSize, VkDeviceSize minOffsetAlignment) {
+        if (minOffsetAlignment > 0) {
             return (instanceSize + minOffsetAlignment - 1) & ~(minOffsetAlignment - 1);
         }
         return instanceSize;
     }
 
-    buffer::buffer(
-        class device& device,
+    vulkan_buffer::vulkan_buffer(
+        class vulkan_device &device,
         VkDeviceSize instanceSize,
         uint32_t instanceCount,
         VkBufferUsageFlags usageFlags,
@@ -42,15 +39,13 @@ namespace minimal
           instanceSize{instanceSize},
           instanceCount{instanceCount},
           usageFlags{usageFlags},
-          memoryPropertyFlags{memoryPropertyFlags}
-    {
+          memoryPropertyFlags{memoryPropertyFlags} {
         alignmentSize = getAlignment(instanceSize, minOffsetAlignment);
         bufferSize = alignmentSize * instanceCount;
         device.createBuffer(bufferSize, usageFlags, memoryPropertyFlags, vk_buffer_, memory);
     }
 
-    buffer::~buffer()
-    {
+    vulkan_buffer::~vulkan_buffer() {
         unmap();
         vkDestroyBuffer(device.get_device(), vk_buffer_, nullptr);
         vkFreeMemory(device.get_device(), memory, nullptr);
@@ -65,8 +60,7 @@ namespace minimal
      *
      * @return VkResult of the buffer mapping call
      */
-    VkResult buffer::map(VkDeviceSize size, VkDeviceSize offset)
-    {
+    VkResult vulkan_buffer::map(VkDeviceSize size, VkDeviceSize offset) {
         assert(vk_buffer_ && memory && "Called map on buffer before create");
         return vkMapMemory(device.get_device(), memory, offset, size, 0, &mapped);
     }
@@ -76,10 +70,8 @@ namespace minimal
      *
      * @note Does not return a result as vkUnmapMemory can't fail
      */
-    void buffer::unmap()
-    {
-        if (mapped)
-        {
+    void vulkan_buffer::unmap() {
+        if (mapped) {
             vkUnmapMemory(device.get_device(), memory);
             mapped = nullptr;
         }
@@ -94,17 +86,13 @@ namespace minimal
      * @param offset (Optional) Byte offset from beginning of mapped region
      *
      */
-    void buffer::writeToBuffer(void* data, VkDeviceSize size, VkDeviceSize offset)
-    {
+    void vulkan_buffer::writeToBuffer(void *data, VkDeviceSize size, VkDeviceSize offset) {
         assert(mapped && "Cannot copy to unmapped buffer");
 
-        if (size == VK_WHOLE_SIZE)
-        {
+        if (size == VK_WHOLE_SIZE) {
             memcpy(mapped, data, bufferSize);
-        }
-        else
-        {
-            char* memOffset = (char*)mapped;
+        } else {
+            char *memOffset = (char *) mapped;
             memOffset += offset;
             memcpy(memOffset, data, size);
         }
@@ -121,8 +109,7 @@ namespace minimal
      *
      * @return VkResult of the flush call
      */
-    VkResult buffer::flush(VkDeviceSize size, VkDeviceSize offset)
-    {
+    VkResult vulkan_buffer::flush(VkDeviceSize size, VkDeviceSize offset) {
         VkMappedMemoryRange mappedRange = {};
         mappedRange.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
         mappedRange.memory = memory;
@@ -142,8 +129,7 @@ namespace minimal
      *
      * @return VkResult of the invalidate call
      */
-    VkResult buffer::invalidate(VkDeviceSize size, VkDeviceSize offset)
-    {
+    VkResult vulkan_buffer::invalidate(VkDeviceSize size, VkDeviceSize offset) {
         VkMappedMemoryRange mappedRange = {};
         mappedRange.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
         mappedRange.memory = memory;
@@ -160,8 +146,7 @@ namespace minimal
      *
      * @return VkDescriptorBufferInfo of specified offset and range
      */
-    VkDescriptorBufferInfo buffer::descriptorInfo(VkDeviceSize size, VkDeviceSize offset)
-    {
+    VkDescriptorBufferInfo vulkan_buffer::descriptorInfo(VkDeviceSize size, VkDeviceSize offset) {
         return VkDescriptorBufferInfo{
             vk_buffer_,
             offset,
@@ -176,8 +161,7 @@ namespace minimal
      * @param index Used in offset calculation
      *
      */
-    void buffer::writeToIndex(void* data, int index)
-    {
+    void vulkan_buffer::writeToIndex(void *data, int index) {
         writeToBuffer(data, instanceSize, index * alignmentSize);
     }
 
@@ -187,7 +171,7 @@ namespace minimal
      * @param index Used in offset calculation
      *
      */
-    VkResult buffer::flushIndex(int index) { return flush(alignmentSize, index * alignmentSize); }
+    VkResult vulkan_buffer::flushIndex(int index) { return flush(alignmentSize, index * alignmentSize); }
 
     /**
      * Create a buffer info descriptor
@@ -196,8 +180,7 @@ namespace minimal
      *
      * @return VkDescriptorBufferInfo for instance at index
      */
-    VkDescriptorBufferInfo buffer::descriptorInfoForIndex(int index)
-    {
+    VkDescriptorBufferInfo vulkan_buffer::descriptorInfoForIndex(int index) {
         return descriptorInfo(alignmentSize, index * alignmentSize);
     }
 
@@ -210,8 +193,7 @@ namespace minimal
      *
      * @return VkResult of the invalidate call
      */
-    VkResult buffer::invalidateIndex(int index)
-    {
+    VkResult vulkan_buffer::invalidateIndex(int index) {
         return invalidate(alignmentSize, index * alignmentSize);
     }
 } // namespace lve

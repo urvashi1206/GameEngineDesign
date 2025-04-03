@@ -1,6 +1,6 @@
 #pragma once
 
-#include "device.hpp"
+#include "vulkan_device.hpp"
 
 // vulkan headers
 #include <vulkan/vulkan.h>
@@ -12,17 +12,17 @@
 
 namespace minimal
 {
-    class swap_chain
+    class vulkan_swap_chain
     {
     public:
         static constexpr int MAX_FRAMES_IN_FLIGHT = 2;
 
-        swap_chain(device& deviceRef, VkExtent2D windowExtent);
-        swap_chain(device& deviceRef, VkExtent2D windowExtent, std::shared_ptr<swap_chain> old_swap_chain);
-        ~swap_chain();
+        vulkan_swap_chain(vulkan_device& deviceRef, VkExtent2D windowExtent);
+        vulkan_swap_chain(vulkan_device& deviceRef, VkExtent2D windowExtent, std::shared_ptr<vulkan_swap_chain> old_swap_chain);
+        ~vulkan_swap_chain();
 
-        swap_chain(const swap_chain&) = delete;
-        swap_chain& operator=(const swap_chain&) = delete;
+        vulkan_swap_chain(const vulkan_swap_chain&) = delete;
+        vulkan_swap_chain& operator=(const vulkan_swap_chain&) = delete;
 
         VkFramebuffer getFrameBuffer(int index) { return swapChainFramebuffers[index]; }
         VkRenderPass getRenderPass() { return renderPass; }
@@ -43,7 +43,7 @@ namespace minimal
         VkResult acquireNextImage(uint32_t* imageIndex);
         VkResult submitCommandBuffers(const VkCommandBuffer* buffers, uint32_t* imageIndex);
 
-        bool compareSwapFormats(const swap_chain& swap_chain) const
+        bool compareSwapFormats(const vulkan_swap_chain& swap_chain) const
         {
             return swap_chain.swapChainDepthFormat == swapChainDepthFormat &&
                 swap_chain.swapChainImageFormat == swapChainImageFormat;
@@ -78,11 +78,11 @@ namespace minimal
         std::vector<VkImage> swapChainImages;
         std::vector<VkImageView> swapChainImageViews;
 
-        device& device;
+        vulkan_device& device;
         VkExtent2D windowExtent;
 
         VkSwapchainKHR swapChain;
-        std::shared_ptr<swap_chain> old_swap_chain_;
+        std::shared_ptr<vulkan_swap_chain> old_swap_chain_;
 
         std::vector<VkSemaphore> imageAvailableSemaphores;
         std::vector<VkSemaphore> renderFinishedSemaphores;

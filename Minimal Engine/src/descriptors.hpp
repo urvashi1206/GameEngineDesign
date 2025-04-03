@@ -1,6 +1,6 @@
 #pragma once
 
-#include "device.hpp"
+#include "rendering/vulkan/vulkan_device.hpp"
 
 // std
 #include <memory>
@@ -15,7 +15,7 @@ namespace minimal
         class builder
         {
         public:
-            builder(device& device) : device_{device} {}
+            builder(vulkan_device& device) : device_{device} {}
 
             builder& addBinding(
                 uint32_t binding,
@@ -26,12 +26,12 @@ namespace minimal
             std::unique_ptr<descriptor_set_layout> build() const;
 
         private:
-            device& device_;
+            vulkan_device& device_;
             std::unordered_map<uint32_t, VkDescriptorSetLayoutBinding> bindings_{};
         };
 
         descriptor_set_layout(
-            device& device, std::unordered_map<uint32_t, VkDescriptorSetLayoutBinding> bindings);
+            vulkan_device& device, std::unordered_map<uint32_t, VkDescriptorSetLayoutBinding> bindings);
         ~descriptor_set_layout();
         descriptor_set_layout(const descriptor_set_layout&) = delete;
         descriptor_set_layout& operator=(const descriptor_set_layout&) = delete;
@@ -39,7 +39,7 @@ namespace minimal
         VkDescriptorSetLayout getDescriptorSetLayout() const { return descriptor_set_layout_; }
 
     private:
-        device& device_;
+        vulkan_device& device_;
         VkDescriptorSetLayout descriptor_set_layout_;
         std::unordered_map<uint32_t, VkDescriptorSetLayoutBinding> bindings_;
 
@@ -52,7 +52,7 @@ namespace minimal
         class builder
         {
         public:
-            builder(device& device) : device_{device} {}
+            builder(vulkan_device& device) : device_{device} {}
 
             builder& addPoolSize(VkDescriptorType descriptorType, uint32_t count);
             builder& setPoolFlags(VkDescriptorPoolCreateFlags flags);
@@ -60,14 +60,14 @@ namespace minimal
             std::unique_ptr<descriptor_pool> build() const;
 
         private:
-            device& device_;
+            vulkan_device& device_;
             std::vector<VkDescriptorPoolSize> poolSizes{};
             uint32_t maxSets = 1000;
             VkDescriptorPoolCreateFlags poolFlags = 0;
         };
 
         descriptor_pool(
-            device& device,
+            vulkan_device& device,
             uint32_t maxSets,
             VkDescriptorPoolCreateFlags poolFlags,
             const std::vector<VkDescriptorPoolSize>& poolSizes);
@@ -82,7 +82,7 @@ namespace minimal
         void resetPool();
 
     private:
-        device& device_;
+        vulkan_device& device_;
         VkDescriptorPool descriptorPool;
 
         friend class descriptor_writer;

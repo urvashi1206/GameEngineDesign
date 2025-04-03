@@ -3,20 +3,20 @@
 #include <assert.h>
 #include <memory>
 
-#include "device.hpp"
-#include "window.hpp"
-#include "swap_chain.hpp"
+#include "vulkan_device.hpp"
+#include "../../window.hpp"
+#include "vulkan_swap_chain.hpp"
 
 namespace minimal {
-    class renderer {
+    class vulkan_renderer {
     public:
-        renderer(window &window, device &device);
+        vulkan_renderer(window &window, vulkan_device &device);
 
-        ~renderer();
+        ~vulkan_renderer();
 
-        renderer(const renderer &) = delete;
+        vulkan_renderer(const vulkan_renderer &) = delete;
 
-        renderer &operator=(const renderer &) = delete;
+        vulkan_renderer &operator=(const vulkan_renderer &) = delete;
 
         VkRenderPass get_swap_chain_render_pass() const { return swap_chain_->getRenderPass(); }
         float get_aspect_ratio() const { return swap_chain_->extentAspectRatio(); }
@@ -48,8 +48,8 @@ namespace minimal {
         void recreate_swap_chain();
 
         window &window_;
-        device &device_;
-        std::unique_ptr<swap_chain> swap_chain_;
+        vulkan_device &device_;
+        std::unique_ptr<vulkan_swap_chain> swap_chain_;
         std::vector<VkCommandBuffer> command_buffers_;
 
         uint32_t current_image_index_;

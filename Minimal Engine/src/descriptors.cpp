@@ -32,7 +32,7 @@ namespace minimal
     // *************** Descriptor Set Layout *********************
 
     descriptor_set_layout::descriptor_set_layout(
-        device& lveDevice, std::unordered_map<uint32_t, VkDescriptorSetLayoutBinding> bindings)
+        vulkan_device& lveDevice, std::unordered_map<uint32_t, VkDescriptorSetLayoutBinding> bindings)
         : device_{lveDevice}, bindings_{bindings}
     {
         std::vector<VkDescriptorSetLayoutBinding> setLayoutBindings{};
@@ -87,7 +87,7 @@ namespace minimal
     // *************** Descriptor Pool *********************
 
     descriptor_pool::descriptor_pool(
-        device& lveDevice,
+        vulkan_device& lveDevice,
         uint32_t maxSets,
         VkDescriptorPoolCreateFlags poolFlags,
         const std::vector<VkDescriptorPoolSize>& poolSizes)
