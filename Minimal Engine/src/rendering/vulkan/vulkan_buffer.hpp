@@ -1,39 +1,46 @@
 #pragma once
 
-#include "device.hpp"
+#include "vulkan_device.hpp"
 
-namespace minimal
-{
-    class buffer
-    {
+namespace minimal {
+    class vulkan_buffer {
     public:
-        buffer(
-            device& device,
+        vulkan_buffer(
+            vulkan_device &device,
             VkDeviceSize instanceSize,
             uint32_t instanceCount,
             VkBufferUsageFlags usageFlags,
             VkMemoryPropertyFlags memoryPropertyFlags,
             VkDeviceSize minOffsetAlignment = 1);
-        ~buffer();
 
-        buffer(const buffer&) = delete;
-        buffer& operator=(const buffer&) = delete;
+        ~vulkan_buffer();
+
+        vulkan_buffer(const vulkan_buffer &) = delete;
+
+        vulkan_buffer &operator=(const vulkan_buffer &) = delete;
 
         VkResult map(VkDeviceSize size = VK_WHOLE_SIZE, VkDeviceSize offset = 0);
+
         void unmap();
 
-        void writeToBuffer(void* data, VkDeviceSize size = VK_WHOLE_SIZE, VkDeviceSize offset = 0);
+        void writeToBuffer(void *data, VkDeviceSize size = VK_WHOLE_SIZE, VkDeviceSize offset = 0);
+
         VkResult flush(VkDeviceSize size = VK_WHOLE_SIZE, VkDeviceSize offset = 0);
+
         VkDescriptorBufferInfo descriptorInfo(VkDeviceSize size = VK_WHOLE_SIZE, VkDeviceSize offset = 0);
+
         VkResult invalidate(VkDeviceSize size = VK_WHOLE_SIZE, VkDeviceSize offset = 0);
 
-        void writeToIndex(void* data, int index);
+        void writeToIndex(void *data, int index);
+
         VkResult flushIndex(int index);
+
         VkDescriptorBufferInfo descriptorInfoForIndex(int index);
+
         VkResult invalidateIndex(int index);
 
         VkBuffer getBuffer() const { return vk_buffer_; }
-        void* getMappedMemory() const { return mapped; }
+        void *getMappedMemory() const { return mapped; }
         uint32_t getInstanceCount() const { return instanceCount; }
         VkDeviceSize getInstanceSize() const { return instanceSize; }
         VkDeviceSize getAlignmentSize() const { return instanceSize; }
@@ -44,8 +51,8 @@ namespace minimal
     private:
         static VkDeviceSize getAlignment(VkDeviceSize instanceSize, VkDeviceSize minOffsetAlignment);
 
-        device& device;
-        void* mapped = nullptr;
+        vulkan_device &device;
+        void *mapped = nullptr;
         VkBuffer vk_buffer_ = VK_NULL_HANDLE;
         VkDeviceMemory memory = VK_NULL_HANDLE;
 

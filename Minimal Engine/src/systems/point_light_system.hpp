@@ -2,18 +2,16 @@
 
 #include <memory>
 
-#include "camera.hpp"
-#include "device.hpp"
+#include "../rendering/vulkan/vulkan_device.hpp"
 #include "frame_info.hpp"
-#include "game_object.hpp"
-#include "pipeline.hpp"
+#include "rendering/vulkan/vulkan_pipeline.hpp"
 
 namespace minimal
 {
     class point_light_system
     {
     public:
-        point_light_system(device& device, VkRenderPass render_pass, VkDescriptorSetLayout global_set_layout);
+        point_light_system(vulkan_device& device, VkRenderPass render_pass, VkDescriptorSetLayout global_set_layout);
         ~point_light_system();
 
         point_light_system(const point_light_system&) = delete;
@@ -26,9 +24,9 @@ namespace minimal
         void create_pipeline_layout(VkDescriptorSetLayout global_set_layout);
         void create_pipeline(VkRenderPass render_pass);
 
-        device& device_;
+        vulkan_device& device_;
 
-        std::unique_ptr<pipeline> pipeline_;
+        std::unique_ptr<vulkan_pipeline> pipeline_;
         VkPipelineLayout pipeline_layout_;
     };
 }

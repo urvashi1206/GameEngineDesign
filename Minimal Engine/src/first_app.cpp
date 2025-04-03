@@ -1,7 +1,7 @@
 #include "first_app.hpp"
 
 #include "keyboard_movement_controller.hpp"
-#include "buffer.hpp"
+#include "rendering/vulkan/vulkan_buffer.hpp"
 #include "camera.hpp"
 #include "systems/simple_renderer_system.hpp"
 #include "systems/point_light_system.hpp"
@@ -18,8 +18,8 @@
 namespace minimal {
     first_app::first_app() {
         global_pool_ = descriptor_pool::builder(device_)
-                .setMaxSets(swap_chain::MAX_FRAMES_IN_FLIGHT)
-                .addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, swap_chain::MAX_FRAMES_IN_FLIGHT)
+                .setMaxSets(vulkan_swap_chain::MAX_FRAMES_IN_FLIGHT)
+                .addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, vulkan_swap_chain::MAX_FRAMES_IN_FLIGHT)
                 .build();
 
         load_game_objects();
@@ -29,9 +29,9 @@ namespace minimal {
     }
 
     void first_app::run() {
-        std::vector<std::unique_ptr<buffer> > ubo_buffers(swap_chain::MAX_FRAMES_IN_FLIGHT);
+        std::vector<std::unique_ptr<vulkan_buffer> > ubo_buffers(vulkan_swap_chain::MAX_FRAMES_IN_FLIGHT);
         for (int i = 0; i < ubo_buffers.size(); i++) {
-            ubo_buffers[i] = std::make_unique<buffer>(
+            ubo_buffers[i] = std::make_unique<vulkan_buffer>(
                 device_,
                 sizeof(global_ubo),
                 1,
@@ -45,8 +45,8 @@ namespace minimal {
                 .addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_ALL_GRAPHICS)
                 .build();
 
-        std::vector<VkDescriptorSet> global_descriptor_sets(swap_chain::MAX_FRAMES_IN_FLIGHT);
-        for (int i = 0; i < swap_chain::MAX_FRAMES_IN_FLIGHT; i++) {
+        std::vector<VkDescriptorSet> global_descriptor_sets(vulkan_swap_chain::MAX_FRAMES_IN_FLIGHT);
+        for (int i = 0; i < vulkan_swap_chain::MAX_FRAMES_IN_FLIGHT; i++) {
             auto buffer_info = ubo_buffers[i]->descriptorInfo();
             descriptor_writer(*global_set_layout, *global_pool_)
                     .writeBuffer(0, &buffer_info)
@@ -80,8 +80,7 @@ namespace minimal {
             glfwPollEvents();
 
             auto new_time = std::chrono::high_resolution_clock::now();
-            float frame_time = std::chrono::duration<float, std::chrono::seconds::period>(new_time - current_time).
-                    count();
+            float frame_time = std::chrono::duration<float>(new_time - current_time).count();
             current_time = new_time;
 
             camera_controller.move_in_plane_xz(window_.get_glfw_window(), frame_time, viewer_object);

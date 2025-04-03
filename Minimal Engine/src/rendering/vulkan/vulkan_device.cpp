@@ -1,4 +1,4 @@
-#include "device.hpp"
+#include "vulkan_device.hpp"
 
 // std headers
 #include <cstring>
@@ -54,7 +54,7 @@ namespace minimal
     }
 
     // class member functions
-    device::device(minimal::window& window) : window{window}
+    vulkan_device::vulkan_device(minimal::window& window) : window{window}
     {
         createInstance();
         setupDebugMessenger();
@@ -64,7 +64,7 @@ namespace minimal
         createCommandPool();
     }
 
-    device::~device()
+    vulkan_device::~vulkan_device()
     {
         vkDestroyCommandPool(device_, commandPool, nullptr);
         vkDestroyDevice(device_, nullptr);
@@ -78,7 +78,7 @@ namespace minimal
         vkDestroyInstance(instance, nullptr);
     }
 
-    void device::createInstance()
+    void vulkan_device::createInstance()
     {
         if (enableValidationLayers && !checkValidationLayerSupport())
         {
@@ -124,7 +124,7 @@ namespace minimal
         hasGflwRequiredInstanceExtensions();
     }
 
-    void device::pickPhysicalDevice()
+    void vulkan_device::pickPhysicalDevice()
     {
         uint32_t deviceCount = 0;
         vkEnumeratePhysicalDevices(instance, &deviceCount, nullptr);
@@ -154,7 +154,7 @@ namespace minimal
         std::cout << "physical device: " << properties.deviceName << std::endl;
     }
 
-    void device::createLogicalDevice()
+    void vulkan_device::createLogicalDevice()
     {
         QueueFamilyIndices indices = findQueueFamilies(physicalDevice);
 
@@ -206,7 +206,7 @@ namespace minimal
         vkGetDeviceQueue(device_, indices.presentFamily, 0, &presentQueue_);
     }
 
-    void device::createCommandPool()
+    void vulkan_device::createCommandPool()
     {
         QueueFamilyIndices queueFamilyIndices = findPhysicalQueueFamilies();
 
@@ -222,9 +222,9 @@ namespace minimal
         }
     }
 
-    void device::createSurface() { window.create_window_surface(instance, &surface_); }
+    void vulkan_device::createSurface() { window.create_window_surface(instance, &surface_); }
 
-    bool device::isDeviceSuitable(VkPhysicalDevice device)
+    bool vulkan_device::isDeviceSuitable(VkPhysicalDevice device)
     {
         QueueFamilyIndices indices = findQueueFamilies(device);
 
@@ -244,7 +244,7 @@ namespace minimal
             supportedFeatures.samplerAnisotropy;
     }
 
-    void device::populateDebugMessengerCreateInfo(
+    void vulkan_device::populateDebugMessengerCreateInfo(
         VkDebugUtilsMessengerCreateInfoEXT& createInfo)
     {
         createInfo = {};
@@ -258,7 +258,7 @@ namespace minimal
         createInfo.pUserData = nullptr; // Optional
     }
 
-    void device::setupDebugMessenger()
+    void vulkan_device::setupDebugMessenger()
     {
         if (!enableValidationLayers) return;
         VkDebugUtilsMessengerCreateInfoEXT createInfo;
@@ -269,7 +269,7 @@ namespace minimal
         }
     }
 
-    bool device::checkValidationLayerSupport()
+    bool vulkan_device::checkValidationLayerSupport()
     {
         uint32_t layerCount;
         vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
@@ -299,7 +299,7 @@ namespace minimal
         return true;
     }
 
-    std::vector<const char*> device::getRequiredExtensions()
+    std::vector<const char*> vulkan_device::getRequiredExtensions()
     {
         uint32_t glfwExtensionCount = 0;
         const char** glfwExtensions;
@@ -315,7 +315,7 @@ namespace minimal
         return extensions;
     }
 
-    void device::hasGflwRequiredInstanceExtensions()
+    void vulkan_device::hasGflwRequiredInstanceExtensions()
     {
         uint32_t extensionCount = 0;
         vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
@@ -342,7 +342,7 @@ namespace minimal
         }
     }
 
-    bool device::checkDeviceExtensionSupport(VkPhysicalDevice device)
+    bool vulkan_device::checkDeviceExtensionSupport(VkPhysicalDevice device)
     {
         uint32_t extensionCount;
         vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, nullptr);
@@ -364,7 +364,7 @@ namespace minimal
         return requiredExtensions.empty();
     }
 
-    QueueFamilyIndices device::findQueueFamilies(VkPhysicalDevice device)
+    QueueFamilyIndices vulkan_device::findQueueFamilies(VkPhysicalDevice device)
     {
         QueueFamilyIndices indices;
 
@@ -400,7 +400,7 @@ namespace minimal
         return indices;
     }
 
-    SwapChainSupportDetails device::querySwapChainSupport(VkPhysicalDevice device)
+    SwapChainSupportDetails vulkan_device::querySwapChainSupport(VkPhysicalDevice device)
     {
         SwapChainSupportDetails details;
         vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, surface_, &details.capabilities);
@@ -429,7 +429,7 @@ namespace minimal
         return details;
     }
 
-    VkFormat device::findSupportedFormat(
+    VkFormat vulkan_device::findSupportedFormat(
         const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features)
     {
         for (VkFormat format : candidates)
@@ -450,7 +450,7 @@ namespace minimal
         throw std::runtime_error("failed to find supported format!");
     }
 
-    uint32_t device::findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties)
+    uint32_t vulkan_device::findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties)
     {
         VkPhysicalDeviceMemoryProperties memProperties;
         vkGetPhysicalDeviceMemoryProperties(physicalDevice, &memProperties);
@@ -466,7 +466,7 @@ namespace minimal
         throw std::runtime_error("failed to find suitable memory type!");
     }
 
-    void device::createBuffer(
+    void vulkan_device::createBuffer(
         VkDeviceSize size,
         VkBufferUsageFlags usage,
         VkMemoryPropertyFlags properties,
@@ -500,7 +500,7 @@ namespace minimal
         vkBindBufferMemory(device_, buffer, bufferMemory, 0);
     }
 
-    VkCommandBuffer device::beginSingleTimeCommands()
+    VkCommandBuffer vulkan_device::beginSingleTimeCommands()
     {
         VkCommandBufferAllocateInfo allocInfo{};
         allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -519,7 +519,7 @@ namespace minimal
         return commandBuffer;
     }
 
-    void device::endSingleTimeCommands(VkCommandBuffer commandBuffer)
+    void vulkan_device::endSingleTimeCommands(VkCommandBuffer commandBuffer)
     {
         vkEndCommandBuffer(commandBuffer);
 
@@ -534,7 +534,7 @@ namespace minimal
         vkFreeCommandBuffers(device_, commandPool, 1, &commandBuffer);
     }
 
-    void device::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size)
+    void vulkan_device::copyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size)
     {
         VkCommandBuffer commandBuffer = beginSingleTimeCommands();
 
@@ -548,7 +548,7 @@ namespace minimal
         endSingleTimeCommands(commandBuffer);
     }
 
-    void device::copyBufferToImage(
+    void vulkan_device::copyBufferToImage(
         VkBuffer buffer, VkImage image, uint32_t width, uint32_t height, uint32_t layerCount)
     {
         VkCommandBuffer commandBuffer = beginSingleTimeCommands();
@@ -578,7 +578,7 @@ namespace minimal
         endSingleTimeCommands(commandBuffer);
     }
 
-    void device::createImageWithInfo(
+    void vulkan_device::createImageWithInfo(
         const VkImageCreateInfo& imageInfo,
         VkMemoryPropertyFlags properties,
         VkImage& image,

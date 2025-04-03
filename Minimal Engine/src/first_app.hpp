@@ -3,10 +3,10 @@
 #include <memory>
 
 #include "descriptors.hpp"
-#include "device.hpp"
+#include "rendering/vulkan/vulkan_device.hpp"
 #include "game_object.hpp"
 #include "window.hpp"
-#include "renderer.hpp"
+#include "rendering/vulkan/vulkan_renderer.hpp"
 
 namespace minimal
 {
@@ -28,8 +28,8 @@ namespace minimal
         void load_game_objects();
 
         window window_{"Hello Vulkan!", width, height};
-        device device_{window_};
-        renderer renderer_{window_, device_};
+        vulkan_device device_{window_};
+        vulkan_renderer renderer_{window_, device_};
 
         // note: order of declarations matters
         std::unique_ptr<descriptor_pool> global_pool_{};

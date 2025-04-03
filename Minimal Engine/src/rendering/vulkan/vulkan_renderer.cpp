@@ -1,4 +1,4 @@
-#include "renderer.hpp"
+#include "vulkan_renderer.hpp"
 
 #include <array>
 #include <iostream>
@@ -7,18 +7,18 @@
 
 namespace minimal
 {
-    renderer::renderer(window& window, device& device) : window_{window}, device_{device}
+    vulkan_renderer::vulkan_renderer(window& window, vulkan_device& device) : window_{window}, device_{device}
     {
         recreate_swap_chain();
         create_command_buffers();
     }
 
-    renderer::~renderer()
+    vulkan_renderer::~vulkan_renderer()
     {
         free_command_buffers();
     }
 
-    VkCommandBuffer renderer::begin_frame()
+    VkCommandBuffer vulkan_renderer::begin_frame()
     {
         assert(!is_frame_in_progress() && "Cannot call begin_frame while frame is in progress");
 
@@ -46,7 +46,7 @@ namespace minimal
         return command_buffer;
     }
 
-    void renderer::end_frame()
+    void vulkan_renderer::end_frame()
     {
         assert(is_frame_started_ && "Cannot call end_frame while frame is not in progress");
         auto command_buffer = get_current_command_buffer();
@@ -65,10 +65,10 @@ namespace minimal
         }
 
         is_frame_started_ = false;
-        current_frame_index_ = (current_frame_index_ + 1) % swap_chain::MAX_FRAMES_IN_FLIGHT;
+        current_frame_index_ = (current_frame_index_ + 1) % vulkan_swap_chain::MAX_FRAMES_IN_FLIGHT;
     }
 
-    void renderer::being_swap_chain_render_pass(VkCommandBuffer command_buffer)
+    void vulkan_renderer::being_swap_chain_render_pass(VkCommandBuffer command_buffer)
     {
         assert(is_frame_started_ && "Cannot begin render pass when frame is not in progress");
         assert(command_buffer == get_current_command_buffer() && "can't begin render pass on command buffer from a different frame");
@@ -101,7 +101,7 @@ namespace minimal
         vkCmdSetScissor(command_buffer, 0, 1, &scissor);
     }
 
-    void renderer::end_swap_chain_render_pass(VkCommandBuffer command_buffer)
+    void vulkan_renderer::end_swap_chain_render_pass(VkCommandBuffer command_buffer)
     {
         assert(is_frame_started_ && "Cannot end render pass when frame is not in progress");
         assert(command_buffer == get_current_command_buffer() && "can't end render pass on command buffer from a different frame");
@@ -109,9 +109,9 @@ namespace minimal
         vkCmdEndRenderPass(command_buffer);
     }
 
-    void renderer::create_command_buffers()
+    void vulkan_renderer::create_command_buffers()
     {
-        command_buffers_.resize(swap_chain::MAX_FRAMES_IN_FLIGHT);
+        command_buffers_.resize(vulkan_swap_chain::MAX_FRAMES_IN_FLIGHT);
 
         VkCommandBufferAllocateInfo alloc_info{};
         alloc_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -123,13 +123,13 @@ namespace minimal
             throw std::runtime_error("failed to allocate command buffers!");
     }
 
-    void renderer::free_command_buffers()
+    void vulkan_renderer::free_command_buffers()
     {
         vkFreeCommandBuffers(device_.get_device(), device_.getCommandPool(), static_cast<uint32_t>(command_buffers_.size()), command_buffers_.data());
         command_buffers_.clear();
     }
 
-    void renderer::recreate_swap_chain()
+    void vulkan_renderer::recreate_swap_chain()
     {
         auto extent = window_.get_extent();
         while (extent.width == 0 || extent.height == 0)
@@ -141,12 +141,12 @@ namespace minimal
 
         if (swap_chain_ == nullptr)
         {
-            swap_chain_ = std::make_unique<swap_chain>(device_, extent);
+            swap_chain_ = std::make_unique<vulkan_swap_chain>(device_, extent);
         }
         else
         {
-            std::shared_ptr<swap_chain> old_swap_chain = std::move(swap_chain_);
-            swap_chain_ = std::make_unique<swap_chain>(device_, extent, old_swap_chain);
+            std::shared_ptr<vulkan_swap_chain> old_swap_chain = std::move(swap_chain_);
+            swap_chain_ = std::make_unique<vulkan_swap_chain>(device_, extent, old_swap_chain);
 
             if (!old_swap_chain->compareSwapFormats(*swap_chain_.get()))
             {

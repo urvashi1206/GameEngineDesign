@@ -14,7 +14,7 @@ namespace minimal {
         glm::mat4 normal_matrix{1.0f};
     };
 
-    simple_renderer_system::simple_renderer_system(device &device, VkRenderPass render_pass, VkDescriptorSetLayout global_set_layout) : device_{device} {
+    simple_renderer_system::simple_renderer_system(vulkan_device &device, VkRenderPass render_pass, VkDescriptorSetLayout global_set_layout) : device_{device} {
         create_pipeline_layout(global_set_layout);
         create_pipeline(render_pass);
     }
@@ -45,11 +45,11 @@ namespace minimal {
     void simple_renderer_system::create_pipeline(VkRenderPass render_pass) {
         assert(pipeline_layout_ != nullptr && "Cannot create pipeline before pipeline layout");
 
-        pipeline_config_info pipeline_config{};
-        pipeline::default_pipeline_config_info(pipeline_config);
+        vulkan_pipeline_config_info pipeline_config{};
+        vulkan_pipeline::default_pipeline_config_info(pipeline_config);
         pipeline_config.render_pass = render_pass;
         pipeline_config.pipeline_layout = pipeline_layout_;
-        pipeline_ = std::make_unique<pipeline>(device_,
+        pipeline_ = std::make_unique<vulkan_pipeline>(device_,
                                                "shaders/simple_shader.vert.spv",
                                                "shaders/simple_shader.frag.spv",
                                                pipeline_config);
@@ -57,8 +57,6 @@ namespace minimal {
 
     void simple_renderer_system::render_game_objects(frame_info &frame_info) {
         pipeline_->bind(frame_info.command_buffer);
-
-        auto projection_view = frame_info.camera.get_projection() * frame_info.camera.get_view();
 
         vkCmdBindDescriptorSets(
             frame_info.command_buffer,

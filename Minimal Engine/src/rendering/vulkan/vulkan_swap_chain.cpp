@@ -1,9 +1,7 @@
-#include "swap_chain.hpp"
+#include "vulkan_swap_chain.hpp"
 
 // std
 #include <array>
-#include <cstdlib>
-#include <cstring>
 #include <iostream>
 #include <limits>
 #include <set>
@@ -11,13 +9,13 @@
 
 namespace minimal
 {
-    swap_chain::swap_chain(class device& deviceRef, VkExtent2D extent)
+    vulkan_swap_chain::vulkan_swap_chain(class vulkan_device& deviceRef, VkExtent2D extent)
         : device{deviceRef}, windowExtent{extent}
     {
         init();
     }
 
-    swap_chain::swap_chain(minimal::device& deviceRef, VkExtent2D windowExtent, std::shared_ptr<swap_chain> old_swap_chain)
+    vulkan_swap_chain::vulkan_swap_chain(minimal::vulkan_device& deviceRef, VkExtent2D windowExtent, std::shared_ptr<vulkan_swap_chain> old_swap_chain)
         : device{deviceRef}, windowExtent{windowExtent}, old_swap_chain_{old_swap_chain}
     {
         init();
@@ -26,7 +24,7 @@ namespace minimal
         old_swap_chain_ = nullptr;
     }
 
-    swap_chain::~swap_chain()
+    vulkan_swap_chain::~vulkan_swap_chain()
     {
         for (auto imageView : swapChainImageViews)
         {
@@ -63,7 +61,7 @@ namespace minimal
         }
     }
 
-    VkResult swap_chain::acquireNextImage(uint32_t* imageIndex)
+    VkResult vulkan_swap_chain::acquireNextImage(uint32_t* imageIndex)
     {
         vkWaitForFences(
             device.get_device(),
@@ -83,7 +81,7 @@ namespace minimal
         return result;
     }
 
-    VkResult swap_chain::submitCommandBuffers(
+    VkResult vulkan_swap_chain::submitCommandBuffers(
         const VkCommandBuffer* buffers, uint32_t* imageIndex)
     {
         if (imagesInFlight[*imageIndex] != VK_NULL_HANDLE)
@@ -134,7 +132,7 @@ namespace minimal
         return result;
     }
 
-    void swap_chain::init()
+    void vulkan_swap_chain::init()
     {
         createSwapChain();
         createImageViews();
@@ -144,7 +142,7 @@ namespace minimal
         createSyncObjects();
     }
 
-    void swap_chain::createSwapChain()
+    void vulkan_swap_chain::createSwapChain()
     {
         SwapChainSupportDetails swapChainSupport = device.getSwapChainSupport();
 
@@ -212,7 +210,7 @@ namespace minimal
         swapChainExtent = extent;
     }
 
-    void swap_chain::createImageViews()
+    void vulkan_swap_chain::createImageViews()
     {
         swapChainImageViews.resize(swapChainImages.size());
         for (size_t i = 0; i < swapChainImages.size(); i++)
@@ -236,7 +234,7 @@ namespace minimal
         }
     }
 
-    void swap_chain::createRenderPass()
+    void vulkan_swap_chain::createRenderPass()
     {
         VkAttachmentDescription depthAttachment{};
         depthAttachment.format = findDepthFormat();
@@ -299,7 +297,7 @@ namespace minimal
         }
     }
 
-    void swap_chain::createFramebuffers()
+    void vulkan_swap_chain::createFramebuffers()
     {
         swapChainFramebuffers.resize(imageCount());
         for (size_t i = 0; i < imageCount(); i++)
@@ -327,7 +325,7 @@ namespace minimal
         }
     }
 
-    void swap_chain::createDepthResources()
+    void vulkan_swap_chain::createDepthResources()
     {
         VkFormat depthFormat = findDepthFormat();
         swapChainDepthFormat = depthFormat;
@@ -379,7 +377,7 @@ namespace minimal
         }
     }
 
-    void swap_chain::createSyncObjects()
+    void vulkan_swap_chain::createSyncObjects()
     {
         imageAvailableSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
         renderFinishedSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
@@ -406,7 +404,7 @@ namespace minimal
         }
     }
 
-    VkSurfaceFormatKHR swap_chain::chooseSwapSurfaceFormat(
+    VkSurfaceFormatKHR vulkan_swap_chain::chooseSwapSurfaceFormat(
         const std::vector<VkSurfaceFormatKHR>& availableFormats)
     {
         for (const auto& availableFormat : availableFormats)
@@ -421,7 +419,7 @@ namespace minimal
         return availableFormats[0];
     }
 
-    VkPresentModeKHR swap_chain::chooseSwapPresentMode(
+    VkPresentModeKHR vulkan_swap_chain::chooseSwapPresentMode(
         const std::vector<VkPresentModeKHR>& availablePresentModes)
     {
         for (const auto& availablePresentMode : availablePresentModes)
@@ -444,7 +442,7 @@ namespace minimal
         return VK_PRESENT_MODE_FIFO_KHR;
     }
 
-    VkExtent2D swap_chain::chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities)
+    VkExtent2D vulkan_swap_chain::chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities)
     {
         if (capabilities.currentExtent.width != std::numeric_limits<uint32_t>::max())
         {
@@ -464,7 +462,7 @@ namespace minimal
         }
     }
 
-    VkFormat swap_chain::findDepthFormat()
+    VkFormat vulkan_swap_chain::findDepthFormat()
     {
         return device.findSupportedFormat(
             {VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT},
