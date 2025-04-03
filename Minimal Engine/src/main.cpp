@@ -1,4 +1,4 @@
-#include "first_app.hpp"
+#include "FirstApp.hpp"
 
 // std
 #include <cstdlib>
@@ -6,7 +6,7 @@
 #include <stdexcept>
 
 int main() {
-	minimal::first_app renderer{};
+	Minimal::FirstApp renderer{};
 	
 	try
 	{
