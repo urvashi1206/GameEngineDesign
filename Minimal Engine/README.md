@@ -43,12 +43,7 @@ the [Vulkan SDK](https://www.lunarg.com/vulkan-sdk/). This guide provides step-b
 3. **Rename:**  
    Rename the configured file to `.env.cmake`.
 
-### E] Build the Shader Files
-
-Run the following command in your terminal or command prompt (adjust `[Path to CMake]` and `[Path to build output]` as needed):
-`[Path to CMake]` --build `[Path to build output]` --target Shaders -j 30
-
-### F] Build the Engine
+### E] Build the Engine
 
 1. Build the Minimal Engine by executing:
    `[Path to CMake]` --build `[Path to build output]` --target MinimalEngine -j 30

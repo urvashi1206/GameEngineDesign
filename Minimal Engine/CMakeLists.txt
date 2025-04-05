@@ -111,6 +111,7 @@ endif ()
 # Find all vertex and fragment sources within shaders directory
 # taken from VBlancos vulkan tutorial
 # https://github.com/vblanco20-1/vulkan-guide/blob/all-chapters/CMakeLists.txt
+# modified to copy the generated SPIR-V files to the build directory
 find_program(GLSL_VALIDATOR glslangValidator HINTS
         ${Vulkan_GLSLANG_VALIDATOR_EXECUTABLE}
         /usr/bin
@@ -121,11 +122,14 @@ find_program(GLSL_VALIDATOR glslangValidator HINTS
         $ENV{VULKAN_SDK}/Bin32/
 )
 
-# get all .vert and .frag files in shaders directory
+# Get all .vert and .frag files in shaders directory
 file(GLOB_RECURSE GLSL_SOURCE_FILES
         "${PROJECT_SOURCE_DIR}/shaders/*.frag"
         "${PROJECT_SOURCE_DIR}/shaders/*.vert"
 )
+
+# Initialize the list of SPIR-V binary files
+set(SPIRV_BINARY_FILES "")
 
 foreach (GLSL ${GLSL_SOURCE_FILES})
     get_filename_component(FILE_NAME ${GLSL} NAME)
@@ -133,11 +137,39 @@ foreach (GLSL ${GLSL_SOURCE_FILES})
     add_custom_command(
             OUTPUT ${SPIRV}
             COMMAND ${GLSL_VALIDATOR} -V ${GLSL} -o ${SPIRV}
-            DEPENDS ${GLSL})
+            DEPENDS ${GLSL}
+            COMMENT "Compiling ${GLSL} to ${SPIRV}"
+    )
     list(APPEND SPIRV_BINARY_FILES ${SPIRV})
-endforeach (GLSL)
+endforeach ()
 
 add_custom_target(
         Shaders
         DEPENDS ${SPIRV_BINARY_FILES}
+)
+
+# Make MinimalEngine depend on Shaders so they are built first
+add_dependencies(${PROJECT_NAME} Shaders)
+
+# Create the shaders directory in the build folder after building the executable
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:${PROJECT_NAME}>/shaders
+        COMMENT "Creating shaders directory in build folder"
+)
+
+# Copy each generated SPIR-V file into the build folder's shaders directory
+foreach(SPIRV_FILE ${SPIRV_BINARY_FILES})
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SPIRV_FILE} $<TARGET_FILE_DIR:${PROJECT_NAME}>/shaders/
+            COMMENT "Copying ${SPIRV_FILE} to build directory"
+    )
+endforeach()
+
+# Copy the entire models folder to the build folder after building the executable
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:${PROJECT_NAME}>/models
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${PROJECT_SOURCE_DIR}/models
+        $<TARGET_FILE_DIR:${PROJECT_NAME}>/models
+        COMMENT "Copying models directory to build folder"
 )

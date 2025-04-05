@@ -12,3 +12,4 @@ models/viking_room.obj
 imgui.ini
 .env.cmake
 cmake-build-**
+.vs/
