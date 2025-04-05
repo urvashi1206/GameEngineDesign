@@ -11,10 +11,6 @@
 #include <iostream>
 #include <unordered_map>
 
-#ifndef ENINGE_DIR
-#define ENGINE_DIR "../"
-#endif
-
 
 namespace std {
     template<>
@@ -58,7 +54,7 @@ namespace Minimal {
         // if (!LoadObj(&attrib, &shapes, &materials, &warn, &err, &i_stream))
         //     throw std::runtime_error(warn + err);
 
-        if (!LoadObj(&attrib, &shapes, &materials, &warn, &err, (ENGINE_DIR + filePath).c_str()))
+        if (!LoadObj(&attrib, &shapes, &materials, &warn, &err, filePath.c_str()))
             throw std::runtime_error(warn + err);
 
         vertices.clear();

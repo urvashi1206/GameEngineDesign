@@ -6,10 +6,6 @@
 
 #include "../../Model.hpp"
 
-#ifndef ENINGE_DIR
-#define ENGINE_DIR "../"
-#endif
-
 namespace Minimal {
     VulkanPipeline::VulkanPipeline(VulkanDevice &device,
                                    const std::string &vertPath,
@@ -26,11 +22,10 @@ namespace Minimal {
     }
 
     std::vector<char> VulkanPipeline::readFile(const std::string &filePath) {
-        std::string engineDir = ENGINE_DIR + filePath;
-        std::ifstream file{engineDir, std::ios::ate | std::ios::binary};
+        std::ifstream file{filePath, std::ios::ate | std::ios::binary};
 
         if (!file.is_open())
-            throw std::runtime_error("failed to open file: " + engineDir);
+            throw std::runtime_error("failed to open file: " + filePath);
 
         const size_t fileSize = file.tellg();
         std::vector<char> buffer(fileSize);
