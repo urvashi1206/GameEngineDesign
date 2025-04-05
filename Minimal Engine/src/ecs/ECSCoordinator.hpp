@@ -17,8 +17,8 @@ namespace Minimal {
         }
 
         void destroyEntity(Entity entity) {
-            m_entityManager->DestroyEntity(entity);
-            m_componentManager->DestroyEntity(entity);
+            m_entityManager->destroyEntity(entity);
+            m_componentManager->destroyEntity(entity);
         }
 
         template<typename T>
@@ -28,22 +28,22 @@ namespace Minimal {
 
         template<typename T>
         void addComponent(Entity entity, const T &component) {
-            m_componentManager->AddComponent<T>(entity, component);
+            m_componentManager->addComponent<T>(entity, component);
         }
 
         template<typename T>
         void removeComponent(Entity entity) {
-            m_componentManager->RemoveComponent<T>(entity);
+            m_componentManager->removeComponent<T>(entity);
         }
 
         template<typename T>
         T &getComponent(Entity entity) {
-            return m_componentManager->GetComponent<T>(entity);
+            return m_componentManager->getComponent<T>(entity);
         }
 
         template<typename T>
         bool hasComponent(Entity entity) {
-            return m_componentManager->HasComponent<T>(entity);
+            return m_componentManager->hasComponent<T>(entity);
         }
 
     private:

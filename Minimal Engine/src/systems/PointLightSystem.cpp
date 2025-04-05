@@ -63,42 +63,75 @@ namespace Minimal {
     }
 
     void PointLightSystem::update(FrameInfo &frameInfo, GlobalUBO &ubo) {
-        auto rotate_light = glm::rotate(glm::mat4(1.0f),
-                                        frameInfo.frameTime,
-                                        {0.0f, -1.0f, 0.0f}
+        auto rotateLight = rotate(glm::mat4(1.0f),
+                                  frameInfo.frameTime,
+                                  {0.0f, -1.0f, 0.0f}
         );
         int lightIndex = 0;
-        for (auto &kv: frameInfo.gameObjects) {
-            auto &obj = kv.second;
-            if (obj.pointLight == nullptr) continue;
+
+        for (Entity e = 0; e < MAX_ENTITIES; e++) {
+            if (!frameInfo.ecs.hasComponent<PointLightComponent>(e))
+                continue;
+
+            auto &transform = frameInfo.ecs.getComponent<TransformComponent>(e);
+            auto &pointLight = frameInfo.ecs.getComponent<PointLightComponent>(e);
 
             assert(lightIndex< MAX_LIGHTS && "Point lights exceed maximum specified");
 
             // update light position
-            obj.transform.translation = glm::vec3(rotate_light * glm::vec4(obj.transform.translation, 1.0f));
+            transform.position = glm::vec3(rotateLight * glm::vec4(transform.position, 1.0f));
 
             // copy light to ubo
-            ubo.pointLights[lightIndex].position = glm::vec4(obj.transform.translation, 1.0f);
-            ubo.pointLights[lightIndex].color = glm::vec4(obj.color, obj.pointLight->lightIntensity);
+            ubo.pointLights[lightIndex].position = glm::vec4(transform.position, 1.0f);
+            ubo.pointLights[lightIndex].color = glm::vec4(pointLight.color, pointLight.lightIntensity);
 
             lightIndex++;
         }
+        // for (auto& kv : frameInfo.ecs)
+        // {
+        //     auto& obj = kv.second;
+        //     if (obj.pointLight == nullptr) continue;
+        //
+        //     assert(lightIndex< MAX_LIGHTS && "Point lights exceed maximum specified");
+        //
+        //     // update light position
+        //     obj.transform.position = glm::vec3(rotateLight * glm::vec4(obj.transform.position, 1.0f));
+        //
+        //     // copy light to ubo
+        //     ubo.pointLights[lightIndex].position = glm::vec4(obj.transform.position, 1.0f);
+        //     ubo.pointLights[lightIndex].color = glm::vec4(obj.color, obj.pointLight->lightIntensity);
+        //
+        //     lightIndex++;
+        // }
 
         ubo.numLights = lightIndex;
     }
 
     void PointLightSystem::render(FrameInfo &frameInfo) {
         // sort lights
-        std::map<float, GameObject::IdT> sortedLights;
-        for (auto &kv: frameInfo.gameObjects) {
-            auto &obj = kv.second;
-            if (obj.pointLight == nullptr) continue;
+        std::map<float, Entity> sortedLights;
+
+        for (Entity e = 0; e < MAX_ENTITIES; e++) {
+            if (!frameInfo.ecs.hasComponent<PointLightComponent>(e))
+                continue;
+
+            auto &transform = frameInfo.ecs.getComponent<TransformComponent>(e);
 
             // calculate distance
-            auto offset = frameInfo.camera.getPosition() - obj.transform.translation;
-            float distanceSquared = glm::dot(offset, offset);
-            sortedLights[distanceSquared] = obj.getId();
+            auto offset = frameInfo.camera.getPosition() - transform.position;
+            float distanceSquared = dot(offset, offset);
+            sortedLights[distanceSquared] = e;
         }
+        // for (auto& kv : frameInfo.gameObjects)
+        // {
+        //     auto& obj = kv.second;
+        //     if (obj.pointLight == nullptr) continue;
+        //
+        //     // calculate distance
+        //     auto offset = frameInfo.camera.getPosition() - obj.transform.position;
+        //     float distanceSquared = glm::dot(offset, offset);
+        //     sortedLights[distanceSquared] = obj.getId();
+        // }
 
         m_pipeline->bind(frameInfo.commandBuffer);
 
@@ -115,13 +148,15 @@ namespace Minimal {
 
         // iterate through sorted lights in reverse order
         for (auto it = sortedLights.rbegin(); it != sortedLights.rend(); ++it) {
-            auto &obj = frameInfo.gameObjects.at(it->second);
+            // auto& obj = frameInfo.gameObjects.at(it->second);
+            auto &transform = frameInfo.ecs.getComponent<TransformComponent>(it->second);
+            auto &pointLight = frameInfo.ecs.getComponent<PointLightComponent>(it->second);
 
             PointLightPushConstants push{};
 
-            push.position = glm::vec4(obj.transform.translation, 1.0f);
-            push.color = glm::vec4(obj.color, obj.pointLight->lightIntensity);
-            push.radius = obj.transform.scale.x;
+            push.position = glm::vec4(transform.position, 1.0f);
+            push.color = glm::vec4(pointLight.color, pointLight.lightIntensity);
+            push.radius = transform.scale.x;
 
             vkCmdPushConstants(
                 frameInfo.commandBuffer,

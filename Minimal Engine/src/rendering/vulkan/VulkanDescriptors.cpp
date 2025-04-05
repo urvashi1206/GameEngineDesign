@@ -1,19 +1,17 @@
-#include "Descriptors.hpp"
+#include "VulkanDescriptors.hpp"
 
 // std
 #include <cassert>
 #include <stdexcept>
 
-namespace Minimal
-{
+namespace Minimal {
     // *************** Descriptor Set Layout Builder *********************
 
-    DescriptorSetLayout::Builder& DescriptorSetLayout::Builder::addBinding(
+    VulkanDescriptorSetLayout::Builder &VulkanDescriptorSetLayout::Builder::addBinding(
         uint32_t binding,
         VkDescriptorType descriptorType,
         VkShaderStageFlags stageFlags,
-        uint32_t count)
-    {
+        uint32_t count) {
         assert(m_bindings.count(binding) == 0 && "Binding already in use");
         VkDescriptorSetLayoutBinding layoutBinding{};
         layoutBinding.binding = binding;
@@ -24,19 +22,17 @@ namespace Minimal
         return *this;
     }
 
-    std::unique_ptr<DescriptorSetLayout> DescriptorSetLayout::Builder::build() const
-    {
-        return std::make_unique<DescriptorSetLayout>(m_device, m_bindings);
+    std::unique_ptr<VulkanDescriptorSetLayout> VulkanDescriptorSetLayout::Builder::build() const {
+        return std::make_unique<VulkanDescriptorSetLayout>(m_device, m_bindings);
     }
 
     // *************** Descriptor Set Layout *********************
 
-    DescriptorSetLayout::DescriptorSetLayout(
-        VulkanDevice& lveDevice, std::unordered_map<uint32_t, VkDescriptorSetLayoutBinding> bindings)
-        : m_device{lveDevice}, m_bindings{bindings}
-    {
+    VulkanDescriptorSetLayout::VulkanDescriptorSetLayout(
+        VulkanDevice &lveDevice, std::unordered_map<uint32_t, VkDescriptorSetLayoutBinding> bindings)
+        : m_device{lveDevice}, m_bindings{bindings} {
         std::vector<VkDescriptorSetLayoutBinding> setLayoutBindings{};
-        for (auto kv : bindings)
+        for (auto kv: bindings)
             setLayoutBindings.push_back(kv.second);
 
         VkDescriptorSetLayoutCreateInfo descriptorSetLayoutInfo{};
@@ -45,54 +41,48 @@ namespace Minimal
         descriptorSetLayoutInfo.pBindings = setLayoutBindings.data();
 
         if (vkCreateDescriptorSetLayout(
-            lveDevice.get_device(),
-            &descriptorSetLayoutInfo,
-            nullptr,
-            &m_descriptorSetLayout) != VK_SUCCESS)
+                lveDevice.get_device(),
+                &descriptorSetLayoutInfo,
+                nullptr,
+                &m_descriptorSetLayout) != VK_SUCCESS)
             throw std::runtime_error("failed to create descriptor set layout!");
     }
 
-    DescriptorSetLayout::~DescriptorSetLayout()
-    {
+    VulkanDescriptorSetLayout::~VulkanDescriptorSetLayout() {
         vkDestroyDescriptorSetLayout(m_device.get_device(), m_descriptorSetLayout, nullptr);
     }
 
     // *************** Descriptor Pool Builder *********************
 
-    DescriptorPool::Builder& DescriptorPool::Builder::addPoolSize(
-        VkDescriptorType descriptorType, uint32_t count)
-    {
+    VulkanDescriptorPool::Builder &VulkanDescriptorPool::Builder::addPoolSize(
+        VkDescriptorType descriptorType, uint32_t count) {
         m_poolSizes.push_back({descriptorType, count});
         return *this;
     }
 
-    DescriptorPool::Builder& DescriptorPool::Builder::setPoolFlags(
-        VkDescriptorPoolCreateFlags flags)
-    {
+    VulkanDescriptorPool::Builder &VulkanDescriptorPool::Builder::setPoolFlags(
+        VkDescriptorPoolCreateFlags flags) {
         m_poolFlags = flags;
         return *this;
     }
 
-    DescriptorPool::Builder& DescriptorPool::Builder::setMaxSets(uint32_t count)
-    {
+    VulkanDescriptorPool::Builder &VulkanDescriptorPool::Builder::setMaxSets(uint32_t count) {
         m_maxSets = count;
         return *this;
     }
 
-    std::unique_ptr<DescriptorPool> DescriptorPool::Builder::build() const
-    {
-        return std::make_unique<DescriptorPool>(m_device, m_maxSets, m_poolFlags, m_poolSizes);
+    std::unique_ptr<VulkanDescriptorPool> VulkanDescriptorPool::Builder::build() const {
+        return std::make_unique<VulkanDescriptorPool>(m_device, m_maxSets, m_poolFlags, m_poolSizes);
     }
 
     // *************** Descriptor Pool *********************
 
-    DescriptorPool::DescriptorPool(
-        VulkanDevice& lveDevice,
+    VulkanDescriptorPool::VulkanDescriptorPool(
+        VulkanDevice &lveDevice,
         uint32_t maxSets,
         VkDescriptorPoolCreateFlags poolFlags,
-        const std::vector<VkDescriptorPoolSize>& poolSizes)
-        : m_device{lveDevice}
-    {
+        const std::vector<VkDescriptorPoolSize> &poolSizes)
+        : m_device{lveDevice} {
         VkDescriptorPoolCreateInfo descriptorPoolInfo{};
         descriptorPoolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
         descriptorPoolInfo.poolSizeCount = static_cast<uint32_t>(poolSizes.size());
@@ -104,14 +94,12 @@ namespace Minimal
             throw std::runtime_error("failed to create descriptor pool!");
     }
 
-    DescriptorPool::~DescriptorPool()
-    {
+    VulkanDescriptorPool::~VulkanDescriptorPool() {
         vkDestroyDescriptorPool(m_device.get_device(), m_descriptorPool, nullptr);
     }
 
-    bool DescriptorPool::allocateDescriptor(
-        const VkDescriptorSetLayout descriptorSetLayout, VkDescriptorSet& descriptor) const
-    {
+    bool VulkanDescriptorPool::allocateDescriptor(
+        const VkDescriptorSetLayout descriptorSetLayout, VkDescriptorSet &descriptor) const {
         VkDescriptorSetAllocateInfo allocInfo{};
         allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
         allocInfo.descriptorPool = m_descriptorPool;
@@ -120,15 +108,13 @@ namespace Minimal
 
         // Might want to create a "DescriptorPoolManager" class that handles this case, and builds
         // a new pool whenever an old pool fills up. But this is beyond our current scope
-        if (vkAllocateDescriptorSets(m_device.get_device(), &allocInfo, &descriptor) != VK_SUCCESS)
-        {
+        if (vkAllocateDescriptorSets(m_device.get_device(), &allocInfo, &descriptor) != VK_SUCCESS) {
             return false;
         }
         return true;
     }
 
-    void DescriptorPool::freeDescriptors(std::vector<VkDescriptorSet>& descriptors) const
-    {
+    void VulkanDescriptorPool::freeDescriptors(std::vector<VkDescriptorSet> &descriptors) const {
         vkFreeDescriptorSets(
             m_device.get_device(),
             m_descriptorPool,
@@ -136,22 +122,20 @@ namespace Minimal
             descriptors.data());
     }
 
-    void DescriptorPool::resetPool()
-    {
+    void VulkanDescriptorPool::resetPool() {
         vkResetDescriptorPool(m_device.get_device(), m_descriptorPool, 0);
     }
 
     // *************** Descriptor Writer *********************
 
-    DescriptorWriter::DescriptorWriter(DescriptorSetLayout& setLayout, DescriptorPool& pool)
+    VulkanDescriptorWriter::VulkanDescriptorWriter(VulkanDescriptorSetLayout &setLayout, VulkanDescriptorPool &pool)
         : m_setLayout{setLayout}, m_pool{pool} {}
 
-    DescriptorWriter& DescriptorWriter::writeBuffer(
-        uint32_t binding, VkDescriptorBufferInfo* bufferInfo)
-    {
+    VulkanDescriptorWriter &VulkanDescriptorWriter::writeBuffer(
+        uint32_t binding, VkDescriptorBufferInfo *bufferInfo) {
         assert(m_setLayout.m_bindings.count(binding) == 1 && "Layout does not contain specified binding");
 
-        auto& bindingDescription = m_setLayout.m_bindings[binding];
+        auto &bindingDescription = m_setLayout.m_bindings[binding];
 
         assert(
             bindingDescription.descriptorCount == 1 &&
@@ -168,12 +152,11 @@ namespace Minimal
         return *this;
     }
 
-    DescriptorWriter& DescriptorWriter::writeImage(
-        uint32_t binding, VkDescriptorImageInfo* imageInfo)
-    {
+    VulkanDescriptorWriter &VulkanDescriptorWriter::writeImage(
+        uint32_t binding, VkDescriptorImageInfo *imageInfo) {
         assert(m_setLayout.m_bindings.count(binding) == 1 && "Layout does not contain specified binding");
 
-        auto& bindingDescription = m_setLayout.m_bindings[binding];
+        auto &bindingDescription = m_setLayout.m_bindings[binding];
 
         assert(
             bindingDescription.descriptorCount == 1 &&
@@ -190,8 +173,7 @@ namespace Minimal
         return *this;
     }
 
-    bool DescriptorWriter::build(VkDescriptorSet& set)
-    {
+    bool VulkanDescriptorWriter::build(VkDescriptorSet &set) {
         bool success = m_pool.allocateDescriptor(m_setLayout.getDescriptorSetLayout(), set);
         if (!success)
             return false;
@@ -200,9 +182,8 @@ namespace Minimal
         return true;
     }
 
-    void DescriptorWriter::overwrite(VkDescriptorSet& set)
-    {
-        for (auto& write : m_writes)
+    void VulkanDescriptorWriter::overwrite(VkDescriptorSet &set) {
+        for (auto &write: m_writes)
             write.dstSet = set;
 
         vkUpdateDescriptorSets(m_pool.m_device.get_device(), m_writes.size(), m_writes.data(), 0, nullptr);

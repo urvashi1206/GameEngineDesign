@@ -9,9 +9,9 @@
 
 namespace Minimal {
     struct TransformComponent {
-        glm::vec3 translation{};
-        glm::vec3 scale{1.0f, 1.0f, 1.0f};
-        glm::vec3 rotation{};
+        glm::vec3 position{0.0f};
+        glm::vec3 rotation{0.0f};
+        glm::vec3 scale{1.0f};
 
         // Matrix corrsponds to Translate * Ry * Rx * Rz * Scale
         // Rotations correspond to Tait-bryan angles of Y(1), X(2), Z(3)
@@ -19,10 +19,13 @@ namespace Minimal {
         glm::mat4 mat4();
 
         glm::mat3 normalMatrix();
+
+        std::string toString();
     };
 
     struct PointLightComponent {
         float lightIntensity = 1.0f;
+        glm::vec3 color{};
     };
 
     class GameObject {

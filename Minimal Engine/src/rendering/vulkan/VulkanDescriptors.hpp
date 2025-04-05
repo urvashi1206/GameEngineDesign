@@ -1,6 +1,6 @@
 #pragma once
 
-#include "rendering/vulkan/VulkanDevice.hpp"
+#include "VulkanDevice.hpp"
 
 // std
 #include <memory>
@@ -8,7 +8,7 @@
 #include <vector>
 
 namespace Minimal {
-    class DescriptorSetLayout {
+    class VulkanDescriptorSetLayout {
     public:
         class Builder {
         public:
@@ -21,20 +21,20 @@ namespace Minimal {
                 uint32_t count = 1
             );
 
-            std::unique_ptr<DescriptorSetLayout> build() const;
+            std::unique_ptr<VulkanDescriptorSetLayout> build() const;
 
         private:
             VulkanDevice &m_device;
             std::unordered_map<uint32_t, VkDescriptorSetLayoutBinding> m_bindings{};
         };
 
-        DescriptorSetLayout(VulkanDevice &device, std::unordered_map<uint32_t, VkDescriptorSetLayoutBinding> bindings);
+        VulkanDescriptorSetLayout(VulkanDevice &device, std::unordered_map<uint32_t, VkDescriptorSetLayoutBinding> bindings);
 
-        ~DescriptorSetLayout();
+        ~VulkanDescriptorSetLayout();
 
-        DescriptorSetLayout(const DescriptorSetLayout &) = delete;
+        VulkanDescriptorSetLayout(const VulkanDescriptorSetLayout &) = delete;
 
-        DescriptorSetLayout &operator=(const DescriptorSetLayout &) = delete;
+        VulkanDescriptorSetLayout &operator=(const VulkanDescriptorSetLayout &) = delete;
 
         VkDescriptorSetLayout getDescriptorSetLayout() const { return m_descriptorSetLayout; }
 
@@ -43,10 +43,10 @@ namespace Minimal {
         VkDescriptorSetLayout m_descriptorSetLayout;
         std::unordered_map<uint32_t, VkDescriptorSetLayoutBinding> m_bindings;
 
-        friend class DescriptorWriter;
+        friend class VulkanDescriptorWriter;
     };
 
-    class DescriptorPool {
+    class VulkanDescriptorPool {
     public:
         class Builder {
         public:
@@ -58,7 +58,7 @@ namespace Minimal {
 
             Builder &setMaxSets(uint32_t count);
 
-            std::unique_ptr<DescriptorPool> build() const;
+            std::unique_ptr<VulkanDescriptorPool> build() const;
 
         private:
             VulkanDevice &m_device;
@@ -67,17 +67,17 @@ namespace Minimal {
             VkDescriptorPoolCreateFlags m_poolFlags = 0;
         };
 
-        DescriptorPool(
+        VulkanDescriptorPool(
             VulkanDevice &device,
             uint32_t maxSets,
             VkDescriptorPoolCreateFlags poolFlags,
             const std::vector<VkDescriptorPoolSize> &poolSizes);
 
-        ~DescriptorPool();
+        ~VulkanDescriptorPool();
 
-        DescriptorPool(const DescriptorPool &) = delete;
+        VulkanDescriptorPool(const VulkanDescriptorPool &) = delete;
 
-        DescriptorPool &operator=(const DescriptorPool &) = delete;
+        VulkanDescriptorPool &operator=(const VulkanDescriptorPool &) = delete;
 
         bool allocateDescriptor(const VkDescriptorSetLayout descriptorSetLayout, VkDescriptorSet &descriptor) const;
 
@@ -89,24 +89,24 @@ namespace Minimal {
         VulkanDevice &m_device;
         VkDescriptorPool m_descriptorPool;
 
-        friend class DescriptorWriter;
+        friend class VulkanDescriptorWriter;
     };
 
-    class DescriptorWriter {
+    class VulkanDescriptorWriter {
     public:
-        DescriptorWriter(DescriptorSetLayout &setLayout, DescriptorPool &pool);
+        VulkanDescriptorWriter(VulkanDescriptorSetLayout &setLayout, VulkanDescriptorPool &pool);
 
-        DescriptorWriter &writeBuffer(uint32_t binding, VkDescriptorBufferInfo *bufferInfo);
+        VulkanDescriptorWriter &writeBuffer(uint32_t binding, VkDescriptorBufferInfo *bufferInfo);
 
-        DescriptorWriter &writeImage(uint32_t binding, VkDescriptorImageInfo *imageInfo);
+        VulkanDescriptorWriter &writeImage(uint32_t binding, VkDescriptorImageInfo *imageInfo);
 
         bool build(VkDescriptorSet &set);
 
         void overwrite(VkDescriptorSet &set);
 
     private:
-        DescriptorSetLayout &m_setLayout;
-        DescriptorPool &m_pool;
+        VulkanDescriptorSetLayout &m_setLayout;
+        VulkanDescriptorPool &m_pool;
         std::vector<VkWriteDescriptorSet> m_writes;
     };
 }

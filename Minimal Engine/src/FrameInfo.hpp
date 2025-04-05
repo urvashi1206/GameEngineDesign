@@ -1,21 +1,24 @@
 #pragma once
 
-#include "Camera.hpp"
-
 // lib
-#include <vulkan/vulkan.h>
+#include <ecs/Components.hpp>
+#include <ecs/ECSCoordinator.hpp>
 
 #include "GameObject.hpp"
+#include "vulkan/vulkan.h"
 
-namespace Minimal {
+namespace Minimal
+{
 #define MAX_LIGHTS 10
 
-    struct PointLight {
+    struct PointLight
+    {
         glm::vec4 position{}; // ignore w
         glm::vec4 color{}; // w is intensity
     };
 
-    struct GlobalUBO {
+    struct GlobalUBO
+    {
         glm::mat4 projection{1.0f};
         glm::mat4 view{1.0f};
         glm::mat4 inverseView{1.0f};
@@ -24,12 +27,14 @@ namespace Minimal {
         int numLights;
     };
 
-    struct FrameInfo {
+    struct FrameInfo
+    {
         int frameIndex;
         float frameTime;
         VkCommandBuffer commandBuffer;
-        Camera &camera;
+        CameraComponent& camera;
         VkDescriptorSet globalDescriptorSet;
-        GameObject::Map &gameObjects;
+        // GameObject::Map &gameObjects;
+        ECSCoordinator& ecs;
     };
 }
