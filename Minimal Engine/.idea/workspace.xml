@@ -37,30 +37,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ff6dfa8c-eb6c-408e-98c4-a7d0c45c3a71" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/Engine.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Engine.hpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/ecs/Components.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/systems/CameraSystem.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/systems/CameraSystem.hpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../ECSProject/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../ECSProject/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/editor.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/editor.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Descriptors.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/rendering/vulkan/VulkanDescriptors.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Descriptors.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/rendering/vulkan/VulkanDescriptors.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/FirstApp.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/FirstApp.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/FrameInfo.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/FrameInfo.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/GameObject.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/GameObject.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/GameObject.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/GameObject.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/KeyboardMovementController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/KeyboardMovementController.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/KeyboardMovementController.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/KeyboardMovementController.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Model.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ecs/ComponentManager.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ecs/ComponentManager.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ecs/Components.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ecs/Components.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ecs/ECSCoordinator.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ecs/ECSCoordinator.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/systems/PointLightSystem.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/systems/PointLightSystem.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/systems/SimpleRendererSystem.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/systems/SimpleRendererSystem.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -319,14 +298,17 @@
     <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Camera.hpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Engine.hpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/FrameInfo.hpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/GameObject.hpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Model.hpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/ecs/ComponentArray.hpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/ecs/ComponentManager.hpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/ecs/Components.hpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/ecs/ECSCoordinator.hpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/ecs/EntityManager.hpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/rendering/vulkan/Descriptors.hpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/rendering/vulkan/VulkanDescriptors.hpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/rendering/vulkan/VulkanDevice.hpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/systems/CameraSystem.hpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/systems/PointLightSystem.hpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/systems/SimpleRendererSystem.hpp" root0="FORCE_HIGHLIGHTING" />
   </component>
@@ -347,31 +329,31 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "CMake Application.MinimalEngine.executor": "Run",
-    "CMake Application.Shaders.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.RadMigrateCodeStyle": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.cidr.known.project.marker": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.readMode.enableVisualFormatting": "true",
-    "RunOnceActivity.west.config.association.type.startup.service": "true",
-    "cf.advertisement.text.has.clang-format": "true",
-    "cf.first.check.clang-format": "false",
-    "cidr.known.project.marker": "true",
-    "git-widget-placeholder": "Rendering",
-    "last_opened_file_path": "C:/Users/rohit/Study/Sem 4/689/Game Engine Project/Minimal Engine/src",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.sourceCode.C/C++",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;CMake Application.MinimalEngine.executor&quot;: &quot;Run&quot;,
+    &quot;CMake Application.Shaders.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.RadMigrateCodeStyle&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.west.config.association.type.startup.service&quot;: &quot;true&quot;,
+    &quot;cf.advertisement.text.has.clang-format&quot;: &quot;true&quot;,
+    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Rendering&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/rohit/Study/Sem 4/689/Game Engine Project/Minimal Engine/src&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.sourceCode.C/C++&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\rohit\Study\Sem 4\689\Game Engine Project\Minimal Engine\src" />
@@ -381,11 +363,6 @@
     </key>
   </component>
   <component name="RunManager" selected="CMake Application.MinimalEngine">
-    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="MinimalEngine" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="MinimalEngine" TARGET_NAME="MinimalEngine" CONFIG_NAME="Debug-Visual Studio" RUN_TARGET_PROJECT_NAME="MinimalEngine" RUN_TARGET_NAME="MinimalEngine">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -420,7 +397,9 @@
       <workItem from="1743652259068" duration="5943000" />
       <workItem from="1743663513172" duration="21745000" />
       <workItem from="1743712013117" duration="4359000" />
-      <workItem from="1743795154505" duration="18028000" />
+      <workItem from="1743795154505" duration="19545000" />
+      <workItem from="1743831111377" duration="58000" />
+      <workItem from="1743831289510" duration="309000" />
     </task>
     <servers />
   </component>
