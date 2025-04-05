@@ -27,7 +27,7 @@ namespace Minimal {
                 scale.z * (c1 * c2),
                 0.0f,
             },
-            {translation.x, translation.y, translation.z, 1.0f}
+            {position.x, position.y, position.z, 1.0f}
         };
     }
 
@@ -56,6 +56,12 @@ namespace Minimal {
                 inverseScale.z * (c1 * c2)
             }
         };
+    }
+
+    std::string TransformComponent::toString() {
+        return "TransformComponent: " + std::to_string(position.x) + ", " + std::to_string(position.y) + ", " + std::to_string(position.z) + "\n" +
+               std::to_string(rotation.x) + ", " + std::to_string(rotation.y) + ", " + std::to_string(rotation.z) + "\n" +
+               std::to_string(scale.x) + ", " + std::to_string(scale.y) + ", " + std::to_string(scale.z);
     }
 
     GameObject GameObject::makePointLight(float intensity, float radius, glm::vec3 color) {

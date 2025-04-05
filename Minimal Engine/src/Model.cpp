@@ -119,7 +119,7 @@ namespace Minimal {
         Builder builder{};
         builder.loadModel(filePath);
 
-        std::cout << "Vectex count: " << builder.vertices.size() << '\n';
+        std::cout << "Vertex count: " << builder.vertices.size() << '\n';
 
         return std::make_unique<Model>(device, builder);
     }

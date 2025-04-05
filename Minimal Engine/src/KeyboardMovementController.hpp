@@ -3,10 +3,13 @@
 #include "GameObject.hpp"
 #include "Window.hpp"
 
-namespace Minimal {
-    class KeyboardMovementController {
+namespace Minimal
+{
+    class KeyboardMovementController
+    {
     public:
-        struct KeyMappings {
+        struct KeyMappings
+        {
             int moveLeft = GLFW_KEY_A;
             int moveRight = GLFW_KEY_D;
             int moveForward = GLFW_KEY_W;
@@ -19,7 +22,8 @@ namespace Minimal {
             int lookDown = GLFW_KEY_DOWN;
         };
 
-        void moveInPlaneXZ(GLFWwindow *window, float dt, GameObject &gameObject);
+        void moveInPlaneXZ(GLFWwindow* window, float dt, GameObject& gameObject);
+        void moveInPlaneXZ(GLFWwindow* window, float dt, TransformComponent& cameraTransform);
 
         KeyMappings keys{};
         float moveSpeed{3.0f};
