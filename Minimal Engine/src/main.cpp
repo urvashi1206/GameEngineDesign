@@ -10,7 +10,7 @@ int main()
 
     try
     {
-        engine.runECS();
+        engine.run();
     }
     catch (const std::exception& e)
     {

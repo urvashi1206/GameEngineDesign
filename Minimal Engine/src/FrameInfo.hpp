@@ -34,7 +34,6 @@ namespace Minimal
         VkCommandBuffer commandBuffer;
         CameraComponent& camera;
         VkDescriptorSet globalDescriptorSet;
-        // GameObject::Map &gameObjects;
         ECSCoordinator& ecs;
     };
 }

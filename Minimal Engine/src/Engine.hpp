@@ -29,11 +29,7 @@ namespace Minimal {
 
         void run();
 
-        void runECS();
-
     private:
-        void loadGameObjects();
-
         void loadEntities();
 
         ECSCoordinator m_ecs;
@@ -43,6 +39,5 @@ namespace Minimal {
 
         // note: order of declarations matters
         std::unique_ptr<VulkanDescriptorPool> m_globalPool{};
-        GameObject::Map m_gameObjects;
     };
 }
