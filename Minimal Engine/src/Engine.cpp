@@ -75,7 +75,7 @@ namespace Minimal {
         Entity cameraEntity = m_ecs.createEntity();
         m_ecs.addComponent<CameraComponent>(cameraEntity, {true});
 
-        // camera.set_view_direction(glm::vec3(0.0f), glm::vec3(0.5f, 0.0f, 1.0f));
+        // cameraSystem.setViewDirection(glm::vec3(0.0f), glm::vec3(0.5f, 0.0f, 1.0f));
         cameraSystem.setViewTarget(cameraEntity, glm::vec3(-1.0f, -2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 2.5f));
 
         auto &cameraTransform = m_ecs.getComponent<TransformComponent>(cameraEntity);

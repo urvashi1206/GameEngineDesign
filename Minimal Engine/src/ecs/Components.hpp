@@ -57,15 +57,6 @@ namespace Minimal {
     };
 
     struct CameraComponent {
-        void setOrthographicProjection(float left, float right, float top, float bottom, float near, float far);
-
-        void setPerspectiveProjection(float fovy, float aspect, float near, float far);
-
-        void setViewDirection(glm::vec3 position, glm::vec3 direction, glm::vec3 up = {0.0f, -1.0f, 0.0f});
-
-        void setViewTarget(glm::vec3 position, glm::vec3 target, glm::vec3 up = {0.0f, -1.0f, 0.0f});
-
-        void setViewYXZ(glm::vec3 position, glm::vec3 rotation);
 
         const glm::vec3 &getPosition() const { return glm::vec3(inverseViewMatrix[3]); }
 
