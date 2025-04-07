@@ -3,10 +3,24 @@
 #include "Model.hpp"
 
 namespace Minimal {
-    struct Transform3D {
-        glm::vec3 position{0.0f, 0.0f, 0.0f};
-        glm::vec3 rotation{0.0f, 0.0f, 0.0f};
-        glm::vec3 scale{1.0f, 1.0f, 1.0f};
+    struct TransformComponent {
+        glm::vec3 position{0.0f};
+        glm::vec3 rotation{0.0f};
+        glm::vec3 scale{1.0f};
+
+        // Matrix corrsponds to Translate * Ry * Rx * Rz * Scale
+        // Rotations correspond to Tait-bryan angles of Y(1), X(2), Z(3)
+        // https://en.wikipedia.org/wiki/Euler_angles#Rotation_matrix // Brendan Galea
+        glm::mat4 mat4();
+
+        glm::mat3 normalMatrix();
+
+        std::string toString();
+    };
+
+    struct PointLightComponent {
+        float lightIntensity = 1.0f;
+        glm::vec3 color{};
     };
 
     struct MeshRendererComponent {
@@ -53,14 +67,11 @@ namespace Minimal {
 
         void setViewYXZ(glm::vec3 position, glm::vec3 rotation);
 
-        const glm::mat4 &getProjection() const { return m_projectionMatrix; }
-        const glm::mat4 &getView() const { return m_viewMatrix; }
-        const glm::mat4 &getInverseView() const { return m_inverseViewMatrix; }
-        const glm::vec3 &getPosition() const { return glm::vec3(m_inverseViewMatrix[3]); }
+        const glm::vec3 &getPosition() const { return glm::vec3(inverseViewMatrix[3]); }
 
-    private:
-        glm::mat4 m_projectionMatrix{1.0f};
-        glm::mat4 m_viewMatrix{1.0f};
-        glm::mat4 m_inverseViewMatrix{1.0f};
+        bool isMain;
+        glm::mat4 projectionMatrix{1.0f};
+        glm::mat4 viewMatrix{1.0f};
+        glm::mat4 inverseViewMatrix{1.0f};
     };
 }

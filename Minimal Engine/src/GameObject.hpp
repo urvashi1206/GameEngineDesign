@@ -7,26 +7,9 @@
 #include <unordered_map>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "ecs/Components.hpp"
+
 namespace Minimal {
-    struct TransformComponent {
-        glm::vec3 position{0.0f};
-        glm::vec3 rotation{0.0f};
-        glm::vec3 scale{1.0f};
-
-        // Matrix corrsponds to Translate * Ry * Rx * Rz * Scale
-        // Rotations correspond to Tait-bryan angles of Y(1), X(2), Z(3)
-        // https://en.wikipedia.org/wiki/Euler_angles#Rotation_matrix // Brendan Galea
-        glm::mat4 mat4();
-
-        glm::mat3 normalMatrix();
-
-        std::string toString();
-    };
-
-    struct PointLightComponent {
-        float lightIntensity = 1.0f;
-        glm::vec3 color{};
-    };
 
     class GameObject {
     public:

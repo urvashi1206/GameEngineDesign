@@ -111,6 +111,7 @@ namespace Minimal {
         // sort lights
         std::map<float, Entity> sortedLights;
 
+
         for (Entity e = 0; e < MAX_ENTITIES; e++) {
             if (!frameInfo.ecs.hasComponent<PointLightComponent>(e))
                 continue;

@@ -13,7 +13,10 @@ namespace Minimal {
         }
 
         Entity createEntity() {
-            return m_entityManager->createEntity();
+            Entity entity = m_entityManager->createEntity();
+            addComponent<TransformComponent>(entity, {});
+
+            return entity;
         }
 
         void destroyEntity(Entity entity) {
