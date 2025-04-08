@@ -1,12 +1,309 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\Users\\krims\\Documents\\GitHub\\GameEngineDesign\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{ACF860A3-2352-4AB1-A8D0-00295A054E84}|D3D11Starter.vcxproj|C:\\Users\\krims\\Documents\\GitHub\\GameEngineDesign\\ResourceManager.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{ACF860A3-2352-4AB1-A8D0-00295A054E84}|D3D11Starter.vcxproj|solutionrelative:ResourceManager.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ACF860A3-2352-4AB1-A8D0-00295A054E84}|D3D11Starter.vcxproj|C:\\Users\\krims\\Documents\\GitHub\\GameEngineDesign\\PhysicsUtils.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{ACF860A3-2352-4AB1-A8D0-00295A054E84}|D3D11Starter.vcxproj|solutionrelative:PhysicsUtils.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ACF860A3-2352-4AB1-A8D0-00295A054E84}|D3D11Starter.vcxproj|C:\\Users\\krims\\Documents\\GitHub\\GameEngineDesign\\PhysicsUtils.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{ACF860A3-2352-4AB1-A8D0-00295A054E84}|D3D11Starter.vcxproj|solutionrelative:PhysicsUtils.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ACF860A3-2352-4AB1-A8D0-00295A054E84}|D3D11Starter.vcxproj|C:\\Users\\krims\\Documents\\GitHub\\GameEngineDesign\\PhysicsSystem.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{ACF860A3-2352-4AB1-A8D0-00295A054E84}|D3D11Starter.vcxproj|solutionrelative:PhysicsSystem.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ACF860A3-2352-4AB1-A8D0-00295A054E84}|D3D11Starter.vcxproj|C:\\Users\\krims\\Documents\\GitHub\\GameEngineDesign\\PhysicsSystem.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{ACF860A3-2352-4AB1-A8D0-00295A054E84}|D3D11Starter.vcxproj|solutionrelative:PhysicsSystem.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ACF860A3-2352-4AB1-A8D0-00295A054E84}|D3D11Starter.vcxproj|C:\\Users\\krims\\Documents\\GitHub\\GameEngineDesign\\PhysicsComponents.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{ACF860A3-2352-4AB1-A8D0-00295A054E84}|D3D11Starter.vcxproj|solutionrelative:PhysicsComponents.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ACF860A3-2352-4AB1-A8D0-00295A054E84}|D3D11Starter.vcxproj|C:\\Users\\krims\\Documents\\GitHub\\GameEngineDesign\\SphereCollider.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{ACF860A3-2352-4AB1-A8D0-00295A054E84}|D3D11Starter.vcxproj|solutionrelative:SphereCollider.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ACF860A3-2352-4AB1-A8D0-00295A054E84}|D3D11Starter.vcxproj|C:\\Users\\krims\\Documents\\GitHub\\GameEngineDesign\\BoxCollider.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{ACF860A3-2352-4AB1-A8D0-00295A054E84}|D3D11Starter.vcxproj|solutionrelative:BoxCollider.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ACF860A3-2352-4AB1-A8D0-00295A054E84}|D3D11Starter.vcxproj|C:\\Users\\krims\\Documents\\GitHub\\GameEngineDesign\\ConvexCollider.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{ACF860A3-2352-4AB1-A8D0-00295A054E84}|D3D11Starter.vcxproj|solutionrelative:ConvexCollider.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ACF860A3-2352-4AB1-A8D0-00295A054E84}|D3D11Starter.vcxproj|C:\\Users\\krims\\Documents\\GitHub\\GameEngineDesign\\Collider.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{ACF860A3-2352-4AB1-A8D0-00295A054E84}|D3D11Starter.vcxproj|solutionrelative:Collider.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ACF860A3-2352-4AB1-A8D0-00295A054E84}|D3D11Starter.vcxproj|C:\\Users\\krims\\Documents\\GitHub\\GameEngineDesign\\Rigidbody.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{ACF860A3-2352-4AB1-A8D0-00295A054E84}|D3D11Starter.vcxproj|solutionrelative:Rigidbody.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ACF860A3-2352-4AB1-A8D0-00295A054E84}|D3D11Starter.vcxproj|C:\\Users\\krims\\Documents\\GitHub\\GameEngineDesign\\Rigidbody.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{ACF860A3-2352-4AB1-A8D0-00295A054E84}|D3D11Starter.vcxproj|solutionrelative:Rigidbody.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ACF860A3-2352-4AB1-A8D0-00295A054E84}|D3D11Starter.vcxproj|C:\\Users\\krims\\Documents\\GitHub\\GameEngineDesign\\Transform.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{ACF860A3-2352-4AB1-A8D0-00295A054E84}|D3D11Starter.vcxproj|solutionrelative:Transform.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ACF860A3-2352-4AB1-A8D0-00295A054E84}|D3D11Starter.vcxproj|C:\\Users\\krims\\Documents\\GitHub\\GameEngineDesign\\Transform.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{ACF860A3-2352-4AB1-A8D0-00295A054E84}|D3D11Starter.vcxproj|solutionrelative:Transform.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ACF860A3-2352-4AB1-A8D0-00295A054E84}|D3D11Starter.vcxproj|C:\\Users\\krims\\Documents\\GitHub\\GameEngineDesign\\ConvexCollider.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{ACF860A3-2352-4AB1-A8D0-00295A054E84}|D3D11Starter.vcxproj|solutionrelative:ConvexCollider.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ACF860A3-2352-4AB1-A8D0-00295A054E84}|D3D11Starter.vcxproj|C:\\Users\\krims\\Documents\\GitHub\\GameEngineDesign\\PhysicsSubsystem.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{ACF860A3-2352-4AB1-A8D0-00295A054E84}|D3D11Starter.vcxproj|solutionrelative:PhysicsSubsystem.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{ACF860A3-2352-4AB1-A8D0-00295A054E84}|D3D11Starter.vcxproj|C:\\Users\\krims\\Documents\\GitHub\\GameEngineDesign\\PhysicsSubsystem.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{ACF860A3-2352-4AB1-A8D0-00295A054E84}|D3D11Starter.vcxproj|solutionrelative:PhysicsSubsystem.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
       "VerticalTabListWidth": 256,
-      "DocumentGroups": []
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ResourceManager.cpp",
+              "DocumentMoniker": "C:\\Users\\krims\\Documents\\GitHub\\GameEngineDesign\\ResourceManager.cpp",
+              "RelativeDocumentMoniker": "ResourceManager.cpp",
+              "ToolTip": "C:\\Users\\krims\\Documents\\GitHub\\GameEngineDesign\\ResourceManager.cpp*",
+              "RelativeToolTip": "ResourceManager.cpp*",
+              "ViewState": "AgIAAIsAAAAAAAAAAAAAAJ4AAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-04-08T22:56:11.356Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "SphereCollider.cpp",
+              "DocumentMoniker": "C:\\Users\\krims\\Documents\\GitHub\\GameEngineDesign\\SphereCollider.cpp",
+              "RelativeDocumentMoniker": "SphereCollider.cpp",
+              "ToolTip": "C:\\Users\\krims\\Documents\\GitHub\\GameEngineDesign\\SphereCollider.cpp",
+              "RelativeToolTip": "SphereCollider.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAAEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-04-08T20:25:05.782Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "BoxCollider.cpp",
+              "DocumentMoniker": "C:\\Users\\krims\\Documents\\GitHub\\GameEngineDesign\\BoxCollider.cpp",
+              "RelativeDocumentMoniker": "BoxCollider.cpp",
+              "ToolTip": "C:\\Users\\krims\\Documents\\GitHub\\GameEngineDesign\\BoxCollider.cpp",
+              "RelativeToolTip": "BoxCollider.cpp",
+              "ViewState": "AgIAAHcAAAAAAAAAAAAAAIMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-04-08T19:18:25.642Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "PhysicsUtils.cpp",
+              "DocumentMoniker": "C:\\Users\\krims\\Documents\\GitHub\\GameEngineDesign\\PhysicsUtils.cpp",
+              "RelativeDocumentMoniker": "PhysicsUtils.cpp",
+              "ToolTip": "C:\\Users\\krims\\Documents\\GitHub\\GameEngineDesign\\PhysicsUtils.cpp",
+              "RelativeToolTip": "PhysicsUtils.cpp",
+              "ViewState": "AgIAAD8BAAAAAAAAAAAQwEwBAAAXAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-04-08T12:56:56.354Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "PhysicsUtils.h",
+              "DocumentMoniker": "C:\\Users\\krims\\Documents\\GitHub\\GameEngineDesign\\PhysicsUtils.h",
+              "RelativeDocumentMoniker": "PhysicsUtils.h",
+              "ToolTip": "C:\\Users\\krims\\Documents\\GitHub\\GameEngineDesign\\PhysicsUtils.h",
+              "RelativeToolTip": "PhysicsUtils.h",
+              "ViewState": "AgIAAB8AAAAAAAAAAAAAADMAAAAyAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-04-08T12:56:37.782Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "PhysicsComponents.h",
+              "DocumentMoniker": "C:\\Users\\krims\\Documents\\GitHub\\GameEngineDesign\\PhysicsComponents.h",
+              "RelativeDocumentMoniker": "PhysicsComponents.h",
+              "ToolTip": "C:\\Users\\krims\\Documents\\GitHub\\GameEngineDesign\\PhysicsComponents.h",
+              "RelativeToolTip": "PhysicsComponents.h",
+              "ViewState": "AgIAABAAAAAAAAAAAAAAAA4AAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-04-01T22:02:58.096Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "PhysicsSystem.cpp",
+              "DocumentMoniker": "C:\\Users\\krims\\Documents\\GitHub\\GameEngineDesign\\PhysicsSystem.cpp",
+              "RelativeDocumentMoniker": "PhysicsSystem.cpp",
+              "ToolTip": "C:\\Users\\krims\\Documents\\GitHub\\GameEngineDesign\\PhysicsSystem.cpp",
+              "RelativeToolTip": "PhysicsSystem.cpp",
+              "ViewState": "AgIAADsAAAAAAAAAAAAAAEYAAAAkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-04-03T20:45:17.751Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "PhysicsSystem.h",
+              "DocumentMoniker": "C:\\Users\\krims\\Documents\\GitHub\\GameEngineDesign\\PhysicsSystem.h",
+              "RelativeDocumentMoniker": "PhysicsSystem.h",
+              "ToolTip": "C:\\Users\\krims\\Documents\\GitHub\\GameEngineDesign\\PhysicsSystem.h",
+              "RelativeToolTip": "PhysicsSystem.h",
+              "ViewState": "AgIAAD4AAAAAAAAAAAAAABQAAABYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-04-03T20:45:17.824Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "Rigidbody.cpp",
+              "DocumentMoniker": "C:\\Users\\krims\\Documents\\GitHub\\GameEngineDesign\\Rigidbody.cpp",
+              "RelativeDocumentMoniker": "Rigidbody.cpp",
+              "ToolTip": "C:\\Users\\krims\\Documents\\GitHub\\GameEngineDesign\\Rigidbody.cpp",
+              "RelativeToolTip": "Rigidbody.cpp",
+              "ViewState": "AgIAAAIAAAAAAAAAAAAAABMAAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-04-03T21:17:33.308Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "Rigidbody.h",
+              "DocumentMoniker": "C:\\Users\\krims\\Documents\\GitHub\\GameEngineDesign\\Rigidbody.h",
+              "RelativeDocumentMoniker": "Rigidbody.h",
+              "ToolTip": "C:\\Users\\krims\\Documents\\GitHub\\GameEngineDesign\\Rigidbody.h",
+              "RelativeToolTip": "Rigidbody.h",
+              "ViewState": "AgIAAB8AAAAAAAAAAAAAADcAAABaAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-04-01T22:03:33.302Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "Collider.h",
+              "DocumentMoniker": "C:\\Users\\krims\\Documents\\GitHub\\GameEngineDesign\\Collider.h",
+              "RelativeDocumentMoniker": "Collider.h",
+              "ToolTip": "C:\\Users\\krims\\Documents\\GitHub\\GameEngineDesign\\Collider.h",
+              "RelativeToolTip": "Collider.h",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAAACYAAABPAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-04-03T21:28:07.823Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "ConvexCollider.cpp",
+              "DocumentMoniker": "C:\\Users\\krims\\Documents\\GitHub\\GameEngineDesign\\ConvexCollider.cpp",
+              "RelativeDocumentMoniker": "ConvexCollider.cpp",
+              "ToolTip": "C:\\Users\\krims\\Documents\\GitHub\\GameEngineDesign\\ConvexCollider.cpp",
+              "RelativeToolTip": "ConvexCollider.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-04-03T21:27:50.401Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "Transform.cpp",
+              "DocumentMoniker": "C:\\Users\\krims\\Documents\\GitHub\\GameEngineDesign\\Transform.cpp",
+              "RelativeDocumentMoniker": "Transform.cpp",
+              "ToolTip": "C:\\Users\\krims\\Documents\\GitHub\\GameEngineDesign\\Transform.cpp",
+              "RelativeToolTip": "Transform.cpp",
+              "ViewState": "AgIAAEcAAAAAAAAAAADwv1oAAAAjAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-04-08T11:54:34.57Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "Transform.h",
+              "DocumentMoniker": "C:\\Users\\krims\\Documents\\GitHub\\GameEngineDesign\\Transform.h",
+              "RelativeDocumentMoniker": "Transform.h",
+              "ToolTip": "C:\\Users\\krims\\Documents\\GitHub\\GameEngineDesign\\Transform.h",
+              "RelativeToolTip": "Transform.h",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAAAkAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-04-08T11:53:27.826Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "ConvexCollider.h",
+              "DocumentMoniker": "C:\\Users\\krims\\Documents\\GitHub\\GameEngineDesign\\ConvexCollider.h",
+              "RelativeDocumentMoniker": "ConvexCollider.h",
+              "ToolTip": "C:\\Users\\krims\\Documents\\GitHub\\GameEngineDesign\\ConvexCollider.h",
+              "RelativeToolTip": "ConvexCollider.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-04-03T21:06:50.391Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "PhysicsSubsystem.h",
+              "DocumentMoniker": "C:\\Users\\krims\\Documents\\GitHub\\GameEngineDesign\\PhysicsSubsystem.h",
+              "RelativeDocumentMoniker": "PhysicsSubsystem.h",
+              "ToolTip": "C:\\Users\\krims\\Documents\\GitHub\\GameEngineDesign\\PhysicsSubsystem.h",
+              "RelativeToolTip": "PhysicsSubsystem.h",
+              "ViewState": "AgIAAGMAAAAAAAAAAAAAAHoAAABMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-04-03T20:45:51.794Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "PhysicsSubsystem.cpp",
+              "DocumentMoniker": "C:\\Users\\krims\\Documents\\GitHub\\GameEngineDesign\\PhysicsSubsystem.cpp",
+              "RelativeDocumentMoniker": "PhysicsSubsystem.cpp",
+              "ToolTip": "C:\\Users\\krims\\Documents\\GitHub\\GameEngineDesign\\PhysicsSubsystem.cpp",
+              "RelativeToolTip": "PhysicsSubsystem.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAeAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-04-01T21:54:57.735Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
     }
   ]
 }

@@ -26,6 +26,8 @@ C:\Users\krims\Documents\GitHub\GameEngineDesign\Mesh.cpp;C:\Users\krims\Documen
 C:\Users\krims\Documents\GitHub\GameEngineDesign\PathHelpers.cpp;C:\Users\krims\Documents\GitHub\GameEngineDesign\D3D11Starter\x64\Debug\PathHelpers.obj
 C:\Users\krims\Documents\GitHub\GameEngineDesign\PhysicsEntity.cpp;C:\Users\krims\Documents\GitHub\GameEngineDesign\D3D11Starter\x64\Debug\PhysicsEntity.obj
 C:\Users\krims\Documents\GitHub\GameEngineDesign\PhysicsSubsystem.cpp;C:\Users\krims\Documents\GitHub\GameEngineDesign\D3D11Starter\x64\Debug\PhysicsSubsystem.obj
+C:\Users\krims\Documents\GitHub\GameEngineDesign\PhysicsSystem.cpp;C:\Users\krims\Documents\GitHub\GameEngineDesign\D3D11Starter\x64\Debug\PhysicsSystem.obj
+C:\Users\krims\Documents\GitHub\GameEngineDesign\PhysicsUtils.cpp;C:\Users\krims\Documents\GitHub\GameEngineDesign\D3D11Starter\x64\Debug\PhysicsUtils.obj
 C:\Users\krims\Documents\GitHub\GameEngineDesign\Renderer.cpp;C:\Users\krims\Documents\GitHub\GameEngineDesign\D3D11Starter\x64\Debug\Renderer.obj
 C:\Users\krims\Documents\GitHub\GameEngineDesign\ResourceManager.cpp;C:\Users\krims\Documents\GitHub\GameEngineDesign\D3D11Starter\x64\Debug\ResourceManager.obj
 C:\Users\krims\Documents\GitHub\GameEngineDesign\Rigidbody.cpp;C:\Users\krims\Documents\GitHub\GameEngineDesign\D3D11Starter\x64\Debug\Rigidbody.obj

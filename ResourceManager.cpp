@@ -156,9 +156,9 @@ std::unordered_map<std::wstring, std::wstring> ResourceManager::GetAllFilesInDir
             if(std::find(extensions.begin(), extensions.end(), extension) != extensions.end())
                 identifiers.emplace(localPath, identifier);
 
-            for(char c : identifier)
-                std::cout << c;
-            std::cout << std::endl;
+            //for(char c : identifier)
+                //std::cout << c;
+            //std::cout << std::endl;
         }
     }
 
