@@ -1,5 +1,8 @@
 #include "KeyboardMovementController.hpp"
 
+#include <glm/gtc/constants.hpp>
+
+
 namespace Minimal {
     void KeyboardMovementController::moveInPlaneXZ(GLFWwindow *window, float dt, TransformComponent &transform) {
         glm::vec3 rotate{0};

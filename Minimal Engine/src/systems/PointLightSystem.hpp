@@ -4,20 +4,21 @@
 
 #include "../rendering/vulkan/VulkanDevice.hpp"
 #include "FrameInfo.hpp"
+#include "System.hpp"
 #include "rendering/vulkan/VulkanPipeline.hpp"
 
 namespace Minimal {
-    class PointLightSystem {
+    class PointLightSystem : public System {
     public:
-        PointLightSystem(VulkanDevice &device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout);
+        PointLightSystem(ECSCoordinator& ecs, VulkanDevice &device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout);
 
-        ~PointLightSystem();
+        ~PointLightSystem() override;
 
         PointLightSystem(const PointLightSystem &) = delete;
 
         PointLightSystem &operator=(const PointLightSystem &) = delete;
 
-        void update(FrameInfo &frameInfo, GlobalUBO &ubo);
+        void update(FrameInfo &frameInfo);
 
         void render(FrameInfo &frameInfo);
 

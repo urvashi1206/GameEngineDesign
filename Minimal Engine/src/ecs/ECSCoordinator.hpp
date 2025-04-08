@@ -3,6 +3,7 @@
 #include <memory>
 #include "EntityManager.hpp"
 #include "ComponentManager.hpp"
+#include "Components.hpp"
 
 namespace Minimal {
     class ECSCoordinator {

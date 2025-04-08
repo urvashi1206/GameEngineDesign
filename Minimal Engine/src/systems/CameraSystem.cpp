@@ -3,15 +3,9 @@
 //
 
 #include "CameraSystem.hpp"
-#include "CameraSystem.hpp"
-#include "CameraSystem.hpp"
-#include "CameraSystem.hpp"
-#include "CameraSystem.hpp"
 
 namespace Minimal {
-    CameraSystem::CameraSystem(ECSCoordinator &ecs): m_ecs(ecs) {}
-
-    CameraSystem::~CameraSystem() = default;
+    CameraSystem::CameraSystem(ECSCoordinator &ecs): System(ecs) {}
 
     void CameraSystem::setOrthographicProjection(Entity cameraEntity, float left, float right, float top, float bottom, float near, float far) {
         if (hasCamera(cameraEntity))
@@ -169,7 +163,10 @@ namespace Minimal {
         return *fallBackCamera;
     }
 
-    void CameraSystem::update(float aspect) {
+    void CameraSystem::update(FrameInfo &frameInfo) {
+        CameraComponent *mainCamera{nullptr};
+        CameraComponent *fallbackCamera{nullptr};
+
         for (Entity entity = 0; entity < MAX_ENTITIES; entity++) {
             if (!hasCamera(entity))
                 continue;
@@ -178,9 +175,28 @@ namespace Minimal {
             auto &cameraTransform = m_ecs.getComponent<TransformComponent>(entity);
             setViewYXZ(camera, cameraTransform);
 
-            // setOthrographicProjection(-aspect, aspect, -1.0f, 1.0f, -1.0f, 1.0f);
-            setPerspectiveProjection(camera, glm::radians(50.0f), aspect, 0.1f, 100.0f);
+            // setOthrographicProjection(-frameInfo.aspect, frameInfo.aspect, -1.0f, 1.0f, -1.0f, 1.0f);
+            setPerspectiveProjection(camera, glm::radians(50.0f), frameInfo.aspect, 0.1f, 100.0f);
+
+            if (mainCamera != nullptr)
+                continue;
+
+            if (camera.isMain)
+                mainCamera = &camera;
+
+            if (fallbackCamera == nullptr)
+                fallbackCamera = &camera;
         }
+
+        if (mainCamera == nullptr)
+            mainCamera = fallbackCamera;
+
+        assert(mainCamera != nullptr && "No cameras available");
+
+        frameInfo.camera = mainCamera;
+        frameInfo.ubo.projection = mainCamera->projectionMatrix;
+        frameInfo.ubo.view = mainCamera->viewMatrix;
+        frameInfo.ubo.inverseView = mainCamera->inverseViewMatrix;
     }
 
     bool CameraSystem::hasCamera(Entity cameraEntity) {

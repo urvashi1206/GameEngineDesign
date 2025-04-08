@@ -3,14 +3,12 @@
 //
 #pragma once
 
-#include "FrameInfo.hpp"
+#include "System.hpp"
 
 namespace Minimal {
-    class CameraSystem {
+    class CameraSystem : public System {
     public:
         CameraSystem(ECSCoordinator &ecs);
-
-        ~CameraSystem();
 
         CameraSystem(const CameraSystem &) = delete;
 
@@ -34,11 +32,9 @@ namespace Minimal {
 
         CameraComponent &getMainCamera();
 
-        void update(float aspect);
+        void update(FrameInfo &frameInfo);
 
     private:
-        ECSCoordinator &m_ecs;
-
         bool hasCamera(Entity cameraEntity);
 
         CameraComponent &getCamera(Entity cameraEntity);

@@ -1,34 +1,31 @@
 #include "SimpleRendererSystem.hpp"
 
-#include <array>
-#include <iostream>
 #include <stdexcept>
 
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include <glm/glm.hpp>
 
-namespace Minimal
-{
-    struct SimplePushConstantData
-    {
+namespace Minimal {
+    struct SimplePushConstantData {
         glm::mat4 modelMatrix{1.0f};
         glm::mat4 normalMatrix{1.0f};
     };
 
-    SimpleRendererSystem::SimpleRendererSystem(VulkanDevice& device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout) : m_device{device}
-    {
+    SimpleRendererSystem::SimpleRendererSystem(ECSCoordinator &ecs,
+                                               VulkanDevice &device,
+                                               VkRenderPass renderPass,
+                                               VkDescriptorSetLayout globalSetLayout) : System(ecs),
+                                                                                        m_device{device} {
         createPipelineLayout(globalSetLayout);
         createPipeline(renderPass);
     }
 
-    SimpleRendererSystem::~SimpleRendererSystem()
-    {
+    SimpleRendererSystem::~SimpleRendererSystem() {
         vkDestroyPipelineLayout(m_device.get_device(), m_pipelineLayout, nullptr);
     }
 
-    void SimpleRendererSystem::createPipelineLayout(VkDescriptorSetLayout globalSetLayout)
-    {
+    void SimpleRendererSystem::createPipelineLayout(VkDescriptorSetLayout globalSetLayout) {
         VkPushConstantRange pushConstantRange{};
         pushConstantRange.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
         pushConstantRange.offset = 0;
@@ -47,8 +44,7 @@ namespace Minimal
             throw std::runtime_error("failed to create pipeline layout!");
     }
 
-    void SimpleRendererSystem::createPipeline(VkRenderPass renderPass)
-    {
+    void SimpleRendererSystem::createPipeline(VkRenderPass renderPass) {
         assert(m_pipelineLayout != nullptr && "Cannot create pipeline before pipeline layout");
 
         VulkanPipelineConfigInfo pipelineConfig{};
@@ -61,8 +57,7 @@ namespace Minimal
                                                       pipelineConfig);
     }
 
-    void SimpleRendererSystem::renderGameObjects(FrameInfo& frameInfo)
-    {
+    void SimpleRendererSystem::render(FrameInfo &frameInfo) {
         m_pipeline->bind(frameInfo.commandBuffer);
 
         vkCmdBindDescriptorSets(
@@ -76,48 +71,28 @@ namespace Minimal
             nullptr
         );
 
-        for (Entity e = 0; e < MAX_ENTITIES; ++e)
-        {
-            if (frameInfo.ecs.hasComponent<MeshRendererComponent>(e))
-            {
-                auto& transform = frameInfo.ecs.getComponent<TransformComponent>(e);
-                auto model = frameInfo.ecs.getComponent<MeshRendererComponent>(e).model;
+        for (Entity e = 0; e < MAX_ENTITIES; ++e) {
+            if (!m_ecs.hasComponent<MeshRendererComponent>(e))
+                continue;
 
-                SimplePushConstantData push{};
+            auto &transform = m_ecs.getComponent<TransformComponent>(e);
+            auto model = m_ecs.getComponent<MeshRendererComponent>(e).mesh;
 
-                push.modelMatrix = transform.mat4();
-                push.normalMatrix = transform.normalMatrix();
+            SimplePushConstantData push{};
 
-                vkCmdPushConstants(frameInfo.commandBuffer,
-                                   m_pipelineLayout,
-                                   VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
-                                   0,
-                                   sizeof(push),
-                                   &push);
-                model->bind(frameInfo.commandBuffer);
-                model->draw(frameInfo.commandBuffer);
-            }
+            push.modelMatrix = transform.mat4();
+            push.normalMatrix = transform.normalMatrix();
+
+            vkCmdPushConstants(frameInfo.commandBuffer,
+                               m_pipelineLayout,
+                               VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
+                               0,
+                               sizeof(push),
+                               &push);
+            model->bind(frameInfo.commandBuffer);
+            model->draw(frameInfo.commandBuffer);
         }
-
-
-        // for (auto& kv : frameInfo.gameObjects)
-        // {
-        //     auto& obj = kv.second;
-        //     if (obj.model == nullptr) continue;
-        //
-        //     SimplePushConstantData push{};
-        //
-        //     push.modelMatrix = obj.transform.mat4();
-        //     push.normalMatrix = obj.transform.normalMatrix();
-        //
-        //     vkCmdPushConstants(frameInfo.commandBuffer,
-        //                        m_pipelineLayout,
-        //                        VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
-        //                        0,
-        //                        sizeof(push),
-        //                        &push);
-        //     obj.model->bind(frameInfo.commandBuffer);
-        //     obj.model->draw(frameInfo.commandBuffer);
-        // }
     }
+
+    void SimpleRendererSystem::update(FrameInfo &frameInfo) {}
 }

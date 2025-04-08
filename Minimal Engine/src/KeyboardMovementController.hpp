@@ -1,10 +1,11 @@
 #pragma once
 
-#include "GameObject.hpp"
 #include "Window.hpp"
+#include "ecs/Components.hpp"
 
 namespace Minimal
 {
+
     class KeyboardMovementController
     {
     public:
