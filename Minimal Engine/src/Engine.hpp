@@ -2,7 +2,6 @@
 
 #include <memory>
 
-#include "GameObject.hpp"
 #include "Window.hpp"
 #include "ecs/ECSCoordinator.hpp"
 #include "rendering/vulkan/VulkanDescriptors.hpp"

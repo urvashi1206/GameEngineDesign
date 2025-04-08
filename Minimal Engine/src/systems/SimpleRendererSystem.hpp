@@ -4,12 +4,13 @@
 
 #include "../rendering/vulkan/VulkanDevice.hpp"
 #include "FrameInfo.hpp"
+#include "System.hpp"
 #include "rendering/vulkan/VulkanPipeline.hpp"
 
 namespace Minimal {
-    class SimpleRendererSystem {
+    class SimpleRendererSystem : public System {
     public:
-        SimpleRendererSystem(VulkanDevice &device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout);
+        SimpleRendererSystem(ECSCoordinator &ecs, VulkanDevice &device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout);
 
         ~SimpleRendererSystem();
 
@@ -17,7 +18,9 @@ namespace Minimal {
 
         SimpleRendererSystem &operator=(const SimpleRendererSystem &) = delete;
 
-        void renderGameObjects(FrameInfo &frameInfo);
+        void render(FrameInfo &frameInfo);
+
+        void update(FrameInfo &frameInfo) override;
 
     private:
         void createPipelineLayout(VkDescriptorSetLayout globalSetLayout);

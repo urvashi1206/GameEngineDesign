@@ -4,7 +4,7 @@
 #include <fstream>
 #include <iostream>
 
-#include "../../Model.hpp"
+#include "Mesh.hpp"
 
 namespace Minimal {
     VulkanPipeline::VulkanPipeline(VulkanDevice &device,
@@ -186,8 +186,8 @@ namespace Minimal {
             size());
         configInfo.dynamicStateInfo.flags = 0;
 
-        configInfo.bindingDescriptions = Model::Vertex::getBindingDescriptions();
-        configInfo.attributeDescriptions = Model::Vertex::getAttributeDescriptions();
+        configInfo.bindingDescriptions = Mesh::Vertex::getBindingDescriptions();
+        configInfo.attributeDescriptions = Mesh::Vertex::getAttributeDescriptions();
     }
 
     void VulkanPipeline::enableAlphaBlending(VulkanPipelineConfigInfo &configInfo) {

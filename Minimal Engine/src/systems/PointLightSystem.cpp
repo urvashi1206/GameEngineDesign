@@ -8,6 +8,7 @@
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include <glm/glm.hpp>
+#include <glm/ext/matrix_transform.hpp>
 
 namespace Minimal {
     struct PointLightPushConstants {
@@ -16,8 +17,11 @@ namespace Minimal {
         float radius;
     };
 
-    PointLightSystem::PointLightSystem(VulkanDevice &device, VkRenderPass renderPass,
-                                       VkDescriptorSetLayout globalSetLayout) : m_device{device} {
+    PointLightSystem::PointLightSystem(ECSCoordinator& ecs,
+                                       VulkanDevice &device,
+                                       VkRenderPass renderPass,
+                                       VkDescriptorSetLayout globalSetLayout) : System(ecs),
+                                                                                m_device{device} {
         createPipelineLayout(globalSetLayout);
         createPipeline(renderPass);
     }
@@ -62,7 +66,7 @@ namespace Minimal {
                                                       pipelineConfig);
     }
 
-    void PointLightSystem::update(FrameInfo &frameInfo, GlobalUBO &ubo) {
+    void PointLightSystem::update(FrameInfo &frameInfo) {
         auto rotateLight = rotate(glm::mat4(1.0f),
                                   frameInfo.frameTime,
                                   {0.0f, -1.0f, 0.0f}
@@ -70,11 +74,11 @@ namespace Minimal {
         int lightIndex = 0;
 
         for (Entity e = 0; e < MAX_ENTITIES; e++) {
-            if (!frameInfo.ecs.hasComponent<PointLightComponent>(e))
+            if (!m_ecs.hasComponent<PointLightComponent>(e))
                 continue;
 
-            auto &transform = frameInfo.ecs.getComponent<TransformComponent>(e);
-            auto &pointLight = frameInfo.ecs.getComponent<PointLightComponent>(e);
+            auto &transform = m_ecs.getComponent<TransformComponent>(e);
+            auto &pointLight = m_ecs.getComponent<PointLightComponent>(e);
 
             assert(lightIndex< MAX_LIGHTS && "Point lights exceed maximum specified");
 
@@ -82,29 +86,13 @@ namespace Minimal {
             transform.position = glm::vec3(rotateLight * glm::vec4(transform.position, 1.0f));
 
             // copy light to ubo
-            ubo.pointLights[lightIndex].position = glm::vec4(transform.position, 1.0f);
-            ubo.pointLights[lightIndex].color = glm::vec4(pointLight.color, pointLight.lightIntensity);
+            frameInfo.ubo.pointLights[lightIndex].position = glm::vec4(transform.position, 1.0f);
+            frameInfo.ubo.pointLights[lightIndex].color = glm::vec4(pointLight.color, pointLight.lightIntensity);
 
             lightIndex++;
         }
-        // for (auto& kv : frameInfo.ecs)
-        // {
-        //     auto& obj = kv.second;
-        //     if (obj.pointLight == nullptr) continue;
-        //
-        //     assert(lightIndex< MAX_LIGHTS && "Point lights exceed maximum specified");
-        //
-        //     // update light position
-        //     obj.transform.position = glm::vec3(rotateLight * glm::vec4(obj.transform.position, 1.0f));
-        //
-        //     // copy light to ubo
-        //     ubo.pointLights[lightIndex].position = glm::vec4(obj.transform.position, 1.0f);
-        //     ubo.pointLights[lightIndex].color = glm::vec4(obj.color, obj.pointLight->lightIntensity);
-        //
-        //     lightIndex++;
-        // }
 
-        ubo.numLights = lightIndex;
+        frameInfo.ubo.numLights = lightIndex;
     }
 
     void PointLightSystem::render(FrameInfo &frameInfo) {
@@ -113,13 +101,13 @@ namespace Minimal {
 
 
         for (Entity e = 0; e < MAX_ENTITIES; e++) {
-            if (!frameInfo.ecs.hasComponent<PointLightComponent>(e))
+            if (!m_ecs.hasComponent<PointLightComponent>(e))
                 continue;
 
-            auto &transform = frameInfo.ecs.getComponent<TransformComponent>(e);
+            auto &transform = m_ecs.getComponent<TransformComponent>(e);
 
             // calculate distance
-            auto offset = frameInfo.camera.getPosition() - transform.position;
+            auto offset = frameInfo.camera->getPosition() - transform.position;
             float distanceSquared = dot(offset, offset);
             sortedLights[distanceSquared] = e;
         }
@@ -150,8 +138,8 @@ namespace Minimal {
         // iterate through sorted lights in reverse order
         for (auto it = sortedLights.rbegin(); it != sortedLights.rend(); ++it) {
             // auto& obj = frameInfo.gameObjects.at(it->second);
-            auto &transform = frameInfo.ecs.getComponent<TransformComponent>(it->second);
-            auto &pointLight = frameInfo.ecs.getComponent<PointLightComponent>(it->second);
+            auto &transform = m_ecs.getComponent<TransformComponent>(it->second);
+            auto &pointLight = m_ecs.getComponent<PointLightComponent>(it->second);
 
             PointLightPushConstants push{};
 

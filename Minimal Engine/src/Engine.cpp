@@ -8,9 +8,9 @@
 
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
-#include <algorithm>
 #include <chrono>
 #include <glm/glm.hpp>
+#include <glm/ext/matrix_transform.hpp>
 #include <glm/gtc/constants.hpp>
 
 #include "systems/CameraSystem.hpp"
@@ -59,12 +59,14 @@ namespace Minimal {
         }
 
         SimpleRendererSystem simpleRendererSystem{
+            m_ecs,
             m_device,
             m_renderer.getSwapChainRenderPass(),
             globalSetLayout->getDescriptorSetLayout()
         };
 
         PointLightSystem pointLightSystem{
+            m_ecs,
             m_device,
             m_renderer.getSwapChainRenderPass(),
             globalSetLayout->getDescriptorSetLayout()
@@ -94,36 +96,31 @@ namespace Minimal {
 
             cameraController.moveInPlaneXZ(m_window.getGlfwWindow(), frameTime, cameraTransform);
 
-            float aspect = m_renderer.getAspectRatio();
-            cameraSystem.update(aspect);
 
             if (auto commandBuffer = m_renderer.beginFrame()) {
                 int frameIndex = m_renderer.getFrameIndex();
 
-                auto &mainCamera = cameraSystem.getMainCamera();
-
+                // update
                 FrameInfo frameInfo{
                     frameIndex,
                     frameTime,
                     commandBuffer,
-                    mainCamera,
-                    globalDescriptorSets[frameIndex],
-                    m_ecs
+                    m_renderer.getAspectRatio(),
+                    {},
+                    nullptr,
+                    globalDescriptorSets[frameIndex]
                 };
 
-                // update
-                GlobalUBO ubo{};
-                ubo.projection = mainCamera.projectionMatrix;
-                ubo.view = mainCamera.viewMatrix;
-                ubo.inverseView = mainCamera.inverseViewMatrix;
-                pointLightSystem.update(frameInfo, ubo);
-                uboBuffers[frameIndex]->writeToBuffer(&ubo);
+                cameraSystem.update(frameInfo);
+                pointLightSystem.update(frameInfo);
+
+                uboBuffers[frameIndex]->writeToBuffer(&frameInfo.ubo);
                 uboBuffers[frameIndex]->flush();
 
                 // render
                 m_renderer.beingSwapChainRenderPass(commandBuffer);
 
-                simpleRendererSystem.renderGameObjects(frameInfo);
+                simpleRendererSystem.render(frameInfo);
                 pointLightSystem.render(frameInfo);
 
                 m_renderer.endSwapChainRenderPass(commandBuffer);
@@ -136,25 +133,25 @@ namespace Minimal {
 
     void Engine::loadEntities() {
         // Flat vase
-        std::shared_ptr model = Model::createModelFromFile(m_device, "models/flat_vase.obj");
+        std::shared_ptr mesh = Mesh::createModelFromFile(m_device, "models/flat_vase.obj");
         auto flatVase = m_ecs.createEntity();
-        m_ecs.addComponent<MeshRendererComponent>(flatVase, {model});
+        m_ecs.addComponent<MeshRendererComponent>(flatVase, {mesh});
         auto &flatVaseTransform = m_ecs.getComponent<TransformComponent>(flatVase);
         flatVaseTransform.position = {-0.5f, 0.5f, 0.0f};
         flatVaseTransform.scale = {3.0f, 1.5f, 3.0f};
 
         // Smooth vase
-        model = Model::createModelFromFile(m_device, "models/smooth_vase.obj");
+        mesh = Mesh::createModelFromFile(m_device, "models/smooth_vase.obj");
         auto smoothVase = m_ecs.createEntity();
-        m_ecs.addComponent<MeshRendererComponent>(smoothVase, {model});
+        m_ecs.addComponent<MeshRendererComponent>(smoothVase, {mesh});
         auto &smoothVaseTransform = m_ecs.getComponent<TransformComponent>(smoothVase);
         smoothVaseTransform.position = {0.5f, 0.5f, 0.0f};
         smoothVaseTransform.scale = {3.0f, 1.5f, 3.0f};
 
         // Floor
-        model = Model::createModelFromFile(m_device, "models/quad.obj");
+        mesh = Mesh::createModelFromFile(m_device, "models/quad.obj");
         auto floor = m_ecs.createEntity();
-        m_ecs.addComponent<MeshRendererComponent>(floor, {model});
+        m_ecs.addComponent<MeshRendererComponent>(floor, {mesh});
         auto &floorTransform = m_ecs.getComponent<TransformComponent>(floor);
         floorTransform.position = {0.0f, 0.5f, 0.0f};
         floorTransform.scale = {3.0f, 1.0f, 3.0f};

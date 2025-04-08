@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Model.hpp"
+#include "Mesh.hpp"
 
 namespace Minimal {
     struct TransformComponent {
@@ -24,7 +24,7 @@ namespace Minimal {
     };
 
     struct MeshRendererComponent {
-        std::shared_ptr<Model> model;
+        std::shared_ptr<Mesh> mesh;
         // will have a material here at a later point.
     };
 
