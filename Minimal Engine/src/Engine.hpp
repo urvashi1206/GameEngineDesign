@@ -31,12 +31,13 @@ namespace Minimal {
     private:
         void loadEntities();
 
-        ECSCoordinator m_ecs;
         Window m_window{"Hello Vulkan!", WIDTH, HEIGHT};
         VulkanDevice m_device{m_window};
         VulkanRenderer m_renderer{m_window, m_device};
 
         // note: order of declarations matters
         std::unique_ptr<VulkanDescriptorPool> m_globalPool{};
+
+        ECSCoordinator m_ecs{};
     };
 }
