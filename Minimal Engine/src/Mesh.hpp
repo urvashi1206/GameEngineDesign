@@ -43,6 +43,8 @@ namespace Minimal {
 
         static std::unique_ptr<Mesh> createModelFromFile(VulkanDevice &device, const std::string &filePath);
 
+        static std::unique_ptr<Mesh> createModelFromVerticesAndIndices(VulkanDevice &device, std::vector<Vertex> vertices, std::vector<uint32_t> indices);
+
         void bind(VkCommandBuffer commandBuffer);
 
         void draw(VkCommandBuffer commandBuffer);
