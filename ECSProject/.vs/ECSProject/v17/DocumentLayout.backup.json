@@ -3,16 +3,28 @@
   "WorkspaceRootPath": "C:\\Users\\Owner\\Documents\\GameEngineDesign\\ECSProject\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Owner\\Documents\\GameEngineDesign\\ECSProject\\src\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Owner\\Documents\\GameEngineDesign\\ECSProject\\src\\Systems.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\Systems.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Owner\\Documents\\GameEngineDesign\\ECSProject\\include\\ecs\\ComponentArray.hpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:include\\ecs\\ComponentArray.hpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Owner\\Documents\\GameEngineDesign\\ECSProject\\include\\ecs\\Components.hpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:include\\ecs\\Components.hpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Owner\\Documents\\GameEngineDesign\\ECSProject\\include\\ecs\\ComponentManager.hpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:include\\ecs\\ComponentManager.hpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Owner\\Documents\\GameEngineDesign\\ECSProject\\include\\ecs\\ECSCoordinator.hpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:include\\ecs\\ECSCoordinator.hpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Owner\\Documents\\GameEngineDesign\\ECSProject\\src\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -22,8 +34,34 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 4,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "ComponentManager.hpp",
+              "DocumentMoniker": "C:\\Users\\Owner\\Documents\\GameEngineDesign\\ECSProject\\include\\ecs\\ComponentManager.hpp",
+              "RelativeDocumentMoniker": "include\\ecs\\ComponentManager.hpp",
+              "ToolTip": "C:\\Users\\Owner\\Documents\\GameEngineDesign\\ECSProject\\include\\ecs\\ComponentManager.hpp",
+              "RelativeToolTip": "include\\ecs\\ComponentManager.hpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-04-01T21:40:16.581Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "ECSCoordinator.hpp",
+              "DocumentMoniker": "C:\\Users\\Owner\\Documents\\GameEngineDesign\\ECSProject\\include\\ecs\\ECSCoordinator.hpp",
+              "RelativeDocumentMoniker": "include\\ecs\\ECSCoordinator.hpp",
+              "ToolTip": "C:\\Users\\Owner\\Documents\\GameEngineDesign\\ECSProject\\include\\ecs\\ECSCoordinator.hpp",
+              "RelativeToolTip": "include\\ecs\\ECSCoordinator.hpp",
+              "ViewState": "AgIAACEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-04-01T21:39:42.906Z",
+              "EditorCaption": ""
+            },
             {
               "$type": "Document",
               "DocumentIndex": 2,
@@ -32,36 +70,48 @@
               "RelativeDocumentMoniker": "include\\ecs\\Components.hpp",
               "ToolTip": "C:\\Users\\Owner\\Documents\\GameEngineDesign\\ECSProject\\include\\ecs\\Components.hpp",
               "RelativeToolTip": "include\\ecs\\Components.hpp",
-              "ViewState": "AgIAABMAAAAAAAAAAAAUwDEAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAdAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-03-09T21:05:36.175Z",
+              "WhenOpened": "2025-04-01T21:38:28.984Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
+              "Title": "ComponentArray.hpp",
+              "DocumentMoniker": "C:\\Users\\Owner\\Documents\\GameEngineDesign\\ECSProject\\include\\ecs\\ComponentArray.hpp",
+              "RelativeDocumentMoniker": "include\\ecs\\ComponentArray.hpp",
+              "ToolTip": "C:\\Users\\Owner\\Documents\\GameEngineDesign\\ECSProject\\include\\ecs\\ComponentArray.hpp",
+              "RelativeToolTip": "include\\ecs\\ComponentArray.hpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-04-01T21:37:17.058Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
               "Title": "Systems.cpp",
               "DocumentMoniker": "C:\\Users\\Owner\\Documents\\GameEngineDesign\\ECSProject\\src\\Systems.cpp",
               "RelativeDocumentMoniker": "src\\Systems.cpp",
               "ToolTip": "C:\\Users\\Owner\\Documents\\GameEngineDesign\\ECSProject\\src\\Systems.cpp",
               "RelativeToolTip": "src\\Systems.cpp",
-              "ViewState": "AgIAAEkAAAAAAAAAAAAmwHoAAAA1AAAAAAAAAA==",
+              "ViewState": "AgIAACQAAAAAAAAAAAAAADYAAAAbAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-03-09T21:03:35.989Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 5,
               "Title": "main.cpp",
               "DocumentMoniker": "C:\\Users\\Owner\\Documents\\GameEngineDesign\\ECSProject\\src\\main.cpp",
               "RelativeDocumentMoniker": "src\\main.cpp",
               "ToolTip": "C:\\Users\\Owner\\Documents\\GameEngineDesign\\ECSProject\\src\\main.cpp",
               "RelativeToolTip": "src\\main.cpp",
-              "ViewState": "AgIAACcAAAAAAAAAAAAAADIAAAANAAAAAAAAAA==",
+              "ViewState": "AgIAADwAAAAAAAAAAAAAADIAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-02-10T04:50:57.755Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-10T04:50:57.755Z"
             }
           ]
         }
