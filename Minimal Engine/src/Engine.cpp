@@ -156,6 +156,98 @@ namespace Minimal {
         floorTransform.position = {0.0f, 0.5f, 0.0f};
         floorTransform.scale = {3.0f, 1.0f, 3.0f};
 
+
+        // 24 unique vertices to allow distinct normal and UV per face.
+        // Each face gets its own color, normal, and UV layout.
+        // std::vector<Mesh::Vertex> vertices = {
+        //     // ----------------
+        //     //     FRONT FACE
+        //     // ----------------
+        //     // Normal:  (0, 0, +1)
+        //     // Color:   (1, 0, 0) (red face, just for example)
+        //     // UVs:     simple 0→1 across X and Y
+        //     {{-0.5f, -0.5f, 0.5f}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}}, // [0]
+        //     {{0.5f, -0.5f, 0.5f}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 0.0f}}, // [1]
+        //     {{0.5f, 0.5f, 0.5f}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f}}, // [2]
+        //     {{-0.5f, 0.5f, 0.5f}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}}, // [3]
+        //
+        //     // ----------------
+        //     //     BACK FACE
+        //     // ----------------
+        //     // Normal:  (0, 0, -1)
+        //     // Color:   (0, 1, 0) (green face)
+        //     // Note we flip UVs as desired—this is one example
+        //     {{-0.5f, -0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f, -1.0f}, {1.0f, 0.0f}}, // [4]
+        //     {{0.5f, -0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f}}, // [5]
+        //     {{0.5f, 0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f}}, // [6]
+        //     {{-0.5f, 0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f, -1.0f}, {1.0f, 1.0f}}, // [7]
+        //
+        //     // ----------------
+        //     //     LEFT FACE
+        //     // ----------------
+        //     // Normal:  (-1, 0, 0)
+        //     // Color:   (0, 0, 1) (blue face)
+        //     {{-0.5f, -0.5f, -0.5f}, {0.0f, 0.0f, 1.0f}, {-1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}}, // [8]
+        //     {{-0.5f, -0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}, {-1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}}, // [9]
+        //     {{-0.5f, 0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}, {-1.0f, 0.0f, 0.0f}, {1.0f, 1.0f}}, // [10]
+        //     {{-0.5f, 0.5f, -0.5f}, {0.0f, 0.0f, 1.0f}, {-1.0f, 0.0f, 0.0f}, {0.0f, 1.0f}}, // [11]
+        //
+        //     // ----------------
+        //     //     RIGHT FACE
+        //     // ----------------
+        //     // Normal:  (+1, 0, 0)
+        //     // Color:   (1, 1, 0) (yellow face)
+        //     {{0.5f, -0.5f, 0.5f}, {1.0f, 1.0f, 0.0f}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}}, // [12]
+        //     {{0.5f, -0.5f, -0.5f}, {1.0f, 1.0f, 0.0f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}}, // [13]
+        //     {{0.5f, 0.5f, -0.5f}, {1.0f, 1.0f, 0.0f}, {1.0f, 0.0f, 0.0f}, {1.0f, 1.0f}}, // [14]
+        //     {{0.5f, 0.5f, 0.5f}, {1.0f, 1.0f, 0.0f}, {1.0f, 0.0f, 0.0f}, {0.0f, 1.0f}}, // [15]
+        //
+        //     // ----------------
+        //     //     TOP FACE
+        //     // ----------------
+        //     // Normal:  (0, +1, 0)
+        //     // Color:   (1, 0, 1) (magenta face)
+        //     {{-0.5f, 0.5f, 0.5f}, {1.0f, 0.0f, 1.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}}, // [16]
+        //     {{0.5f, 0.5f, 0.5f}, {1.0f, 0.0f, 1.0f}, {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f}}, // [17]
+        //     {{0.5f, 0.5f, -0.5f}, {1.0f, 0.0f, 1.0f}, {0.0f, 1.0f, 0.0f}, {1.0f, 1.0f}}, // [18]
+        //     {{-0.5f, 0.5f, -0.5f}, {1.0f, 0.0f, 1.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 1.0f}}, // [19]
+        //
+        //     // ----------------
+        //     //    BOTTOM FACE
+        //     // ----------------
+        //     // Normal:  (0, -1, 0)
+        //     // Color:   (0, 1, 1) (cyan face)
+        //     {{-0.5f, -0.5f, -0.5f}, {0.0f, 1.0f, 1.0f}, {0.0f, -1.0f, 0.0f}, {0.0f, 0.0f}}, // [20]
+        //     {{0.5f, -0.5f, -0.5f}, {0.0f, 1.0f, 1.0f}, {0.0f, -1.0f, 0.0f}, {1.0f, 0.0f}}, // [21]
+        //     {{0.5f, -0.5f, 0.5f}, {0.0f, 1.0f, 1.0f}, {0.0f, -1.0f, 0.0f}, {1.0f, 1.0f}}, // [22]
+        //     {{-0.5f, -0.5f, 0.5f}, {0.0f, 1.0f, 1.0f}, {0.0f, -1.0f, 0.0f}, {0.0f, 1.0f}}, // [23]
+        // };
+        //
+        // // Each face is two triangles. Hence, 6 faces × 2 triangles/face = 12 triangles.
+        // // Each triangle has 3 indices, so 12 × 3 = 36 indices total.
+        // std::vector<uint32_t> indices = {
+        //     // Front face  (vertices 0,1,2,3)
+        //     0, 1, 2, 2, 3, 0,
+        //     // Back face   (vertices 4,5,6,7)
+        //     4, 5, 6, 6, 7, 4,
+        //     // Left face   (vertices 8,9,10,11)
+        //     8, 9, 10, 10, 11, 8,
+        //     // Right face  (vertices 12,13,14,15)
+        //     12, 13, 14, 14, 15, 12,
+        //     // Top face    (vertices 16,17,18,19)
+        //     16, 17, 18, 18, 19, 16,
+        //     // Bottom face (vertices 20,21,22,23)
+        //     20, 21, 22, 22, 23, 20
+        // };
+        //
+        //
+        // std::shared_ptr mesh = Mesh::createModelFromVerticesAndIndices(m_device, vertices, indices);
+        // auto cube = m_ecs.createEntity();
+        // m_ecs.addComponent<MeshRendererComponent>(cube, {mesh});
+        // auto &cubeTransform = m_ecs.getComponent<TransformComponent>(cube);
+        // cubeTransform.position = {-0.5f, 0.5f, 0.0f};
+        // cubeTransform.scale = {3.0f, 1.5f, 3.0f};
+
         // Point lights
         std::vector<glm::vec3> lightColors{
             {1.0f, 0.1f, 0.1f},
