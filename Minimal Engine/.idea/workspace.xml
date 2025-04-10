@@ -35,37 +35,27 @@
     <configurations>
       <configuration PROFILE_NAME="Debug-Visual Studio" ENABLED="true" CONFIG_NAME="Debug" TOOLCHAIN_NAME="Visual Studio" />
       <configuration PROFILE_NAME="Release-Visual Studio" ENABLED="true" CONFIG_NAME="Release" TOOLCHAIN_NAME="Visual Studio" />
+      <configuration PROFILE_NAME="RelWithDebInfo-Visual Studio" ENABLED="true" CONFIG_NAME="RelWithDebInfo" TOOLCHAIN_NAME="Visual Studio" />
+      <configuration PROFILE_NAME="MinSizeRel-Visual Studio" ENABLED="true" CONFIG_NAME="MinSizeRel" TOOLCHAIN_NAME="Visual Studio" />
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ff6dfa8c-eb6c-408e-98c4-a7d0c45c3a71" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/systems/System.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/systems/System.hpp" afterDir="false" />
+    <list default="true" id="ff6dfa8c-eb6c-408e-98c4-a7d0c45c3a71" name="Changes" comment="updated the README.md with the correct GLFW link">
       <change beforePath="$PROJECT_DIR$/../ECSProject/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../ECSProject/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/editor.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/editor.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Engine.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Engine.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Engine.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Engine.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/FrameInfo.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/FrameInfo.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/GameObject.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/GameObject.hpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/KeyboardMovementController.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/KeyboardMovementController.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/KeyboardMovementController.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/KeyboardMovementController.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Mesh.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Model.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Mesh.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ecs/Components.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ecs/Components.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ecs/ECSCoordinator.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ecs/ECSCoordinator.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rendering/vulkan/VulkanPipeline.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/rendering/vulkan/VulkanPipeline.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/systems/CameraSystem.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/systems/CameraSystem.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/systems/CameraSystem.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/systems/CameraSystem.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/systems/PointLightSystem.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/systems/PointLightSystem.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/systems/PointLightSystem.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/systems/PointLightSystem.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/systems/SimpleRendererSystem.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/systems/SimpleRendererSystem.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/systems/SimpleRendererSystem.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/systems/SimpleRendererSystem.hpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ChangesViewManager">
+    <option name="groupingKeys">
+      <option value="directory" />
+      <option value="repository" />
+    </option>
   </component>
   <component name="ClangdSettings">
     <option name="formatViaClangd" value="false" />
@@ -87,94 +77,10 @@
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///dummy.cpp" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/Camera.hpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Engine.hpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/rohit/Study/Sem 4/689/Game Engine Project/Minimal Engine/src/Engine.hpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/FrameInfo.hpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/GameObject.hpp" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/Model.hpp" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/rohit/Study/Sem 4/689/Game Engine Project/Minimal Engine/src/Mesh.cpp" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/ecs/ComponentArray.hpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/ecs/ComponentManager.hpp" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/ecs/Components.hpp" root0="FORCE_HIGHLIGHTING" />
@@ -224,7 +130,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.sourceCode.C/C++",
+    "settings.editor.selected.configurable": "preferences.sourceCode",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -243,11 +149,6 @@
       </method>
     </configuration>
     <configuration name="Shaders" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="MinimalEngine" TARGET_NAME="Shaders" CONFIG_NAME="Debug-Visual Studio">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -286,8 +187,47 @@
       <workItem from="1744059876068" duration="3884000" />
       <workItem from="1744065234057" duration="164000" />
       <workItem from="1744065771339" duration="3140000" />
-      <workItem from="1744069121179" duration="8446000" />
+      <workItem from="1744069121179" duration="8655000" />
+      <workItem from="1744136109062" duration="3136000" />
+      <workItem from="1744223735543" duration="668000" />
+      <workItem from="1744225342142" duration="5346000" />
+      <workItem from="1744252084308" duration="1086000" />
+      <workItem from="1744254977214" duration="317000" />
+      <workItem from="1744311517877" duration="5294000" />
     </task>
+    <task id="LOCAL-00001" summary="Solved the vk device destroyed before memory being freed issue">
+      <option name="closed" value="true" />
+      <created>1744319658123</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1744319658123</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Created a function to create mesh from vertices and indices vectors">
+      <option name="closed" value="true" />
+      <created>1744320452325</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1744320452325</updated>
+    </task>
+    <task id="LOCAL-00003" summary="created the test function for Mesh::createFromVerticesAndIndices">
+      <option name="closed" value="true" />
+      <created>1744321135274</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1744321135274</updated>
+    </task>
+    <task id="LOCAL-00004" summary="updated the README.md with the correct GLFW link">
+      <option name="closed" value="true" />
+      <created>1744323262620</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1744323262620</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -297,6 +237,13 @@
     <isAutomaticCheckingOnLaunch value="false" />
     <isAutomaticFoundErrors value="true" />
     <isAutomaticReloadCMake value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Solved the vk device destroyed before memory being freed issue" />
+    <MESSAGE value="Created a function to create mesh from vertices and indices vectors" />
+    <MESSAGE value="created the test function for Mesh::createFromVerticesAndIndices" />
+    <MESSAGE value="updated the README.md with the correct GLFW link" />
+    <option name="LAST_COMMIT_MESSAGE" value="updated the README.md with the correct GLFW link" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
