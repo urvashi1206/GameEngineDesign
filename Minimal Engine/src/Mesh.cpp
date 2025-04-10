@@ -50,10 +50,6 @@ namespace Minimal {
         std::vector<tinyobj::material_t> materials;
         std::string warn, err;
 
-        // auto i_stream = std::ifstream{file_path};
-        // if (!LoadObj(&attrib, &shapes, &materials, &warn, &err, &i_stream))
-        //     throw std::runtime_error(warn + err);
-
         if (!LoadObj(&attrib, &shapes, &materials, &warn, &err, filePath.c_str()))
             throw std::runtime_error(warn + err);
 
@@ -116,6 +112,14 @@ namespace Minimal {
         builder.loadModel(filePath);
 
         std::cout << "Vertex count: " << builder.vertices.size() << '\n';
+
+        return std::make_unique<Mesh>(device, builder);
+    }
+
+    std::unique_ptr<Mesh> Mesh::createModelFromVerticesAndIndices(VulkanDevice &device, std::vector<Vertex> vertices, std::vector<uint32_t> indices) {
+        Builder builder{};
+        builder.vertices = std::move(vertices);
+        builder.indices = std::move(indices);
 
         return std::make_unique<Mesh>(device, builder);
     }
