@@ -16,7 +16,7 @@ the [Vulkan SDK](https://www.lunarg.com/vulkan-sdk/). This guide provides step-b
 ### A] Install GLFW
 
 1. **Download GLFW:**  
-   Download the GLFW archive from the [GLFW 3.4 release](https://github.com/glfw/glfw/releases/download/3.4/glfw-3.4.zip).
+   Download the GLFW archive from the [GLFW 3.4 release](https://github.com/glfw/glfw/releases/download/3.4/glfw-3.4.bin.WIN64.zip).
 2. **Unzip:**  
    Unzip the downloaded file and place the extracted folder in a convenient location.
 
