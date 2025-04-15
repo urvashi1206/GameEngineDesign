@@ -6,11 +6,15 @@
 #include <glm/ext/matrix_transform.hpp>
 
 namespace Minimal {
+    void TransformComponent::rotate(glm::quat quaternion) {
+        rotation = quaternion * rotation;
+    }
+
     glm::mat4 TransformComponent::mat4() {
         glm::mat4 translation = translate(glm::mat4(1.0f), position);
-        glm::mat4 rotationZ = rotate(glm::mat4(1.0f), rotation.z, glm::vec3(0, 0, 1));
-        glm::mat4 rotationX = rotate(glm::mat4(1.0f), rotation.x, glm::vec3(1, 0, 0));
-        glm::mat4 rotationY = rotate(glm::mat4(1.0f), rotation.y, glm::vec3(0, 1, 0));
+        glm::mat4 rotationZ = glm::rotate(glm::mat4(1.0f), glm::roll(rotation), glm::vec3(0, 0, 1));
+        glm::mat4 rotationX = glm::rotate(glm::mat4(1.0f), glm::pitch(rotation), glm::vec3(1, 0, 0));
+        glm::mat4 rotationY = glm::rotate(glm::mat4(1.0f), glm::yaw(rotation), glm::vec3(0, 1, 0));
         glm::mat4 scaling = glm::scale(glm::mat4(1.0f), scale);
 
         // Note: The order of rotations must match your intended convention.
@@ -20,12 +24,12 @@ namespace Minimal {
     }
 
     glm::mat3 TransformComponent::normalMatrix() {
-        const float c3 = glm::cos(rotation.z);
-        const float s3 = glm::sin(rotation.z);
-        const float c2 = glm::cos(rotation.x);
-        const float s2 = glm::sin(rotation.x);
-        const float c1 = glm::cos(rotation.y);
-        const float s1 = glm::sin(rotation.y);
+        const float c3 = glm::cos(glm::roll(rotation));
+        const float s3 = glm::sin(glm::roll(rotation));
+        const float c2 = glm::cos(glm::pitch(rotation));
+        const float s2 = glm::sin(glm::pitch(rotation));
+        const float c1 = glm::cos(glm::yaw(rotation));
+        const float s1 = glm::sin(glm::yaw(rotation));
         const glm::vec3 inverseScale = 1.0f / scale;
         return glm::mat3{
             {
@@ -57,7 +61,7 @@ namespace Minimal {
 
     std::string TransformComponent::toString() {
         return "TransformComponent: " + std::to_string(position.x) + ", " + std::to_string(position.y) + ", " + std::to_string(position.z) + "\n" +
-               std::to_string(rotation.x) + ", " + std::to_string(rotation.y) + ", " + std::to_string(rotation.z) + "\n" +
+               std::to_string(glm::pitch(rotation)) + ", " + std::to_string(glm::yaw(rotation)) + ", " + std::to_string(glm::roll(rotation)) + "\n" +
                std::to_string(scale.x) + ", " + std::to_string(scale.y) + ", " + std::to_string(scale.z);
     }
 }

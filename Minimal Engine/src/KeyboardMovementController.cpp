@@ -16,13 +16,14 @@ namespace Minimal {
             rotate.x -= 1.0f;
 
         if (dot(rotate, rotate) > std::numeric_limits<float>::epsilon())
-            transform.rotation += lookSpeed * dt * normalize(rotate);
+            transform.rotate(glm::quat(lookSpeed * dt * normalize(rotate)));
 
         // limit pitch values between +/- 85ish degrees
+        // TO-DO: UPDATE TO QUATERNIONS
         transform.rotation.x = glm::clamp(transform.rotation.x, -1.5f, 1.5f);
         transform.rotation.y = glm::mod(transform.rotation.y, glm::two_pi<float>());
 
-        float yaw = transform.rotation.y;
+        float yaw = glm::yaw(transform.rotation);
         const glm::vec3 forwardDir{sin(yaw), 0.0f, cos(yaw)};
         const glm::vec3 rightDir{forwardDir.z, 0.0f, -forwardDir.x};
         constexpr glm::vec3 upDir{0.0f, -1.0f, 0.0f};

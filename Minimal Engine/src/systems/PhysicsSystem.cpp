@@ -1,7 +1,7 @@
 #include "PhysicsSystem.hpp"
 #include "PhysicsUtils.hpp"
 
-#include <iostream>
+#include <algorithm>
 
 namespace Minimal
 {
@@ -38,8 +38,15 @@ namespace Minimal
 			/* Collision Detection and Contact Generation */
 
 			for (Entity e1 = 0; e1 < MAX_ENTITIES; e1++)
+			{
+				if (!m_ecs.hasComponent<RigidbodyComponent>(e1) || !m_ecs.hasComponent<ColliderComponent>(e1))
+					continue;
+				
 				for (Entity e2 = 0; e2 < MAX_ENTITIES; e2++)
 				{
+					if (!m_ecs.hasComponent<RigidbodyComponent>(e2) || !m_ecs.hasComponent<ColliderComponent>(e2))
+						continue;
+
 					if (e1 == e2)
 						continue;
 
@@ -60,6 +67,7 @@ namespace Minimal
 						collisions.push_back(collisionData);
 					}
 				}
+			}
 
 			/* Collision Resolution */
 
@@ -156,7 +164,7 @@ namespace Minimal
 					const float percent = 0.2f; // Usually 20% to 80%
 					const float slop = 0.01f; // Usually 0.01 to 0.1
 					glm::vec3 correction = contact.normal * std::max(contact.penetrationDepth - slop, 0.0f) / (inverseMassA + inverseMassB) * percent;
-					transformA.position += -correction * inverseMassA;
+					transformA.position -= correction * inverseMassA;
 					transformB.position += correction * inverseMassB;
 				}
 
@@ -746,12 +754,12 @@ namespace Minimal
 
 			dotDominant = dotUp;
 		}
-		float dotForward = glm::dot(direction, TransformUtils::GetForward(transform));
+		float dotForward = glm::dot(direction, transform.forward());
 		if (abs(dotForward) > abs(dotDominant))
 		{
 			dominant = (dotForward > 0) ? transform.forward() : -transform.forward();
-			u = -TransformUtils::GetRight(transform);
-			v = TransformUtils::GetUp(transform);
+			u = -transform.right();
+			v = transform.up();
 
 			halfSizeDominant = collider.halfSize.z;
 			halfSizeU = collider.halfSize.x;

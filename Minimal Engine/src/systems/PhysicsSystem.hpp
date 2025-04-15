@@ -34,6 +34,21 @@ public:
 namespace std
 {
 	template<>
+	struct hash<glm::vec3>
+	{
+		std::size_t operator()(const glm::vec3& v) const
+		{
+			/* Hash and combine x, y, z */
+
+			std::hash<float> hasher;
+
+			return hasher(v.x)
+				^ (hasher(v.y) << 1)
+				^ (hasher(v.z) << 2);
+		}
+	};
+
+	template<>
 	struct hash<CollisionPair>
 	{
 		std::size_t operator()(CollisionPair collisionPair) const

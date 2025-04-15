@@ -3,13 +3,14 @@
 #include "Mesh.hpp"
 
 #include <glm/gtc/quaternion.hpp>
-#include <glm/gtx/quaternion.hpp>
 
 namespace Minimal {
     struct TransformComponent {
         glm::vec3 position{0.0f};
         glm::quat rotation{0, 0, 0, 1};
         glm::vec3 scale{1.0f};
+
+        void rotate(glm::quat quaternion);
 
         // Matrix corrsponds to Translate * Ry * Rx * Rz * Scale
         // Rotations correspond to Tait-bryan angles of Y(1), X(2), Z(3)

@@ -104,12 +104,12 @@ namespace Minimal {
     }
 
     void CameraSystem::setViewYXZ(CameraComponent &camera, TransformComponent &transform) {
-        const float c3 = glm::cos(transform.rotation.z);
-        const float s3 = glm::sin(transform.rotation.z);
-        const float c2 = glm::cos(transform.rotation.x);
-        const float s2 = glm::sin(transform.rotation.x);
-        const float c1 = glm::cos(transform.rotation.y);
-        const float s1 = glm::sin(transform.rotation.y);
+        const float c3 = glm::cos(glm::roll(transform.rotation));
+        const float s3 = glm::sin(glm::roll(transform.rotation));
+        const float c2 = glm::cos(glm::pitch(transform.rotation));
+        const float s2 = glm::sin(glm::pitch(transform.rotation));
+        const float c1 = glm::cos(glm::yaw(transform.rotation));
+        const float s1 = glm::sin(glm::yaw(transform.rotation));
         const glm::vec3 u{(c1 * c3 + s1 * s2 * s3), (c2 * s3), (c1 * s2 * s3 - c3 * s1)};
         const glm::vec3 v{(c3 * s1 * s2 - c1 * s3), (c2 * c3), (c1 * c3 * s2 + s1 * s3)};
         const glm::vec3 w{(c2 * s1), (-s2), (c1 * c2)};
