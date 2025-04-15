@@ -45,6 +45,15 @@ namespace Minimal {
             }
         };
     }
+    glm::vec3 TransformComponent::right() const {
+        return rotation * glm::vec3(1, 0, 0);
+    }
+    glm::vec3 TransformComponent::up() const {
+        return rotation * glm::vec3(0, 1, 0);
+    }
+    glm::vec3 TransformComponent::forward() const {
+        return rotation * glm::vec3(0, 0, 1);
+    }
 
     std::string TransformComponent::toString() {
         return "TransformComponent: " + std::to_string(position.x) + ", " + std::to_string(position.y) + ", " + std::to_string(position.z) + "\n" +

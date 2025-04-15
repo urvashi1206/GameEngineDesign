@@ -5,6 +5,7 @@
 #include "rendering/vulkan/VulkanBuffer.hpp"
 #include "systems/PointLightSystem.hpp"
 #include "systems/SimpleRendererSystem.hpp"
+#include "systems/PhysicsSystem.hpp"
 
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
@@ -27,6 +28,8 @@ namespace Minimal {
         m_ecs.registerComponent<CameraComponent>();
         m_ecs.registerComponent<MeshRendererComponent>();
         m_ecs.registerComponent<PointLightComponent>();
+        m_ecs.registerComponent<ColliderComponent>();
+        m_ecs.registerComponent<RigidbodyComponent>();
 
         loadEntities();
     }
@@ -72,6 +75,10 @@ namespace Minimal {
             globalSetLayout->getDescriptorSetLayout()
         };
 
+        PhysicsSystem physicsSystem(m_ecs);
+
+        physicsSystem.initialize();
+
         CameraSystem cameraSystem{m_ecs};
 
         Entity cameraEntity = m_ecs.createEntity();
@@ -81,6 +88,7 @@ namespace Minimal {
         cameraSystem.setViewTarget(cameraEntity, glm::vec3(-1.0f, -2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 2.5f));
 
         auto &cameraTransform = m_ecs.getComponent<TransformComponent>(cameraEntity);
+        cameraTransform.position.y = -0.5f;
         cameraTransform.position.z = -2.5f;
 
         KeyboardMovementController cameraController{};
@@ -113,6 +121,7 @@ namespace Minimal {
 
                 cameraSystem.update(frameInfo);
                 pointLightSystem.update(frameInfo);
+                physicsSystem.update(frameInfo);
 
                 uboBuffers[frameIndex]->writeToBuffer(&frameInfo.ubo);
                 uboBuffers[frameIndex]->flush();
@@ -267,6 +276,18 @@ namespace Minimal {
                                       i * glm::two_pi<float>() / lightColors.size(),
                                       {0.0f, -1.0f, 0.0f});
             pointLightTransform.position = glm::vec3(rotateLight * glm::vec4(-1.0f, -1.0f, -1.0f, 1.0f));
+        }
+
+        /* Physics objects */
+        {
+            auto object = m_ecs.createEntity();
+            m_ecs.addComponent<MeshRendererComponent>(object, { mesh });
+            m_ecs.addComponent<ColliderComponent>(object, { EColliderType::Box, glm::vec3(0, 0, 0), glm::vec3(0.5f, 0.5f, 0.5f) });
+            m_ecs.addComponent<RigidbodyComponent>(object, { false, 1, 0, 0.3f, 0.5f, glm::vec3(0, -1.0f, 0), glm::vec3(0, 1.0f, 0), glm::vec3(0, 1.0f, 0) });
+
+            auto& transform = m_ecs.getComponent<TransformComponent>(object);
+            transform.position = { 0.0f, -1.5f, 0.0f };
+            transform.scale = { 0.5f, 0.5f, 0.5f };
         }
     }
 }

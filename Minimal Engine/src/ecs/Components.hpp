@@ -2,10 +2,13 @@
 
 #include "Mesh.hpp"
 
+#include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/quaternion.hpp>
+
 namespace Minimal {
     struct TransformComponent {
         glm::vec3 position{0.0f};
-        glm::vec3 rotation{0.0f};
+        glm::quat rotation{0, 0, 0, 1};
         glm::vec3 scale{1.0f};
 
         // Matrix corrsponds to Translate * Ry * Rx * Rz * Scale
@@ -14,6 +17,9 @@ namespace Minimal {
         glm::mat4 mat4();
 
         glm::mat3 normalMatrix();
+        glm::vec3 right() const;
+        glm::vec3 up() const;
+        glm::vec3 forward() const;
 
         std::string toString();
     };
@@ -29,7 +35,20 @@ namespace Minimal {
     };
 
     struct RigidbodyComponent {
+        bool isStatic;
+
+        float mass = 1;
+        float bounciness = 0;
+        float staticFriction = 0.3f;
+        float dynamicFriction = 0.5f;
+
+        glm::vec3 gravity;
+
         glm::vec3 velocity;
+        glm::vec3 angularVelocity;
+
+        glm::vec3 netForce;
+        glm::vec3 netTorque;
     };
 
     struct RenderComponent {
@@ -38,10 +57,17 @@ namespace Minimal {
         float size = 1.0f;
     };
 
+    enum class EColliderType {
+        None,
+        Box,
+        Sphere
+    };
     struct ColliderComponent {
-        float width;
-        float height;
-        float depth;
+        EColliderType colliderType;
+
+        glm::vec3 center;
+        glm::vec3 halfSize;
+        float radius;
     };
 
     struct HealthComponent {
