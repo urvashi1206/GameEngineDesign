@@ -68,7 +68,8 @@ namespace Minimal
 				rigidbody.angularVelocity = glm::vec3(0, 0, 0);
 
 			transform.position += rigidbody.velocity * deltaTime;
-			transform.rotate(glm::angleAxis(glm::length(rigidbody.angularVelocity) * deltaTime, glm::normalize(rigidbody.angularVelocity)));
+			if(glm::length(rigidbody.angularVelocity) > 0)
+				transform.rotate(glm::angleAxis(glm::length(rigidbody.angularVelocity) * deltaTime, glm::normalize(rigidbody.angularVelocity)));
 
 			rigidbody.velocity += rigidbody.netForce * deltaTime;
 			rigidbody.angularVelocity += rigidbody.netTorque * deltaTime;

@@ -48,8 +48,8 @@ namespace Minimal {
         glm::vec3 velocity;
         glm::vec3 angularVelocity;
 
-        glm::vec3 netForce;
-        glm::vec3 netTorque;
+        glm::vec3 netForce{0, 0, 0};
+        glm::vec3 netTorque{0, 0, 0};
     };
 
     struct RenderComponent {

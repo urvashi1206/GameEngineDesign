@@ -7,6 +7,9 @@
 
 namespace Minimal {
     void TransformComponent::rotate(glm::quat quaternion) {
+        /*if (quaternion == glm::quat)
+            return;*/
+        
         rotation = quaternion * rotation;
     }
 
@@ -18,7 +21,7 @@ namespace Minimal {
         glm::mat4 scaling = glm::scale(glm::mat4(1.0f), scale);
 
         // Note: The order of rotations must match your intended convention.
-        glm::mat4 rotationMat = rotationY * rotationX * rotationZ;
+        glm::mat4 rotationMat = glm::mat3(rotation);
 
         return translation * rotationMat * scaling;
     }

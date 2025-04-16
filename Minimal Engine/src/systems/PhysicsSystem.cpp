@@ -2,6 +2,7 @@
 #include "PhysicsUtils.hpp"
 
 #include <algorithm>
+#include <iostream>
 
 namespace Minimal
 {
@@ -152,7 +153,7 @@ namespace Minimal
 
 					float frictionInertia = inverseMassA + inverseMassB + angularEffectFrictionA + angularEffectFrictionB;
 					float frictionImpulseMagnitude = glm::dot(-relativeVelocity, tangentialVelocity) / frictionInertia;
-					frictionImpulseMagnitude = std::clamp(frictionImpulseMagnitude, -maxFrictionImpulse, maxFrictionImpulse);
+					frictionImpulseMagnitude = std::clamp(frictionImpulseMagnitude, -abs(maxFrictionImpulse), abs(maxFrictionImpulse));
 
 					glm::vec3 frictionImpulse = tangentialVelocity * frictionImpulseMagnitude;
 
