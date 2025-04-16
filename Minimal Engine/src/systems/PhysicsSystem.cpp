@@ -25,7 +25,7 @@ namespace Minimal
 
 			/* Physics Update */
 
-			for (Entity e = 0; e < MAX_ENTITIES; e++)
+			for (Entity e = 0; e < 10; e++)
 				if (m_ecs.hasComponent<RigidbodyComponent>(e) && m_ecs.hasComponent<ColliderComponent>(e))
 				{
 					TransformComponent& transform = m_ecs.getComponent<TransformComponent>(e);
@@ -34,16 +34,18 @@ namespace Minimal
 					RigidbodyUtils::ApplyGravity(rb);
 
 					RigidbodyUtils::UpdatePhysics(transform, rb, tickPhysics ? PHYSICS_TICK : 0);
+
+					std::cout << transform.position.x << " " << transform.position.y << " " << transform.position.z << std::endl;
 				}
 
 			/* Collision Detection and Contact Generation */
 
-			for (Entity e1 = 0; e1 < MAX_ENTITIES; e1++)
+			for (Entity e1 = 0; e1 < 10; e1++)
 			{
 				if (!m_ecs.hasComponent<RigidbodyComponent>(e1) || !m_ecs.hasComponent<ColliderComponent>(e1))
 					continue;
 				
-				for (Entity e2 = 0; e2 < MAX_ENTITIES; e2++)
+				for (Entity e2 = 0; e2 < 10; e2++)
 				{
 					if (!m_ecs.hasComponent<RigidbodyComponent>(e2) || !m_ecs.hasComponent<ColliderComponent>(e2))
 						continue;
@@ -123,8 +125,8 @@ namespace Minimal
 
 					// Apply impulse
 					glm::vec3 impulse = contact.normal * j;
-					RigidbodyUtils::ApplyImpulse(transformA, colliderA, bodyA, -impulse, contact.location);
-					RigidbodyUtils::ApplyImpulse(transformB, colliderB, bodyB, impulse, contact.location);
+					//RigidbodyUtils::ApplyImpulse(transformA, colliderA, bodyA, -impulse, contact.location);
+					//RigidbodyUtils::ApplyImpulse(transformB, colliderB, bodyB, impulse, contact.location);
 
 					/* Friction */
 
@@ -158,8 +160,8 @@ namespace Minimal
 					glm::vec3 frictionImpulse = tangentialVelocity * frictionImpulseMagnitude;
 
 					// Apply friction impulse
-					RigidbodyUtils::ApplyImpulse(transformA, colliderA, bodyA, -frictionImpulse, contact.location);
-					RigidbodyUtils::ApplyImpulse(transformB, colliderB, bodyB, frictionImpulse, contact.location);
+					//RigidbodyUtils::ApplyImpulse(transformA, colliderA, bodyA, -frictionImpulse, contact.location);
+					//RigidbodyUtils::ApplyImpulse(transformB, colliderB, bodyB, frictionImpulse, contact.location);
 
 					// Positional correction to prevent sinking
 					const float percent = 0.2f; // Usually 20% to 80%

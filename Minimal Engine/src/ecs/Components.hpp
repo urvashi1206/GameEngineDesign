@@ -40,8 +40,8 @@ namespace Minimal {
 
         float mass = 1;
         float bounciness = 0;
-        float staticFriction = 0.3f;
-        float dynamicFriction = 0.5f;
+        float staticFriction = 0.5f;
+        float dynamicFriction = 0.3f;
 
         glm::vec3 gravity;
 
