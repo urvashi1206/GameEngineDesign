@@ -30,6 +30,10 @@ namespace Minimal
 	#pragma endregion
 
 	#pragma region ColliderUtils
+	glm::vec3 ColliderUtils::GetCenter(const TransformComponent& transform, const ColliderComponent& collider)
+	{
+		return TransformUtils::LocalToWorld_Point(transform, collider.center);
+	}
 	glm::mat4 ColliderUtils::GetInertiaTensor(const ColliderComponent& collider, float mass)
 	{
 		switch (collider.colliderType)
@@ -59,7 +63,7 @@ namespace Minimal
 		void RigidbodyUtils::UpdatePhysics(TransformComponent& transform, RigidbodyComponent& rigidbody, float deltaTime)
 		{
 			// Minimum velocity allowed for a body's velocity to be considered non-zero. Basically acts as a global static coefficient of friction.
-			static const float VELOCITY_THRESHOLD = 0.02f;
+			static const float VELOCITY_THRESHOLD = 0.01f;
 
 			// Velocity threshold to prevent small movements from accumulating
 			if (glm::length(rigidbody.velocity) < VELOCITY_THRESHOLD)
@@ -105,10 +109,13 @@ namespace Minimal
 			// Apply linear impulse
 			rigidbody.velocity += impulse / rigidbody.mass;
 
-			glm::vec3 r = location - collider.center;
+			glm::vec3 r = location - ColliderUtils::GetCenter(transform, collider);
 
 			// Apply angular impulse
-			rigidbody.angularVelocity += (glm::vec3) (glm::inverse(GetInertiaTensor(transform, collider, rigidbody)) * glm::vec4(glm::cross(r, impulse), 1));
+			glm::vec4 cross = glm::vec4(glm::cross(r, impulse), 0);
+			glm::mat4 inv = glm::inverse(GetInertiaTensor(transform, collider, rigidbody));
+			glm::vec3 delta = (glm::vec3)(inv * cross);
+			rigidbody.angularVelocity += delta;
 		}
 
 		float RigidbodyUtils::GetMass(const RigidbodyComponent& rigidbody)

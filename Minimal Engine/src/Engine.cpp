@@ -253,11 +253,11 @@ namespace Minimal {
         std::shared_ptr mesh = Mesh::createModelFromVerticesAndIndices(m_device, vertices, indices);
         auto cube = m_ecs.createEntity();
         m_ecs.addComponent<MeshRendererComponent>(cube, {mesh});
-        m_ecs.addComponent<ColliderComponent>(cube, { EColliderType::Box, glm::vec3(0, 0, 0), glm::vec3(0.5f, 0.5f, 0.5f) });
-        m_ecs.addComponent<RigidbodyComponent>(cube, { false, 1000, 0, 0.5f, 0.3f, glm::vec3(0, 0.0f, 0), glm::vec3(0, 0.0f, 0), glm::vec3(0, 0.0f, 0) });
+        m_ecs.addComponent<ColliderComponent>(cube, { EColliderType::Box, glm::vec3(0, 0, 0), glm::vec3(2.5f, 0.5f, 2.5f) });
+        m_ecs.addComponent<RigidbodyComponent>(cube, { false, 1000, 0, 0.3f, 0.5f, glm::vec3(0, 0.0f, 0), glm::vec3(0, 0.0f, 0), glm::vec3(0, 0.0f, 0) });
         auto &cubeTransform = m_ecs.getComponent<TransformComponent>(cube);
-        cubeTransform.position = {-0.5f, 0.5f, 0.0f};
-        cubeTransform.scale = {3.0f, 1.5f, 3.0f};
+        cubeTransform.position = {0.0f, -2.0f, 0.0f};
+        cubeTransform.scale = {5.0f, 1.5f, 5.0f};
 
         // Point lights
         std::vector<glm::vec3> lightColors{
@@ -285,10 +285,11 @@ namespace Minimal {
             auto object = m_ecs.createEntity();
             m_ecs.addComponent<MeshRendererComponent>(object, { mesh });
             m_ecs.addComponent<ColliderComponent>(object, { EColliderType::Box, glm::vec3(0, 0, 0), glm::vec3(0.5f, 0.5f, 0.5f) });
-            m_ecs.addComponent<RigidbodyComponent>(object, { false, 1, 0, 0.5f, 0.3f, glm::vec3(0, 9.8f, 0), glm::vec3(0, 1.0f, 0), glm::vec3(0, 0.0f, 0) });
+            m_ecs.addComponent<RigidbodyComponent>(object, { false, 1, 0, 0.3f, 0.5f, glm::vec3(0, -1.8f, 0), glm::vec3(0, 0.0f, 0), glm::vec3(0, 0.0f, 0) });
 
             auto& transform = m_ecs.getComponent<TransformComponent>(object);
-            transform.position = { 0.0f, -1.5f, 0.0f };
+            transform.position = { 0.0f, 0.0f, 0.0f };
+            transform.rotate(glm::quat(glm::vec3(0, 0, 0.5f)));
             transform.scale = { 0.5f, 0.5f, 0.5f };
         }
     }

@@ -86,8 +86,8 @@ namespace Minimal
 				TransformComponent& transformA = m_ecs.getComponent<TransformComponent>(entityA);
 				TransformComponent& transformB = m_ecs.getComponent<TransformComponent>(entityB);
 
-				glm::vec3 initialLocationA = colliderA.center;
-				glm::vec3 initialLocationB = colliderB.center;
+				glm::vec3 initialLocationA = ColliderUtils::GetCenter(transformA, colliderA);
+				glm::vec3 initialLocationB = ColliderUtils::GetCenter(transformB, colliderB);
 				glm::vec3 initialVelocityA = bodyA.velocity;
 				glm::vec3 initialVelocityB = bodyB.velocity;
 				glm::vec3 initialAngularVelocityA = bodyA.angularVelocity;
@@ -103,8 +103,8 @@ namespace Minimal
 					//Debug::CreateWireframe_Temp(contact.location, Vector(), Vector(0.1f, 0.1f, 0.1f));
 
 					// Location and velocity relative to center of mass
-					glm::vec3 rA = contact.location - colliderA.center;
-					glm::vec3 rB = contact.location - colliderB.center;
+					glm::vec3 rA = contact.location - ColliderUtils::GetCenter(transformA, colliderA);
+					glm::vec3 rB = contact.location - ColliderUtils::GetCenter(transformB, colliderB);
 					glm::vec3 relativeVelocity = bodyB.velocity + glm::cross(bodyB.angularVelocity, rB) - bodyA.velocity - glm::cross(bodyA.angularVelocity, rA);
 
 					// Calculate relative velocity along the normal
@@ -120,13 +120,13 @@ namespace Minimal
 					// Calculate impulse scalar
 					float j = -(1 + e) * velocityAlongNormal;
 					j /= inverseMassA + inverseMassB +
-						glm::dot(contact.normal, glm::cross((glm::vec3) (glm::inverse(inertiaTensorA) * glm::vec4(glm::cross(rA, contact.normal), 1)), rA)) +
-						glm::dot(contact.normal, glm::cross((glm::vec3) (glm::inverse(inertiaTensorB) * glm::vec4(glm::cross(rB, contact.normal), 1)), rB));
+						glm::dot(contact.normal, glm::cross((glm::vec3) (glm::inverse(inertiaTensorA) * glm::vec4(glm::cross(rA, contact.normal), 0)), rA)) +
+						glm::dot(contact.normal, glm::cross((glm::vec3) (glm::inverse(inertiaTensorB) * glm::vec4(glm::cross(rB, contact.normal), 0)), rB));
 
 					// Apply impulse
 					glm::vec3 impulse = contact.normal * j;
-					//RigidbodyUtils::ApplyImpulse(transformA, colliderA, bodyA, -impulse, contact.location);
-					//RigidbodyUtils::ApplyImpulse(transformB, colliderB, bodyB, impulse, contact.location);
+					RigidbodyUtils::ApplyImpulse(transformA, colliderA, bodyA, -impulse, contact.location);
+					RigidbodyUtils::ApplyImpulse(transformB, colliderB, bodyB, impulse, contact.location);
 
 					/* Friction */
 
@@ -150,8 +150,8 @@ namespace Minimal
 
 					glm::vec3 rA_cross_t = glm::cross(rA, tangentialVelocity);
 					glm::vec3 rB_cross_t = glm::cross(rB, tangentialVelocity);
-					float angularEffectFrictionA = glm::dot(rA_cross_t, (glm::vec3) (glm::inverse(inertiaTensorA) * glm::vec4(rA_cross_t, 1)));
-					float angularEffectFrictionB = glm::dot(rB_cross_t, (glm::vec3) (glm::inverse(inertiaTensorB) * glm::vec4(rB_cross_t, 1)));
+					float angularEffectFrictionA = glm::dot(rA_cross_t, (glm::vec3) (glm::inverse(inertiaTensorA) * glm::vec4(rA_cross_t, 0)));
+					float angularEffectFrictionB = glm::dot(rB_cross_t, (glm::vec3) (glm::inverse(inertiaTensorB) * glm::vec4(rB_cross_t, 0)));
 
 					float frictionInertia = inverseMassA + inverseMassB + angularEffectFrictionA + angularEffectFrictionB;
 					float frictionImpulseMagnitude = glm::dot(-relativeVelocity, tangentialVelocity) / frictionInertia;
@@ -160,8 +160,8 @@ namespace Minimal
 					glm::vec3 frictionImpulse = tangentialVelocity * frictionImpulseMagnitude;
 
 					// Apply friction impulse
-					//RigidbodyUtils::ApplyImpulse(transformA, colliderA, bodyA, -frictionImpulse, contact.location);
-					//RigidbodyUtils::ApplyImpulse(transformB, colliderB, bodyB, frictionImpulse, contact.location);
+					RigidbodyUtils::ApplyImpulse(transformA, colliderA, bodyA, -frictionImpulse, contact.location);
+					RigidbodyUtils::ApplyImpulse(transformB, colliderB, bodyB, frictionImpulse, contact.location);
 
 					// Positional correction to prevent sinking
 					const float percent = 0.2f; // Usually 20% to 80%
@@ -515,12 +515,12 @@ namespace Minimal
 		}*/
 
 		// Check cached contacts for similar values; don't update if not necessary
-		CollisionPair colliderPair(&a, &b);
-		if (AreContactsValidInCache(colliderPair, contactPoints))
-			return cachedContacts[colliderPair];
+		//CollisionPair colliderPair(&a, &b);
+		//if (AreContactsValidInCache(colliderPair, contactPoints))
+		//	return cachedContacts[colliderPair];
 
-		// Cache the contacts between these two colliders so they aren't regenerated if there is no significant difference in locations ("resting contact")
-		cachedContacts[colliderPair] = contactPoints;
+		//// Cache the contacts between these two colliders so they aren't regenerated if there is no significant difference in locations ("resting contact")
+		//cachedContacts[colliderPair] = contactPoints;
 
 		return contactPoints;
 	}
@@ -591,13 +591,23 @@ namespace Minimal
 			glm::vec3 currentVertex = referenceFace[i];
 			glm::vec3 nextVertex = referenceFace[(i + 1) % referenceFace.size()];
 
-			glm::vec3 edgeNormal = glm::normalize(glm::cross(nextVertex - currentVertex, referenceNormal));
+			glm::vec3 currentToNext = nextVertex - currentVertex;
+			glm::vec3 cross = glm::vec3(
+				currentToNext.y * referenceNormal.z - currentToNext.z * referenceNormal.y,
+				currentToNext.z * referenceNormal.x - currentToNext.x * referenceNormal.z,
+				currentToNext.x * referenceNormal.y - currentToNext.y * referenceNormal.x);
+
+			glm::vec3 edgeNormal = glm::normalize(cross);
 			float planeOffset = glm::dot(edgeNormal, currentVertex);
-			if (glm::dot(edgeNormal, currentVertex - referenceCenter) > 0)
+			glm::vec3 l = currentVertex - referenceCenter;
+			float dot = glm::dot(edgeNormal, l);
+			if (glm::dot(edgeNormal, currentVertex - referenceCenter) >= 0)
 			{
 				edgeNormal = -edgeNormal;
 				planeOffset = -planeOffset;
 			}
+			if(edgePlanes.find(edgeNormal) != edgePlanes.end())
+				int k = 0;
 			edgePlanes.emplace(edgeNormal, planeOffset);
 		}
 
@@ -605,7 +615,7 @@ namespace Minimal
 		assert(edgePlanes.size() == referenceFace.size());
 
 		float referencePlaneOffset = glm::dot(referenceNormal, referenceFace[0]);
-		float k = referencePlaneOffset / abs(referencePlaneOffset) * THICKNESS;
+		float k = (referencePlaneOffset == 0 ? 0 : referencePlaneOffset / abs(referencePlaneOffset)) * THICKNESS;
 		ClipPolygonAgainstPlane(incidentFace, -referenceNormal, -(referencePlaneOffset + k));
 
 		for (auto& plane : edgePlanes)

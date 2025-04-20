@@ -18,6 +18,7 @@ namespace Minimal
 
 	namespace ColliderUtils
 	{
+		glm::vec3 GetCenter(const TransformComponent& transform, const ColliderComponent& collider);
 		glm::mat4 GetInertiaTensor(const ColliderComponent& collider, float mass);
 	}
 
