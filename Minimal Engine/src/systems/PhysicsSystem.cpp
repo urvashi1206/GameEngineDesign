@@ -592,10 +592,7 @@ namespace Minimal
 			glm::vec3 nextVertex = referenceFace[(i + 1) % referenceFace.size()];
 
 			glm::vec3 currentToNext = nextVertex - currentVertex;
-			glm::vec3 cross = glm::vec3(
-				currentToNext.y * referenceNormal.z - currentToNext.z * referenceNormal.y,
-				currentToNext.z * referenceNormal.x - currentToNext.x * referenceNormal.z,
-				currentToNext.x * referenceNormal.y - currentToNext.y * referenceNormal.x);
+			glm::vec3 cross = glm::cross(currentToNext, referenceNormal);
 
 			glm::vec3 edgeNormal = glm::normalize(cross);
 			float planeOffset = glm::dot(edgeNormal, currentVertex);
@@ -745,7 +742,7 @@ namespace Minimal
 		if (abs(dotRight) > abs(dotDominant))
 		{
 			dominant = (dotRight > 0) ? transform.right() : -transform.right();
-			u = transform.right();
+			u = transform.forward();
 			v = transform.up();
 
 			halfSizeDominant = collider.halfSize.x;
