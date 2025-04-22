@@ -73,7 +73,7 @@ namespace Minimal {
         );
         int lightIndex = 0;
 
-        for (Entity e = 0; e < MAX_ENTITIES; e++) {
+        for (Entity e = 0; e < m_ecs.getEntityCount(); e++) {
             if (!m_ecs.hasComponent<PointLightComponent>(e))
                 continue;
 
@@ -100,7 +100,7 @@ namespace Minimal {
         std::map<float, Entity> sortedLights;
 
 
-        for (Entity e = 0; e < MAX_ENTITIES; e++) {
+        for (Entity e = 0; e < m_ecs.getEntityCount(); e++) {
             if (!m_ecs.hasComponent<PointLightComponent>(e))
                 continue;
 

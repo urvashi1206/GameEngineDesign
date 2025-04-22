@@ -41,10 +41,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ff6dfa8c-eb6c-408e-98c4-a7d0c45c3a71" name="Changes" comment="updated the README.md with the correct GLFW link">
-      <change beforePath="$PROJECT_DIR$/../ECSProject/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../ECSProject/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/editor.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/editor.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ecs/ECSCoordinator.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ecs/ECSCoordinator.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ecs/EntityManager.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ecs/EntityManager.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/systems/CameraSystem.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/systems/CameraSystem.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/systems/PointLightSystem.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/systems/PointLightSystem.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/systems/SimpleRendererSystem.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/systems/SimpleRendererSystem.cpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,6 +64,11 @@
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug-Visual Studio" />
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$/.." value="physics-test" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
@@ -123,7 +130,7 @@
     "cf.advertisement.text.has.clang-format": "true",
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
-    "git-widget-placeholder": "Rendering",
+    "git-widget-placeholder": "main",
     "last_opened_file_path": "C:/Users/rohit/Study/Sem 4/689/Game Engine Project/Minimal Engine/src",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -149,6 +156,11 @@
       </method>
     </configuration>
     <configuration name="Shaders" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="MinimalEngine" TARGET_NAME="Shaders" CONFIG_NAME="Debug-Visual Studio">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -238,23 +250,23 @@
     <isAutomaticFoundErrors value="true" />
     <isAutomaticReloadCMake value="true" />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Solved the vk device destroyed before memory being freed issue" />
     <MESSAGE value="Created a function to create mesh from vertices and indices vectors" />
     <MESSAGE value="created the test function for Mesh::createFromVerticesAndIndices" />
     <MESSAGE value="updated the README.md with the correct GLFW link" />
     <option name="LAST_COMMIT_MESSAGE" value="updated the README.md with the correct GLFW link" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/src/systems/PointLightSystem.cpp</url>
-          <line>106</line>
-          <option name="timeStamp" value="10" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

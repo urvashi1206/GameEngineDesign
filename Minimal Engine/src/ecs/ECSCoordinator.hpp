@@ -30,8 +30,8 @@ namespace Minimal {
             m_destroyentitylock.Release();
         }
 
-        int GetEntityCount() {
-            return m_entityManager->GetEntityCount();
+        int getEntityCount() const {
+            return m_entityManager->getEntityCount();
         }
 
         template<typename T>
