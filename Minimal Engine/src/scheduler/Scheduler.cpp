@@ -157,6 +157,10 @@ Counter* Scheduler::CreateCounter(int startValue)
 }
 void Scheduler::WaitForCounter(Counter* counter)
 {
+	// If counter is already zero, don't wait
+	if(counter->GetCount() == 0)
+		return;
+
 	assert(instance);
 
 	// Put current fiber on the wait list

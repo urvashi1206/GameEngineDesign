@@ -34,8 +34,6 @@ namespace Minimal
 					RigidbodyUtils::ApplyGravity(rb);
 
 					RigidbodyUtils::UpdatePhysics(transform, rb, tickPhysics ? PHYSICS_TICK : 0);
-
-					std::cout << transform.position.x << " " << transform.position.y << " " << transform.position.z << std::endl;
 				}
 
 			/* Collision Detection and Contact Generation */
