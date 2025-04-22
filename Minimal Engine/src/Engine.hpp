@@ -7,6 +7,7 @@
 #include "rendering/vulkan/VulkanDescriptors.hpp"
 #include "rendering/vulkan/VulkanDevice.hpp"
 #include "rendering/vulkan/VulkanRenderer.hpp"
+#include "scheduler/Scheduler.h"
 
 namespace Minimal {
     class Engine {
@@ -39,5 +40,6 @@ namespace Minimal {
         std::unique_ptr<VulkanDescriptorPool> m_globalPool{};
 
         ECSCoordinator m_ecs{};
+        Scheduler m_scheduler{};
     };
 }

@@ -95,49 +95,58 @@ namespace Minimal {
 
         auto currentTime = std::chrono::high_resolution_clock::now();
 
-        while (!m_window.shouldClose()) {
-            glfwPollEvents();
+        m_scheduler.Startup();
 
-            auto newTime = std::chrono::high_resolution_clock::now();
-            float frameTime = std::chrono::duration<float>(newTime - currentTime).count();
-            currentTime = newTime;
+        Scheduler::QueueTask([&]()
+            {
+                while (!m_window.shouldClose()) {
+                    glfwPollEvents();
 
-            cameraController.moveInPlaneXZ(m_window.getGlfwWindow(), frameTime, cameraTransform);
+                    auto newTime = std::chrono::high_resolution_clock::now();
+                    float frameTime = std::chrono::duration<float>(newTime - currentTime).count();
+                    currentTime = newTime;
+
+                    cameraController.moveInPlaneXZ(m_window.getGlfwWindow(), frameTime, cameraTransform);
 
 
-            if (auto commandBuffer = m_renderer.beginFrame()) {
-                int frameIndex = m_renderer.getFrameIndex();
+                    if (auto commandBuffer = m_renderer.beginFrame()) {
+                        int frameIndex = m_renderer.getFrameIndex();
 
-                // update
-                FrameInfo frameInfo{
-                    frameIndex,
-                    frameTime,
-                    commandBuffer,
-                    m_renderer.getAspectRatio(),
-                    {},
-                    nullptr,
-                    globalDescriptorSets[frameIndex]
-                };
+                        // update
+                        FrameInfo frameInfo{
+                            frameIndex,
+                            frameTime,
+                            commandBuffer,
+                            m_renderer.getAspectRatio(),
+                            {},
+                            nullptr,
+                            globalDescriptorSets[frameIndex]
+                        };
 
-                cameraSystem.update(frameInfo);
-                pointLightSystem.update(frameInfo);
-                physicsSystem.update(frameInfo);
+                        cameraSystem.update(frameInfo);
+                        pointLightSystem.update(frameInfo);
+                        physicsSystem.update(frameInfo);
 
-                uboBuffers[frameIndex]->writeToBuffer(&frameInfo.ubo);
-                uboBuffers[frameIndex]->flush();
+                        uboBuffers[frameIndex]->writeToBuffer(&frameInfo.ubo);
+                        uboBuffers[frameIndex]->flush();
 
-                // render
-                m_renderer.beingSwapChainRenderPass(commandBuffer);
+                        // render
+                        m_renderer.beingSwapChainRenderPass(commandBuffer);
 
-                simpleRendererSystem.render(frameInfo);
-                pointLightSystem.render(frameInfo);
+                        simpleRendererSystem.render(frameInfo);
+                        pointLightSystem.render(frameInfo);
 
-                m_renderer.endSwapChainRenderPass(commandBuffer);
-                m_renderer.endFrame();
-            }
-        }
+                        m_renderer.endSwapChainRenderPass(commandBuffer);
+                        m_renderer.endFrame();
+                    }
+                }
 
-        vkDeviceWaitIdle(m_device.get_device());
+                vkDeviceWaitIdle(m_device.get_device());
+
+                Scheduler::Shutdown();
+            });
+
+        m_scheduler.Run();
     }
 
     void Engine::loadEntities() {
