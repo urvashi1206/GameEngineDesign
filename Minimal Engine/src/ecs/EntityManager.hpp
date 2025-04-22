@@ -28,7 +28,7 @@ namespace Minimal {
             --m_livingEntityCount;
         }
 
-        int GetEntityCount(){
+        int getEntityCount() const {
             return m_livingEntityCount;
         }
 

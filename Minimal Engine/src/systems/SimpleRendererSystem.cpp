@@ -71,7 +71,7 @@ namespace Minimal {
             nullptr
         );
 
-        for (Entity e = 0; e < MAX_ENTITIES; ++e) {
+        for (Entity e = 0; e < m_ecs.getEntityCount(); ++e) {
             if (!m_ecs.hasComponent<MeshRendererComponent>(e))
                 continue;
 

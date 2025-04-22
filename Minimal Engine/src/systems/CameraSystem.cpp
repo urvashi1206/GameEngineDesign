@@ -145,7 +145,7 @@ namespace Minimal {
 
     CameraComponent &CameraSystem::getMainCamera() {
         CameraComponent *fallBackCamera{nullptr};
-        for (Entity entity = 0; entity < MAX_ENTITIES; entity++) {
+        for (Entity entity = 0; entity < m_ecs.getEntityCount(); entity++) {
             if (!hasCamera(entity))
                 continue;
 
@@ -167,7 +167,7 @@ namespace Minimal {
         CameraComponent *mainCamera{nullptr};
         CameraComponent *fallbackCamera{nullptr};
 
-        for (Entity entity = 0; entity < MAX_ENTITIES; entity++) {
+        for (Entity entity = 0; entity < m_ecs.getEntityCount(); entity++) {
             if (!hasCamera(entity))
                 continue;
 
