@@ -25,6 +25,10 @@ namespace Minimal {
             m_componentManager->destroyEntity(entity);
         }
 
+        int GetEntityCount() {
+            return m_entityManager->GetEntityCount();
+        }
+
         template<typename T>
         void registerComponent() {
             m_componentManager->registerComponent<T>();
@@ -49,6 +53,7 @@ namespace Minimal {
         bool hasComponent(Entity entity) {
             return m_componentManager->hasComponent<T>(entity);
         }
+
 
     private:
         std::unique_ptr<EntityManager> m_entityManager;

@@ -28,6 +28,10 @@ namespace Minimal {
             --m_livingEntityCount;
         }
 
+        int GetEntityCount(){
+            return m_livingEntityCount;
+        }
+
     private:
         std::queue<Entity> m_availableEntities;
         std::uint32_t m_livingEntityCount;
