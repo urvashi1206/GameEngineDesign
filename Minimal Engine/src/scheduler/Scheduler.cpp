@@ -116,12 +116,12 @@ void Scheduler::ExecuteWorkerThread()
 				continue;
 			}
 
-			FiberEntryParams task = taskQueue->front();
+			FiberEntryParams* task = new FiberEntryParams(taskQueue->front());
 			taskQueue->pop();
 
 			instance->lock_taskQueue.Release();
 
-			LPVOID taskFiber = CreateFiber(NULL, ExecuteFiber, &task);
+			LPVOID taskFiber = CreateFiber(NULL, ExecuteFiber, task);
 
 			assert(taskFiber);
 			SwitchToFiber(taskFiber);
@@ -190,6 +190,8 @@ void Scheduler::ExecuteFiber(void* fiberEntryParams)
 	std::function<void()> func = entryParams->func;
 	Counter* taskCounter = entryParams->taskCounter;
 
+	delete entryParams;
+
 	func();
 
 	// After execution of the task completes, decrement the associated task counter if applicable
@@ -204,7 +206,7 @@ void Scheduler::RestoreFibersFromWaitList(Counter* counter)
 {
 	assert(instance);
 
-	std::queue<void*> fiberWaitQueue = instance->fiberWaitList[counter];
+	std::queue<void*>& fiberWaitQueue = instance->fiberWaitList[counter];
 
 	for(int i = 0; i < fiberWaitQueue.size(); i++)
 	{

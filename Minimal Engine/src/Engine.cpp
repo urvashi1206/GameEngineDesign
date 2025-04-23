@@ -16,6 +16,7 @@
 
 #include "systems/CameraSystem.hpp"
 
+#include <iostream>
 
 namespace Minimal {
     Engine::Engine() {
@@ -99,6 +100,7 @@ namespace Minimal {
 
         Scheduler::QueueTask([&]()
             {
+				Counter* mainCounter = Scheduler::CreateCounter();
                 while (!m_window.shouldClose()) {
                     glfwPollEvents();
 
@@ -139,6 +141,12 @@ namespace Minimal {
                         m_renderer.endSwapChainRenderPass(commandBuffer);
                         m_renderer.endFrame();
                     }
+
+                    Scheduler::QueueTask([]()
+                        {
+							std::cout << "Task" << std::endl;
+                        }, TaskPriority::LOW, mainCounter);
+					Scheduler::WaitForCounter(mainCounter);
                 }
 
                 vkDeviceWaitIdle(m_device.get_device());
