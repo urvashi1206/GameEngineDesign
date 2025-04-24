@@ -63,13 +63,13 @@ namespace Minimal {
             return component;
         }
 
-        // template<typename T>
-        // bool hasComponent(Entity entity) {
-        //     m_hasComponentLock.Acquire();
-        //     bool result = m_componentManager->hasComponent<T>(entity);
-        //     m_hasComponentLock.Release();
-        //     return result;
-        // }
+        template<typename T>
+        bool hasComponent(Entity entity) {
+            m_hasComponentLock.Acquire();
+            bool result = m_componentManager->hasComponent<T>(entity);
+            m_hasComponentLock.Release();
+            return result;
+        }
 
 
     private:
