@@ -26,7 +26,7 @@ namespace Minimal
 
 			/* Physics Update */
 
-			for (Entity e = 0; e < 10; e++)
+			for (Entity e = 0; e < m_ecs.getEntityCount(); e++)
 			{
 				Scheduler::QueueTask([&, e]()
 					{
@@ -46,12 +46,12 @@ namespace Minimal
 
 			/* Collision Detection and Contact Generation */
 
-			for (Entity e1 = 0; e1 < 10; e1++)
+			for (Entity e1 = 0; e1 < m_ecs.getEntityCount(); e1++)
 			{
 				if (!m_ecs.hasComponent<RigidbodyComponent>(e1) || !m_ecs.hasComponent<ColliderComponent>(e1))
 					continue;
 				
-				for (Entity e2 = 0; e2 < 10; e2++)
+				for (Entity e2 = 0; e2 < m_ecs.getEntityCount(); e2++)
 				{
 					if (!m_ecs.hasComponent<RigidbodyComponent>(e2) || !m_ecs.hasComponent<ColliderComponent>(e2))
 						continue;
