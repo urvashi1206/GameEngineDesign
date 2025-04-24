@@ -1,5 +1,6 @@
 #include "PhysicsSystem.hpp"
 #include "PhysicsUtils.hpp"
+#include "scheduler/Scheduler.h"
 
 #include <algorithm>
 #include <iostream>
@@ -9,7 +10,7 @@ namespace Minimal
 	PhysicsSystem::PhysicsSystem(ECSCoordinator& ecs) : System(ecs) {}
 	
 	void PhysicsSystem::initialize() {
-		
+		counter = Scheduler::CreateCounter();
 	}
 
 	void PhysicsSystem::update(FrameInfo& frameInfo) {
@@ -26,15 +27,22 @@ namespace Minimal
 			/* Physics Update */
 
 			for (Entity e = 0; e < 10; e++)
-				if (m_ecs.hasComponent<RigidbodyComponent>(e) && m_ecs.hasComponent<ColliderComponent>(e))
-				{
-					TransformComponent& transform = m_ecs.getComponent<TransformComponent>(e);
-					RigidbodyComponent& rb = m_ecs.getComponent<RigidbodyComponent>(e);
+			{
+				Scheduler::QueueTask([&, e]()
+					{
+						if (m_ecs.hasComponent<RigidbodyComponent>(e) && m_ecs.hasComponent<ColliderComponent>(e))
+						{
+							TransformComponent& transform = m_ecs.getComponent<TransformComponent>(e);
+							RigidbodyComponent& rb = m_ecs.getComponent<RigidbodyComponent>(e);
 
-					RigidbodyUtils::ApplyGravity(rb);
+							RigidbodyUtils::ApplyGravity(rb);
 
-					RigidbodyUtils::UpdatePhysics(transform, rb, tickPhysics ? PHYSICS_TICK : 0);
-				}
+							RigidbodyUtils::UpdatePhysics(transform, rb, tickPhysics ? PHYSICS_TICK : 0);
+						}
+					}, TaskPriority::LOW, counter);
+			}
+
+			Scheduler::WaitForCounter(counter);
 
 			/* Collision Detection and Contact Generation */
 
@@ -113,7 +121,7 @@ namespace Minimal
 						continue;
 
 					// Calculate restitution (bounciness)
-					float e = std::min(bodyA.bounciness, bodyB.bounciness);
+					float e = min(bodyA.bounciness, bodyB.bounciness);
 
 					// Calculate impulse scalar
 					float j = -(1 + e) * velocityAlongNormal;
@@ -164,7 +172,7 @@ namespace Minimal
 					// Positional correction to prevent sinking
 					const float percent = 0.2f; // Usually 20% to 80%
 					const float slop = 0.01f; // Usually 0.01 to 0.1
-					glm::vec3 correction = contact.normal * std::max(contact.penetrationDepth - slop, 0.0f) / (inverseMassA + inverseMassB) * percent;
+					glm::vec3 correction = contact.normal * max(contact.penetrationDepth - slop, 0.0f) / (inverseMassA + inverseMassB) * percent;
 					transformA.position -= correction * inverseMassA;
 					transformB.position += correction * inverseMassB;
 				}

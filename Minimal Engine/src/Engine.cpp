@@ -78,6 +78,8 @@ namespace Minimal {
 
         PhysicsSystem physicsSystem(m_ecs);
 
+        m_scheduler.Startup();
+
         physicsSystem.initialize();
 
         CameraSystem cameraSystem{m_ecs};
@@ -95,8 +97,6 @@ namespace Minimal {
         KeyboardMovementController cameraController{};
 
         auto currentTime = std::chrono::high_resolution_clock::now();
-
-        m_scheduler.Startup();
 
         Scheduler::QueueTask([&]()
             {
@@ -125,9 +125,23 @@ namespace Minimal {
                             globalDescriptorSets[frameIndex]
                         };
 
-                        cameraSystem.update(frameInfo);
-                        pointLightSystem.update(frameInfo);
-                        physicsSystem.update(frameInfo);
+                        Scheduler::QueueTask([&]()
+                            {
+                                cameraSystem.update(frameInfo);
+                            }, TaskPriority::HIGH, mainCounter);
+                        Scheduler::QueueTask([&]()
+                            {
+                                pointLightSystem.update(frameInfo);
+                            }, TaskPriority::HIGH, mainCounter);
+                        Scheduler::QueueTask([&]()
+                            {
+                                physicsSystem.update(frameInfo);
+                            }, TaskPriority::HIGH, mainCounter);
+                        Scheduler::WaitForCounter(mainCounter);
+
+                        //cameraSystem.update(frameInfo);
+                        //pointLightSystem.update(frameInfo);
+                        //physicsSystem.update(frameInfo);
 
                         uboBuffers[frameIndex]->writeToBuffer(&frameInfo.ubo);
                         uboBuffers[frameIndex]->flush();
@@ -141,12 +155,6 @@ namespace Minimal {
                         m_renderer.endSwapChainRenderPass(commandBuffer);
                         m_renderer.endFrame();
                     }
-
-                    Scheduler::QueueTask([]()
-                        {
-							std::cout << "Task" << std::endl;
-                        }, TaskPriority::LOW, mainCounter);
-					Scheduler::WaitForCounter(mainCounter);
                 }
 
                 vkDeviceWaitIdle(m_device.get_device());

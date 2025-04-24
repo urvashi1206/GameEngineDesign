@@ -7,6 +7,7 @@
 #include <unordered_map>
 
 #include "ecs/Components.hpp"
+#include "scheduler/Counter.h"
 
 using namespace Minimal;
 
@@ -85,6 +86,8 @@ struct CollisionData
 namespace Minimal {
     class PhysicsSystem : public System {
 	private:
+		Counter* counter;
+
 		std::unordered_map<CollisionPair, std::vector<ContactPoint>> cachedContacts;
 
 		bool tickPhysics = true;

@@ -26,6 +26,8 @@ Scheduler::~Scheduler()
 		c = nullptr;
 	}
 	counters.clear();
+
+	DestroyFiberPool();
 }
 
 void Scheduler::Startup()
@@ -35,6 +37,8 @@ void Scheduler::Startup()
 	taskQueues.emplace(TaskPriority::LOW, std::queue<FiberEntryParams>());
 	taskQueues.emplace(TaskPriority::MEDIUM, std::queue<FiberEntryParams>());
 	taskQueues.emplace(TaskPriority::HIGH, std::queue<FiberEntryParams>());
+
+	InitializeFiberPool();
 }
 void Scheduler::Shutdown()
 {
@@ -59,6 +63,9 @@ void Scheduler::Run()
 
 	ExecuteWorkerThread();
 
+	/* Shutdown */
+
+	// Before shutdown, wait for all threads to complete
 	for(std::thread& t : threads)
 		t.join();
 }
@@ -72,7 +79,7 @@ void Scheduler::ExecuteWorkerThread()
 			&& instance->taskQueues[TaskPriority::HIGH].size() == 0 
 			&& instance->restoredFibersQueue.size() == 0
 			&& !instance->shouldTerminate)
-			std::this_thread::sleep_for(std::chrono::milliseconds(1));
+			std::this_thread::yield();
 
 		// If there is a restored fiber available
 		if(instance->restoredFibersQueue.size() > 0)
@@ -95,6 +102,8 @@ void Scheduler::ExecuteWorkerThread()
 			continue;
 		}
 
+		instance->lock_taskQueues.Acquire();
+
 		// Find a task queue to pull from
 		std::queue<FiberEntryParams>* taskQueue = nullptr;
 		if(instance->taskQueues[TaskPriority::LOW].size() > 0)
@@ -104,27 +113,35 @@ void Scheduler::ExecuteWorkerThread()
 		if(instance->taskQueues[TaskPriority::HIGH].size() > 0)
 			taskQueue = &instance->taskQueues[TaskPriority::HIGH];
 
+		assert(instance->taskQueues[TaskPriority::LOW].empty() || instance->taskQueues[TaskPriority::LOW].front().func);
+
+		instance->lock_taskQueues.Release();
+
 		// If there is a new task available
 		if(taskQueue)
 		{
-			instance->lock_taskQueue.Acquire();
+			instance->lock_taskQueues.Acquire();
 
 			// After lock is released, make sure queue hasn't been emptied by another thread
 			if(taskQueue->size() == 0)
 			{
-				instance->lock_taskQueue.Release();
+				instance->lock_taskQueues.Release();
 				continue;
 			}
 
-			FiberEntryParams* task = new FiberEntryParams(taskQueue->front());
+			assert(taskQueue->front().func);
+			FiberEntryParams e = taskQueue->front();
+			FiberEntryParams* task = new FiberEntryParams(e);
 			taskQueue->pop();
 
-			instance->lock_taskQueue.Release();
+			assert(task->func);
 
 			LPVOID taskFiber = CreateFiber(NULL, ExecuteFiber, task);
+			instance->lock_taskQueues.Release();
 
 			assert(taskFiber);
 			SwitchToFiber(taskFiber);
+			//RunTask(task);
 			continue;
 		}
 	}
@@ -142,17 +159,22 @@ void Scheduler::QueueTask(std::function<void()> task, TaskPriority priority, Cou
 	entryParams.func = task;
 	entryParams.taskCounter = taskCounter;
 
+	assert(entryParams.func);
+
+	// Add the task to the appropriate queue
 	instance->lock_taskQueues.Acquire();
 	instance->taskQueues[priority].push(entryParams);
 	instance->lock_taskQueues.Release();
-
-	//cv_taskAvailable.notify_one(); // Wake up one thread
 }
 
 Counter* Scheduler::CreateCounter(int startValue)
 {
+	assert(instance);
+
 	Counter* counter = new Counter(startValue);
+	instance->lock_counters.Acquire();
 	instance->counters.push_back(counter);
+	instance->lock_counters.Release();
 	return counter;
 }
 void Scheduler::WaitForCounter(Counter* counter)
@@ -165,6 +187,7 @@ void Scheduler::WaitForCounter(Counter* counter)
 
 	// Put current fiber on the wait list
 	void* taskFiber = GetCurrentFiber();
+	instance->lock_fiberWaitList.Acquire();
 	if(instance->fiberWaitList.find(counter) != instance->fiberWaitList.end())
 	{
 		instance->fiberWaitList[counter].push(taskFiber);
@@ -176,11 +199,98 @@ void Scheduler::WaitForCounter(Counter* counter)
 
 		instance->fiberWaitList.emplace(counter, fiberWaitQueue);
 	}
+	instance->lock_fiberWaitList.Release();
 
 	// Switch back to local fiber
 	SwitchToFiber(localFiber);
 }
 
+void Scheduler::InitializeFiberPool()
+{
+	lock_fiberPool.Acquire();
+	fiberPool = new TaskFiber[FIBER_POOL_SIZE];
+	for(size_t i = 0; i < FIBER_POOL_SIZE; i++)
+	{
+		LPVOID newFiber = CreateFiber(NULL, FiberPoolEntryPoint, new size_t(i));
+
+		TaskFiber taskFiber{};
+		taskFiber.fiber = newFiber;
+		taskFiber.entryParams = nullptr;
+		taskFiber.isBusy = false;
+		fiberPool[i] = taskFiber;
+	}
+	lock_fiberPool.Release();
+}
+void Scheduler::DestroyFiberPool()
+{
+	instance->lock_fiberPool.Acquire();
+	for(size_t i = 0; i < FIBER_POOL_SIZE; i++)
+	{
+		DeleteFiber(instance->fiberPool[i].fiber);
+		//delete &instance->fiberPool[i];
+	}
+	instance->fiberPool = nullptr;
+	instance->lock_fiberPool.Release();
+}
+
+void Scheduler::RunTask(FiberEntryParams* entryParams)
+{
+	TaskFiber* taskFiber = GetFirstAvailableFiberInPool();
+	if(taskFiber)
+	{
+		taskFiber->entryParams = entryParams;
+		SwitchToFiber(taskFiber->fiber);
+
+		instance->lock_fiberPool.Acquire();
+		taskFiber->isBusy = false;
+		instance->lock_fiberPool.Release();
+	}
+	else
+	{
+		// Fallback: create and destroy a temporary fiber if pool is exhausted
+		LPVOID tempFiber = CreateFiber(NULL, ExecuteFiber, entryParams);
+		SwitchToFiber(tempFiber);
+		DeleteFiber(tempFiber);
+	}
+}
+
+void Scheduler::FiberPoolEntryPoint(void* poolIndex)
+{
+	assert(instance);
+
+	// These values should be constant throughout the fiberpool's lifetime
+	const size_t index = *((size_t*) poolIndex);
+	TaskFiber* poolFiber = &instance->fiberPool[index];
+
+	// Don't need the index pointer anymore
+	delete poolIndex;
+
+	// Per-task logic that can be reused for any tasks run on this pool fiber
+	while(true)
+	{
+		poolFiber->isBusy = true;
+
+		// Param values should be set before switching to this fiber so we can read the new values here
+
+		std::function<void()> func = poolFiber->entryParams->func;
+		Counter* taskCounter = poolFiber->entryParams->taskCounter;
+
+		// The entry params are now old
+		delete poolFiber->entryParams;
+		poolFiber->entryParams = nullptr;
+
+		assert(func);
+		func();
+
+		// After execution of the task completes, decrement the associated task counter if applicable
+		if(taskCounter)
+			taskCounter->Decrement();
+
+		// Task is complete - switch back to worker fiber
+		// Task fiber is marked as reusable after switching back
+		SwitchToFiber(localFiber);
+	}
+}
 void Scheduler::ExecuteFiber(void* fiberEntryParams)
 {
 	FiberEntryParams* entryParams = (FiberEntryParams*) fiberEntryParams;
@@ -192,6 +302,7 @@ void Scheduler::ExecuteFiber(void* fiberEntryParams)
 
 	delete entryParams;
 
+	assert(func);
 	func();
 
 	// After execution of the task completes, decrement the associated task counter if applicable
@@ -206,11 +317,37 @@ void Scheduler::RestoreFibersFromWaitList(Counter* counter)
 {
 	assert(instance);
 
+	instance->lock_restoredFibersQueue.Acquire();
+
+	instance->lock_fiberWaitList.Acquire();
 	std::queue<void*>& fiberWaitQueue = instance->fiberWaitList[counter];
+	instance->lock_fiberWaitList.Release();
 
 	for(int i = 0; i < fiberWaitQueue.size(); i++)
 	{
-		instance->restoredFibersQueue.push(fiberWaitQueue.front());
+		auto waitingFiber = fiberWaitQueue.front();
+		assert(waitingFiber);
+		instance->restoredFibersQueue.push(waitingFiber);
 		fiberWaitQueue.pop();
 	}
+	instance->lock_restoredFibersQueue.Release();
+}
+
+TaskFiber* Scheduler::GetFirstAvailableFiberInPool()
+{
+	instance->lock_fiberPool.Acquire();
+    for(size_t i = 0; i < FIBER_POOL_SIZE; i++)
+    {
+		TaskFiber* fiber = &instance->fiberPool[i];
+        if(!fiber->isBusy)
+        {
+			instance->lock_fiberPool.Release();
+            
+			return fiber;
+        }
+    }
+	instance->lock_fiberPool.Release();
+
+    // Expand the pool if needed?
+    return nullptr;
 }
