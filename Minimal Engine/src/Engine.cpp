@@ -16,6 +16,7 @@
 
 #include "systems/CameraSystem.hpp"
 
+#include <iostream>
 
 namespace Minimal {
     Engine::Engine() {
@@ -77,6 +78,8 @@ namespace Minimal {
 
         PhysicsSystem physicsSystem(m_ecs);
 
+        m_scheduler.Startup();
+
         physicsSystem.initialize();
 
         CameraSystem cameraSystem{m_ecs};
@@ -95,10 +98,9 @@ namespace Minimal {
 
         auto currentTime = std::chrono::high_resolution_clock::now();
 
-        m_scheduler.Startup();
-
         Scheduler::QueueTask([&]()
             {
+				Counter* mainCounter = Scheduler::CreateCounter();
                 while (!m_window.shouldClose()) {
                     glfwPollEvents();
 
@@ -123,9 +125,23 @@ namespace Minimal {
                             globalDescriptorSets[frameIndex]
                         };
 
-                        cameraSystem.update(frameInfo);
-                        pointLightSystem.update(frameInfo);
-                        physicsSystem.update(frameInfo);
+                        Scheduler::QueueTask([&]()
+                            {
+                                cameraSystem.update(frameInfo);
+                            }, TaskPriority::HIGH, mainCounter);
+                        Scheduler::QueueTask([&]()
+                            {
+                                pointLightSystem.update(frameInfo);
+                            }, TaskPriority::HIGH, mainCounter);
+                        Scheduler::QueueTask([&]()
+                            {
+                                physicsSystem.update(frameInfo);
+                            }, TaskPriority::HIGH, mainCounter);
+                        Scheduler::WaitForCounter(mainCounter);
+
+                        //cameraSystem.update(frameInfo);
+                        //pointLightSystem.update(frameInfo);
+                        //physicsSystem.update(frameInfo);
 
                         uboBuffers[frameIndex]->writeToBuffer(&frameInfo.ubo);
                         uboBuffers[frameIndex]->flush();
