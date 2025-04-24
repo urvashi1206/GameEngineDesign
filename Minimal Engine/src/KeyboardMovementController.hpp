@@ -11,12 +11,12 @@ namespace Minimal
     public:
         struct KeyMappings
         {
-            int moveLeft = GLFW_KEY_A;
-            int moveRight = GLFW_KEY_D;
+            int moveLeft = GLFW_KEY_D;
+            int moveRight = GLFW_KEY_A;
             int moveForward = GLFW_KEY_W;
             int moveBack = GLFW_KEY_S;
-            int moveUp = GLFW_KEY_SPACE;
-            int moveDown = GLFW_KEY_LEFT_SHIFT;
+            int moveUp = GLFW_KEY_Q;
+            int moveDown = GLFW_KEY_E;
             int lookLeft = GLFW_KEY_LEFT;
             int lookRight = GLFW_KEY_RIGHT;
             int lookUp = GLFW_KEY_UP;
