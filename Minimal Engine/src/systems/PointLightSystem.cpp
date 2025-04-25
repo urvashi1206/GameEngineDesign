@@ -111,17 +111,6 @@ namespace Minimal {
             float distanceSquared = dot(offset, offset);
             sortedLights[distanceSquared] = e;
         }
-        // for (auto& kv : frameInfo.gameObjects)
-        // {
-        //     auto& obj = kv.second;
-        //     if (obj.pointLight == nullptr) continue;
-        //
-        //     // calculate distance
-        //     auto offset = frameInfo.camera.getPosition() - obj.transform.position;
-        //     float distanceSquared = glm::dot(offset, offset);
-        //     sortedLights[distanceSquared] = obj.getId();
-        // }
-
         m_pipeline->bind(frameInfo.commandBuffer);
 
         vkCmdBindDescriptorSets(
