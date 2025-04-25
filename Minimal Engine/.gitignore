@@ -4,6 +4,7 @@
 **/a.out
 build/
 cmake-build-**/
+out/
 
 **/.env
 .env.cmake
