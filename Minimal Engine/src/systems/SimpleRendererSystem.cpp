@@ -15,8 +15,9 @@ namespace Minimal {
     SimpleRendererSystem::SimpleRendererSystem(ECSCoordinator &ecs,
                                                VulkanDevice &device,
                                                VkRenderPass renderPass,
-                                               VkDescriptorSetLayout globalSetLayout) : System(ecs),
-                                                                                        m_device{device} {
+                                               VkDescriptorSetLayout globalSetLayout)
+        : m_ecs{ecs},
+          m_device{device} {
         createPipelineLayout(globalSetLayout);
         createPipeline(renderPass);
     }
@@ -31,12 +32,12 @@ namespace Minimal {
         pushConstantRange.offset = 0;
         pushConstantRange.size = sizeof(SimplePushConstantData);
 
-        std::vector<VkDescriptorSetLayout> descriptor_set_layouts{globalSetLayout};
+        std::vector<VkDescriptorSetLayout> descriptorSetLayouts{globalSetLayout};
 
         VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
         pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-        pipelineLayoutInfo.setLayoutCount = static_cast<uint32_t>(descriptor_set_layouts.size());
-        pipelineLayoutInfo.pSetLayouts = descriptor_set_layouts.data();
+        pipelineLayoutInfo.setLayoutCount = static_cast<uint32_t>(descriptorSetLayouts.size());
+        pipelineLayoutInfo.pSetLayouts = descriptorSetLayouts.data();
         pipelineLayoutInfo.pushConstantRangeCount = 1;
         pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange;
 
@@ -93,6 +94,4 @@ namespace Minimal {
             model->draw(frameInfo.commandBuffer);
         }
     }
-
-    void SimpleRendererSystem::update(FrameInfo &frameInfo) {}
 }

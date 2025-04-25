@@ -8,7 +8,7 @@
 #include "rendering/vulkan/VulkanPipeline.hpp"
 
 namespace Minimal {
-    class SimpleRendererSystem : public System {
+    class SimpleRendererSystem {
     public:
         SimpleRendererSystem(ECSCoordinator &ecs, VulkanDevice &device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout);
 
@@ -20,13 +20,12 @@ namespace Minimal {
 
         void render(FrameInfo &frameInfo);
 
-        void update(FrameInfo &frameInfo) override;
-
     private:
         void createPipelineLayout(VkDescriptorSetLayout globalSetLayout);
 
         void createPipeline(VkRenderPass renderPass);
 
+        ECSCoordinator &m_ecs;
         VulkanDevice &m_device;
 
         std::unique_ptr<VulkanPipeline> m_pipeline;
