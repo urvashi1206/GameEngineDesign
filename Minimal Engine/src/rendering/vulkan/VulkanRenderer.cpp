@@ -5,27 +5,22 @@
 #include <stdexcept>
 
 
-namespace Minimal
-{
-    VulkanRenderer::VulkanRenderer(Window& window, VulkanDevice& device) : m_window{window}, m_device{device}
-    {
+namespace Minimal {
+    VulkanRenderer::VulkanRenderer(Window &window, VulkanDevice &device) : m_window{window}, m_device{device} {
         recreateSwapChain();
         createCommandBuffers();
     }
 
-    VulkanRenderer::~VulkanRenderer()
-    {
+    VulkanRenderer::~VulkanRenderer() {
         freeCommandBuffers();
     }
 
-    VkCommandBuffer VulkanRenderer::beginFrame()
-    {
+    VkCommandBuffer VulkanRenderer::beginFrame() {
         assert(!isFrameInProgress() && "Cannot call begin_frame while frame is in progress");
 
         auto result = m_swapChain->acquireNextImage(&m_currentImageIndex);
 
-        if (result == VK_ERROR_OUT_OF_DATE_KHR)
-        {
+        if (result == VK_ERROR_OUT_OF_DATE_KHR) {
             recreateSwapChain();
             return nullptr;
         }
@@ -46,21 +41,17 @@ namespace Minimal
         return command_buffer;
     }
 
-    void VulkanRenderer::endFrame()
-    {
+    void VulkanRenderer::endFrame() {
         assert(m_isFrameStarted && "Cannot call end_frame while frame is not in progress");
         auto command_buffer = getCurrentCommandBuffer();
         if (vkEndCommandBuffer(command_buffer) != VK_SUCCESS)
             throw std::runtime_error("failed to record command buffers!");
 
         auto result = m_swapChain->submitCommandBuffers(&command_buffer, &m_currentImageIndex);
-        if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || m_window.wasWindowResized())
-        {
+        if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || m_window.wasWindowResized()) {
             m_window.resetWindowResizedFlag();
             recreateSwapChain();
-        }
-        else if (result != VK_SUCCESS)
-        {
+        } else if (result != VK_SUCCESS) {
             throw std::runtime_error("failed to submit swap chain command buffers!");
         }
 
@@ -68,8 +59,7 @@ namespace Minimal
         m_currentFrameIndex = (m_currentFrameIndex + 1) % VulkanSwapChain::MAX_FRAMES_IN_FLIGHT;
     }
 
-    void VulkanRenderer::beingSwapChainRenderPass(VkCommandBuffer commandBuffer)
-    {
+    void VulkanRenderer::beingSwapChainRenderPass(VkCommandBuffer commandBuffer) {
         assert(m_isFrameStarted && "Cannot begin render pass when frame is not in progress");
         assert(commandBuffer == getCurrentCommandBuffer() && "can't begin render pass on command buffer from a different frame");
 
@@ -101,16 +91,18 @@ namespace Minimal
         vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
     }
 
-    void VulkanRenderer::endSwapChainRenderPass(VkCommandBuffer commandBuffer)
-    {
+    void VulkanRenderer::endSwapChainRenderPass(VkCommandBuffer commandBuffer) {
         assert(m_isFrameStarted && "Cannot end render pass when frame is not in progress");
         assert(commandBuffer == getCurrentCommandBuffer() && "can't end render pass on command buffer from a different frame");
 
         vkCmdEndRenderPass(commandBuffer);
     }
 
-    void VulkanRenderer::createCommandBuffers()
-    {
+    void VulkanRenderer::shutdown() {
+        vkDeviceWaitIdle(m_device.getDevice());
+    }
+
+    void VulkanRenderer::createCommandBuffers() {
         m_commandBuffers.resize(VulkanSwapChain::MAX_FRAMES_IN_FLIGHT);
 
         VkCommandBufferAllocateInfo allocInfo{};
@@ -123,33 +115,26 @@ namespace Minimal
             throw std::runtime_error("failed to allocate command buffers!");
     }
 
-    void VulkanRenderer::freeCommandBuffers()
-    {
+    void VulkanRenderer::freeCommandBuffers() {
         vkFreeCommandBuffers(m_device.getDevice(), m_device.getCommandPool(), static_cast<uint32_t>(m_commandBuffers.size()), m_commandBuffers.data());
         m_commandBuffers.clear();
     }
 
-    void VulkanRenderer::recreateSwapChain()
-    {
+    void VulkanRenderer::recreateSwapChain() {
         auto extent = m_window.getExtent();
-        while (extent.width == 0 || extent.height == 0)
-        {
+        while (extent.width == 0 || extent.height == 0) {
             extent = m_window.getExtent();
             glfwWaitEvents();
         }
         vkDeviceWaitIdle(m_device.getDevice());
 
-        if (m_swapChain == nullptr)
-        {
+        if (m_swapChain == nullptr) {
             m_swapChain = std::make_unique<VulkanSwapChain>(m_device, extent);
-        }
-        else
-        {
+        } else {
             std::shared_ptr oldSwapChain = std::move(m_swapChain);
             m_swapChain = std::make_unique<VulkanSwapChain>(m_device, extent, oldSwapChain);
 
-            if (!oldSwapChain->compareSwapFormats(*m_swapChain.get()))
-            {
+            if (!oldSwapChain->compareSwapFormats(*m_swapChain.get())) {
                 throw std::runtime_error("Swap chain image(or depth) format has changed!");
             }
         }

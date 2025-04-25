@@ -98,32 +98,31 @@ namespace Minimal {
 
         auto currentTime = std::chrono::high_resolution_clock::now();
 
-        Scheduler::QueueTask([&]()
-            {
-				Counter* mainCounter = Scheduler::CreateCounter();
-                while (!m_window.shouldClose()) {
-                    glfwPollEvents();
+        Scheduler::QueueTask([&]() {
+            Counter *mainCounter = Scheduler::CreateCounter();
+            while (!m_window.shouldClose()) {
+                glfwPollEvents();
 
-                    auto newTime = std::chrono::high_resolution_clock::now();
-                    float frameTime = std::chrono::duration<float>(newTime - currentTime).count();
-                    currentTime = newTime;
+                auto newTime = std::chrono::high_resolution_clock::now();
+                float frameTime = std::chrono::duration<float>(newTime - currentTime).count();
+                currentTime = newTime;
 
-                    cameraController.moveInPlaneXZ(m_window.getGlfwWindow(), frameTime, cameraTransform);
+                cameraController.moveInPlaneXZ(m_window.getGlfwWindow(), frameTime, cameraTransform);
 
 
-                    if (auto commandBuffer = m_renderer.beginFrame()) {
-                        int frameIndex = m_renderer.getFrameIndex();
+                if (auto commandBuffer = m_renderer.beginFrame()) {
+                    int frameIndex = m_renderer.getFrameIndex();
 
-                        // update
-                        FrameInfo frameInfo{
-                            frameIndex,
-                            frameTime,
-                            commandBuffer,
-                            m_renderer.getAspectRatio(),
-                            {},
-                            nullptr,
-                            globalDescriptorSets[frameIndex]
-                        };
+                    // update
+                    FrameInfo frameInfo{
+                        frameIndex,
+                        frameTime,
+                        commandBuffer,
+                        m_renderer.getAspectRatio(),
+                        {},
+                        nullptr,
+                        globalDescriptorSets[frameIndex]
+                    };
 
                         /*Scheduler::QueueTask([&]()
                             {
@@ -143,24 +142,23 @@ namespace Minimal {
                         pointLightSystem.update(frameInfo);
                         physicsSystem.update(frameInfo);
 
-                        uboBuffers[frameIndex]->writeToBuffer(&frameInfo.ubo);
-                        uboBuffers[frameIndex]->flush();
+                    uboBuffers[frameIndex]->writeToBuffer(&frameInfo.ubo);
+                    uboBuffers[frameIndex]->flush();
 
-                        // render
-                        m_renderer.beingSwapChainRenderPass(commandBuffer);
+                    // render
+                    m_renderer.beingSwapChainRenderPass(commandBuffer);
 
-                        simpleRendererSystem.render(frameInfo);
-                        pointLightSystem.render(frameInfo);
+                    simpleRendererSystem.render(frameInfo);
+                    pointLightSystem.render(frameInfo);
 
-                        m_renderer.endSwapChainRenderPass(commandBuffer);
-                        m_renderer.endFrame();
-                    }
+                    m_renderer.endSwapChainRenderPass(commandBuffer);
+                    m_renderer.endFrame();
                 }
+            }
 
-                vkDeviceWaitIdle(m_device.getDevice());
-
-                Scheduler::Shutdown();
-            });
+            m_renderer.shutdown();
+            Scheduler::Shutdown();
+        });
 
         m_scheduler.Run();
     }
@@ -204,7 +202,7 @@ namespace Minimal {
             {{0.5f, -0.5f, 0.5f}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 0.0f}}, // [1]
             {{0.5f, 0.5f, 0.5f}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f}}, // [2]
             {{-0.5f, 0.5f, 0.5f}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}}, // [3]
-        
+
             // ----------------
             //     BACK FACE
             // ----------------
@@ -215,7 +213,7 @@ namespace Minimal {
             {{0.5f, -0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f}}, // [5]
             {{0.5f, 0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f}}, // [6]
             {{-0.5f, 0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f, -1.0f}, {1.0f, 1.0f}}, // [7]
-        
+
             // ----------------
             //     LEFT FACE
             // ----------------
@@ -225,7 +223,7 @@ namespace Minimal {
             {{-0.5f, -0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}, {-1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}}, // [9]
             {{-0.5f, 0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}, {-1.0f, 0.0f, 0.0f}, {1.0f, 1.0f}}, // [10]
             {{-0.5f, 0.5f, -0.5f}, {0.0f, 0.0f, 1.0f}, {-1.0f, 0.0f, 0.0f}, {0.0f, 1.0f}}, // [11]
-        
+
             // ----------------
             //     RIGHT FACE
             // ----------------
@@ -235,7 +233,7 @@ namespace Minimal {
             {{0.5f, -0.5f, -0.5f}, {1.0f, 1.0f, 0.0f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}}, // [13]
             {{0.5f, 0.5f, -0.5f}, {1.0f, 1.0f, 0.0f}, {1.0f, 0.0f, 0.0f}, {1.0f, 1.0f}}, // [14]
             {{0.5f, 0.5f, 0.5f}, {1.0f, 1.0f, 0.0f}, {1.0f, 0.0f, 0.0f}, {0.0f, 1.0f}}, // [15]
-        
+
             // ----------------
             //     TOP FACE
             // ----------------
@@ -245,7 +243,7 @@ namespace Minimal {
             {{0.5f, 0.5f, 0.5f}, {1.0f, 0.0f, 1.0f}, {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f}}, // [17]
             {{0.5f, 0.5f, -0.5f}, {1.0f, 0.0f, 1.0f}, {0.0f, 1.0f, 0.0f}, {1.0f, 1.0f}}, // [18]
             {{-0.5f, 0.5f, -0.5f}, {1.0f, 0.0f, 1.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 1.0f}}, // [19]
-        
+
             // ----------------
             //    BOTTOM FACE
             // ----------------
@@ -256,7 +254,7 @@ namespace Minimal {
             {{0.5f, -0.5f, 0.5f}, {0.0f, 1.0f, 1.0f}, {0.0f, -1.0f, 0.0f}, {1.0f, 1.0f}}, // [22]
             {{-0.5f, -0.5f, 0.5f}, {0.0f, 1.0f, 1.0f}, {0.0f, -1.0f, 0.0f}, {0.0f, 1.0f}}, // [23]
         };
-        
+
         // Each face is two triangles. Hence, 6 faces × 2 triangles/face = 12 triangles.
         // Each triangle has 3 indices, so 12 × 3 = 36 indices total.
         std::vector<uint32_t> indices = {
@@ -273,13 +271,13 @@ namespace Minimal {
             // Bottom face (vertices 20,21,22,23)
             20, 21, 22, 22, 23, 20
         };
-        
-        
+
+
         std::shared_ptr mesh = Mesh::createModelFromVerticesAndIndices(m_device, vertices, indices);
         auto cube = m_ecs.createEntity();
         m_ecs.addComponent<MeshRendererComponent>(cube, {mesh});
-        m_ecs.addComponent<ColliderComponent>(cube, { EColliderType::Box, glm::vec3(0, 0, 0), glm::vec3(2.5f, 0.5f, 2.5f) });
-        m_ecs.addComponent<RigidbodyComponent>(cube, { false, 1000, 0, 0.5f, 0.3f, glm::vec3(0, 0.0f, 0), glm::vec3(0, 0.0f, 0), glm::vec3(0, 0.0f, 0) });
+        m_ecs.addComponent<ColliderComponent>(cube, {EColliderType::Box, glm::vec3(0, 0, 0), glm::vec3(2.5f, 0.5f, 2.5f)});
+        m_ecs.addComponent<RigidbodyComponent>(cube, {false, 1000, 0, 0.5f, 0.3f, glm::vec3(0, 0.0f, 0), glm::vec3(0, 0.0f, 0), glm::vec3(0, 0.0f, 0)});
         auto &cubeTransform = m_ecs.getComponent<TransformComponent>(cube);
         cubeTransform.position = {0.0f, -2.0f, 0.0f};
         cubeTransform.scale = {5.0f, 1.5f, 5.0f};
@@ -308,14 +306,14 @@ namespace Minimal {
         /* Physics objects */
         {
             auto object = m_ecs.createEntity();
-            m_ecs.addComponent<MeshRendererComponent>(object, { mesh });
-            m_ecs.addComponent<ColliderComponent>(object, { EColliderType::Box, glm::vec3(0, 0, 0), glm::vec3(0.5f, 0.5f, 0.5f) });
-            m_ecs.addComponent<RigidbodyComponent>(object, { false, 1, 0, 0.5f, 0.3f, glm::vec3(0, -1.8f, 0), glm::vec3(0, 0.0f, 0), glm::vec3(0, 0.0f, 0) });
+            m_ecs.addComponent<MeshRendererComponent>(object, {mesh});
+            m_ecs.addComponent<ColliderComponent>(object, {EColliderType::Box, glm::vec3(0, 0, 0), glm::vec3(0.5f, 0.5f, 0.5f)});
+            m_ecs.addComponent<RigidbodyComponent>(object, {false, 1, 0, 0.5f, 0.3f, glm::vec3(0, -1.8f, 0), glm::vec3(0, 0.0f, 0), glm::vec3(0, 0.0f, 0)});
 
-            auto& transform = m_ecs.getComponent<TransformComponent>(object);
-            transform.position = { 0.0f, 0.0f, 0.0f };
+            auto &transform = m_ecs.getComponent<TransformComponent>(object);
+            transform.position = {0.0f, 0.0f, 0.0f};
             transform.rotate(glm::quat(glm::vec3(0, 0, 1.0f)));
-            transform.scale = { 0.5f, 0.5f, 0.5f };
+            transform.scale = {0.5f, 0.5f, 0.5f};
         }
     }
 }
