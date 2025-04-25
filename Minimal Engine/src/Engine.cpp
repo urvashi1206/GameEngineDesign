@@ -157,7 +157,7 @@ namespace Minimal {
                     }
                 }
 
-                vkDeviceWaitIdle(m_device.get_device());
+                vkDeviceWaitIdle(m_device.device());
 
                 Scheduler::Shutdown();
             });

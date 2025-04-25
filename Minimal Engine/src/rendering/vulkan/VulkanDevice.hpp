@@ -37,8 +37,8 @@ namespace Minimal {
 
         VulkanDevice &operator=(VulkanDevice &&) = delete;
 
-        VkCommandPool getCommandPool() { return m_commandPool; }
-        VkDevice get_device() { return m_device; }
+        VkCommandPool commandPool() { return m_commandPool; }
+        VkDevice device() { return m_device; }
         VkSurfaceKHR surface() { return m_surface; }
         VkQueue graphicsQueue() { return m_graphicsQueue; }
         VkQueue presentQueue() { return m_presentQueue; }
