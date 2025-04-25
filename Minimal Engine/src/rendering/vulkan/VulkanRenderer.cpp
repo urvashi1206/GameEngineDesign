@@ -116,16 +116,16 @@ namespace Minimal
         VkCommandBufferAllocateInfo allocInfo{};
         allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
         allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-        allocInfo.commandPool = m_device.commandPool();
+        allocInfo.commandPool = m_device.getCommandPool();
         allocInfo.commandBufferCount = static_cast<uint32_t>(m_commandBuffers.size());
 
-        if (vkAllocateCommandBuffers(m_device.device(), &allocInfo, m_commandBuffers.data()) != VK_SUCCESS)
+        if (vkAllocateCommandBuffers(m_device.getDevice(), &allocInfo, m_commandBuffers.data()) != VK_SUCCESS)
             throw std::runtime_error("failed to allocate command buffers!");
     }
 
     void VulkanRenderer::freeCommandBuffers()
     {
-        vkFreeCommandBuffers(m_device.device(), m_device.commandPool(), static_cast<uint32_t>(m_commandBuffers.size()), m_commandBuffers.data());
+        vkFreeCommandBuffers(m_device.getDevice(), m_device.getCommandPool(), static_cast<uint32_t>(m_commandBuffers.size()), m_commandBuffers.data());
         m_commandBuffers.clear();
     }
 
@@ -137,7 +137,7 @@ namespace Minimal
             extent = m_window.getExtent();
             glfwWaitEvents();
         }
-        vkDeviceWaitIdle(m_device.device());
+        vkDeviceWaitIdle(m_device.getDevice());
 
         if (m_swapChain == nullptr)
         {

@@ -27,7 +27,7 @@ namespace Minimal {
     }
 
     PointLightSystem::~PointLightSystem() {
-        vkDestroyPipelineLayout(m_device.device(), m_pipelineLayout, nullptr);
+        vkDestroyPipelineLayout(m_device.getDevice(), m_pipelineLayout, nullptr);
     }
 
     void PointLightSystem::createPipelineLayout(VkDescriptorSetLayout globalSetLayout) {
@@ -45,7 +45,7 @@ namespace Minimal {
         pipelineLayoutInfo.pushConstantRangeCount = 1;
         pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange;
 
-        if (vkCreatePipelineLayout(m_device.device(), &pipelineLayoutInfo, nullptr, &m_pipelineLayout) !=
+        if (vkCreatePipelineLayout(m_device.getDevice(), &pipelineLayoutInfo, nullptr, &m_pipelineLayout) !=
             VK_SUCCESS)
             throw std::runtime_error("failed to create pipeline layout!");
     }

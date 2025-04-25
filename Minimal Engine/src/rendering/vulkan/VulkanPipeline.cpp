@@ -15,10 +15,10 @@ namespace Minimal {
     }
 
     VulkanPipeline::~VulkanPipeline() {
-        vkDestroyShaderModule(m_device.device(), m_vertShaderModule, nullptr);
-        vkDestroyShaderModule(m_device.device(), m_fragShaderModule, nullptr);
+        vkDestroyShaderModule(m_device.getDevice(), m_vertShaderModule, nullptr);
+        vkDestroyShaderModule(m_device.getDevice(), m_fragShaderModule, nullptr);
 
-        vkDestroyPipeline(m_device.device(), m_graphicsPipeline, nullptr);
+        vkDestroyPipeline(m_device.getDevice(), m_graphicsPipeline, nullptr);
     }
 
     std::vector<char> VulkanPipeline::readFile(const std::string &filePath) {
@@ -97,7 +97,7 @@ namespace Minimal {
         pipelineInfo.basePipelineIndex = -1;
         pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
 
-        if (vkCreateGraphicsPipelines(m_device.device(), VK_NULL_HANDLE, 1, &pipelineInfo, nullptr,
+        if (vkCreateGraphicsPipelines(m_device.getDevice(), VK_NULL_HANDLE, 1, &pipelineInfo, nullptr,
                                       &m_graphicsPipeline) != VK_SUCCESS)
             throw std::runtime_error("failed to create graphics pipeline!");
     }
@@ -108,7 +108,7 @@ namespace Minimal {
         createInfo.codeSize = code.size();
         createInfo.pCode = reinterpret_cast<const uint32_t *>(code.data());
 
-        if (vkCreateShaderModule(m_device.device(), &createInfo, nullptr, shaderModule) != VK_SUCCESS)
+        if (vkCreateShaderModule(m_device.getDevice(), &createInfo, nullptr, shaderModule) != VK_SUCCESS)
             throw std::runtime_error("failed to create shader module!");
     }
 

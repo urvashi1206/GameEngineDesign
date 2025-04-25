@@ -47,8 +47,8 @@ namespace Minimal {
 
     VulkanBuffer::~VulkanBuffer() {
         unmap();
-        vkDestroyBuffer(m_device.device(), m_vkBuffer, nullptr);
-        vkFreeMemory(m_device.device(), m_memory, nullptr);
+        vkDestroyBuffer(m_device.getDevice(), m_vkBuffer, nullptr);
+        vkFreeMemory(m_device.getDevice(), m_memory, nullptr);
     }
 
     /**
@@ -62,7 +62,7 @@ namespace Minimal {
      */
     VkResult VulkanBuffer::map(VkDeviceSize size, VkDeviceSize offset) {
         assert(m_vkBuffer && m_memory && "Called map on buffer before create");
-        return vkMapMemory(m_device.device(), m_memory, offset, size, 0, &m_mapped);
+        return vkMapMemory(m_device.getDevice(), m_memory, offset, size, 0, &m_mapped);
     }
 
     /**
@@ -72,7 +72,7 @@ namespace Minimal {
      */
     void VulkanBuffer::unmap() {
         if (m_mapped) {
-            vkUnmapMemory(m_device.device(), m_memory);
+            vkUnmapMemory(m_device.getDevice(), m_memory);
             m_mapped = nullptr;
         }
     }
@@ -115,7 +115,7 @@ namespace Minimal {
         mappedRange.memory = m_memory;
         mappedRange.offset = offset;
         mappedRange.size = size;
-        return vkFlushMappedMemoryRanges(m_device.device(), 1, &mappedRange);
+        return vkFlushMappedMemoryRanges(m_device.getDevice(), 1, &mappedRange);
     }
 
     /**
@@ -135,7 +135,7 @@ namespace Minimal {
         mappedRange.memory = m_memory;
         mappedRange.offset = offset;
         mappedRange.size = size;
-        return vkInvalidateMappedMemoryRanges(m_device.device(), 1, &mappedRange);
+        return vkInvalidateMappedMemoryRanges(m_device.getDevice(), 1, &mappedRange);
     }
 
     /**
