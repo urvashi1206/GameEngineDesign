@@ -18,11 +18,12 @@ namespace Minimal {
         glm::mat4 mat4();
 
         glm::mat3 normalMatrix();
-        glm::vec3 right() const;
-        glm::vec3 up() const;
-        glm::vec3 forward() const;
 
-        std::string toString();
+        glm::vec3 right() const;
+
+        glm::vec3 up() const;
+
+        glm::vec3 forward() const;
     };
 
     struct PointLightComponent {
@@ -63,6 +64,7 @@ namespace Minimal {
         Box,
         Sphere
     };
+
     struct ColliderComponent {
         EColliderType colliderType;
 
@@ -84,7 +86,6 @@ namespace Minimal {
     };
 
     struct CameraComponent {
-
         const glm::vec3 &getPosition() const { return glm::vec3(inverseViewMatrix[3]); }
 
         bool isMain;

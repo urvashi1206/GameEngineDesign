@@ -9,7 +9,7 @@ namespace Minimal {
     void TransformComponent::rotate(glm::quat quaternion) {
         /*if (quaternion == glm::quat)
             return;*/
-        
+
         rotation = quaternion * rotation;
     }
 
@@ -52,19 +52,16 @@ namespace Minimal {
             }
         };
     }
+
     glm::vec3 TransformComponent::right() const {
         return rotation * glm::vec3(1, 0, 0);
     }
+
     glm::vec3 TransformComponent::up() const {
         return rotation * glm::vec3(0, 1, 0);
     }
+
     glm::vec3 TransformComponent::forward() const {
         return rotation * glm::vec3(0, 0, 1);
-    }
-
-    std::string TransformComponent::toString() {
-        return "TransformComponent: " + std::to_string(position.x) + ", " + std::to_string(position.y) + ", " + std::to_string(position.z) + "\n" +
-               std::to_string(glm::pitch(rotation)) + ", " + std::to_string(glm::yaw(rotation)) + ", " + std::to_string(glm::roll(rotation)) + "\n" +
-               std::to_string(scale.x) + ", " + std::to_string(scale.y) + ", " + std::to_string(scale.z);
     }
 }
