@@ -30,7 +30,7 @@ namespace Minimal {
             m_destroyEntityLock.Release();
         }
 
-        int getEntityCount() const {
+        uint32_t getEntityCount() const {
             return m_entityManager->getEntityCount();
         }
 
