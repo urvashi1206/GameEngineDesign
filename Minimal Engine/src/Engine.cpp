@@ -125,7 +125,7 @@ namespace Minimal {
                             globalDescriptorSets[frameIndex]
                         };
 
-                        Scheduler::QueueTask([&]()
+                        /*Scheduler::QueueTask([&]()
                             {
                                 cameraSystem.update(frameInfo);
                             }, TaskPriority::HIGH, mainCounter);
@@ -137,11 +137,11 @@ namespace Minimal {
                             {
                                 physicsSystem.update(frameInfo);
                             }, TaskPriority::HIGH, mainCounter);
-                        Scheduler::WaitForCounter(mainCounter);
+                        Scheduler::WaitForCounter(mainCounter);*/
 
-                        //cameraSystem.update(frameInfo);
-                        //pointLightSystem.update(frameInfo);
-                        //physicsSystem.update(frameInfo);
+                        cameraSystem.update(frameInfo);
+                        pointLightSystem.update(frameInfo);
+                        physicsSystem.update(frameInfo);
 
                         uboBuffers[frameIndex]->writeToBuffer(&frameInfo.ubo);
                         uboBuffers[frameIndex]->flush();

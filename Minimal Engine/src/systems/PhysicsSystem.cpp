@@ -28,8 +28,8 @@ namespace Minimal
 
 			for (Entity e = 0; e < m_ecs.getEntityCount(); e++)
 			{
-				Scheduler::QueueTask([&, e]()
-					{
+				//Scheduler::QueueTask([&, e]()
+					//{
 						if (m_ecs.hasComponent<RigidbodyComponent>(e) && m_ecs.hasComponent<ColliderComponent>(e))
 						{
 							TransformComponent& transform = m_ecs.getComponent<TransformComponent>(e);
@@ -39,10 +39,10 @@ namespace Minimal
 
 							RigidbodyUtils::UpdatePhysics(transform, rb, tickPhysics ? PHYSICS_TICK : 0);
 						}
-					}, TaskPriority::LOW, counter);
+					//}, TaskPriority::LOW, counter);
 			}
 
-			Scheduler::WaitForCounter(counter);
+			//Scheduler::WaitForCounter(counter);
 
 			/* Collision Detection and Contact Generation */
 
