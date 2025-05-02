@@ -67,10 +67,6 @@ namespace Minimal {
     }
 
     void PointLightSystem::update(FrameInfo &frameInfo) {
-        auto rotateLight = rotate(glm::mat4(1.0f),
-                                  frameInfo.frameTime,
-                                  {0.0f, -1.0f, 0.0f}
-        );
         int lightIndex = 0;
 
         for (Entity e = 0; e < m_ecs.getEntityCount(); e++) {
@@ -81,9 +77,6 @@ namespace Minimal {
             auto &pointLight = m_ecs.getComponent<PointLightComponent>(e);
 
             assert(lightIndex< MAX_LIGHTS && "Point lights exceed maximum specified");
-
-            // update light position
-            transform.position = glm::vec3(rotateLight * glm::vec4(transform.position, 1.0f));
 
             // copy light to ubo
             frameInfo.ubo.pointLights[lightIndex].position = glm::vec4(transform.position, 1.0f);

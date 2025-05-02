@@ -18,6 +18,8 @@
 
 #include <iostream>
 
+#include "systems/PointLightMover.hpp"
+
 namespace Minimal {
     Engine::Engine() {
         m_globalPool = VulkanDescriptorPool::Builder(m_device)
@@ -84,6 +86,8 @@ namespace Minimal {
 
         CameraSystem cameraSystem{m_ecs};
 
+        PointLightMover pointLightMover{m_ecs};
+
         Entity cameraEntity = m_ecs.createEntity();
         m_ecs.addComponent<CameraComponent>(cameraEntity, {true});
 
@@ -124,23 +128,24 @@ namespace Minimal {
                         globalDescriptorSets[frameIndex]
                     };
 
-                        /*Scheduler::QueueTask([&]()
-                            {
-                                cameraSystem.update(frameInfo);
-                            }, TaskPriority::HIGH, mainCounter);
-                        Scheduler::QueueTask([&]()
-                            {
-                                pointLightSystem.update(frameInfo);
-                            }, TaskPriority::HIGH, mainCounter);
-                        Scheduler::QueueTask([&]()
-                            {
-                                physicsSystem.update(frameInfo);
-                            }, TaskPriority::HIGH, mainCounter);
-                        Scheduler::WaitForCounter(mainCounter);*/
+                    /*Scheduler::QueueTask([&]()
+                        {
+                            cameraSystem.update(frameInfo);
+                        }, TaskPriority::HIGH, mainCounter);
+                    Scheduler::QueueTask([&]()
+                        {
+                            pointLightSystem.update(frameInfo);
+                        }, TaskPriority::HIGH, mainCounter);
+                    Scheduler::QueueTask([&]()
+                        {
+                            physicsSystem.update(frameInfo);
+                        }, TaskPriority::HIGH, mainCounter);
+                    Scheduler::WaitForCounter(mainCounter);*/
 
-                        cameraSystem.update(frameInfo);
-                        pointLightSystem.update(frameInfo);
-                        physicsSystem.update(frameInfo);
+                    cameraSystem.update(frameInfo);
+                    pointLightMover.update(frameInfo);
+                    pointLightSystem.update(frameInfo);
+                    physicsSystem.update(frameInfo);
 
                     uboBuffers[frameIndex]->writeToBuffer(&frameInfo.ubo);
                     uboBuffers[frameIndex]->flush();
