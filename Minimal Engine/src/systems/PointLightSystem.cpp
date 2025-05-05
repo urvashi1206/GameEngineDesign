@@ -17,10 +17,10 @@ namespace Minimal {
         float radius;
     };
 
-    PointLightSystem::PointLightSystem(ECSCoordinator& ecs,
+    PointLightSystem::PointLightSystem(ECSCoordinator &ecs,
                                        VulkanDevice &device,
                                        VkRenderPass renderPass,
-                                       VkDescriptorSetLayout globalSetLayout) : System(ecs),
+                                       VkDescriptorSetLayout globalSetLayout) : RenderSubsystem(ecs),
                                                                                 m_device{device} {
         createPipelineLayout(globalSetLayout);
         createPipeline(renderPass);
@@ -45,8 +45,7 @@ namespace Minimal {
         pipelineLayoutInfo.pushConstantRangeCount = 1;
         pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange;
 
-        if (vkCreatePipelineLayout(m_device.getDevice(), &pipelineLayoutInfo, nullptr, &m_pipelineLayout) !=
-            VK_SUCCESS)
+        if (vkCreatePipelineLayout(m_device.getDevice(), &pipelineLayoutInfo, nullptr, &m_pipelineLayout) != VK_SUCCESS)
             throw std::runtime_error("failed to create pipeline layout!");
     }
 

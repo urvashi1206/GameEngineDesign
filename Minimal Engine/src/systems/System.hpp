@@ -1,10 +1,9 @@
 ﻿//
-// Created by rohit on 4/7/2025.
+// Created by rohit on 5/2/2025.
 //
 #pragma once
-
-#include "FrameInfo.hpp"
 #include "ecs/ECSCoordinator.hpp"
+
 
 namespace Minimal {
     class System {
@@ -13,7 +12,7 @@ namespace Minimal {
 
         virtual ~System();
 
-        virtual void update(FrameInfo &frameInfo) = 0;
+        virtual void update(float deltaTime) = 0;
 
     protected:
         ECSCoordinator &m_ecs;

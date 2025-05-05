@@ -1,18 +1,100 @@
 #include "VulkanRenderer.hpp"
 
 #include <array>
-#include <iostream>
 #include <stdexcept>
+
+#include "FrameInfo.hpp"
+#include "VulkanDescriptors.hpp"
+#include "systems/CameraSystem.hpp"
+#include "systems/PointLightSystem.hpp"
+#include "systems/SimpleRendererSystem.hpp"
 
 
 namespace Minimal {
-    VulkanRenderer::VulkanRenderer(Window &window, VulkanDevice &device) : m_window{window}, m_device{device} {
+    VulkanRenderer::VulkanRenderer(ECSCoordinator &ecs, Window &window, VulkanDevice &device) : System(ecs), m_window{window}, m_device{device} {
         recreateSwapChain();
         createCommandBuffers();
+
+        m_globalPool = VulkanDescriptorPool::Builder(m_device)
+                .setMaxSets(VulkanSwapChain::MAX_FRAMES_IN_FLIGHT)
+                .addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VulkanSwapChain::MAX_FRAMES_IN_FLIGHT)
+                .build();
     }
 
     VulkanRenderer::~VulkanRenderer() {
         freeCommandBuffers();
+    }
+
+    void VulkanRenderer::initialize() {
+        for (int i = 0; i < m_uboBuffers.size(); i++) {
+            m_uboBuffers[i] = std::make_unique<VulkanBuffer>(
+                m_device,
+                sizeof(GlobalUBO),
+                1,
+                VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+                VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT
+            );
+            m_uboBuffers[i]->map();
+        }
+
+        auto globalSetLayout = VulkanDescriptorSetLayout::Builder(m_device)
+                .addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_ALL_GRAPHICS)
+                .build();
+
+        for (int i = 0; i < VulkanSwapChain::MAX_FRAMES_IN_FLIGHT; i++) {
+            auto bufferInfo = m_uboBuffers[i]->descriptorInfo();
+            VulkanDescriptorWriter(*globalSetLayout, *m_globalPool)
+                    .writeBuffer(0, &bufferInfo)
+                    .build(m_globalDescriptorSets[i]);
+        }
+
+        m_simpleRendererSystem = std::make_unique<SimpleRendererSystem>(
+            m_ecs,
+            m_device,
+            getSwapChainRenderPass(),
+            globalSetLayout->getDescriptorSetLayout()
+        );
+
+        m_pointLightSystem = std::make_unique<PointLightSystem>(
+            m_ecs,
+            m_device,
+            getSwapChainRenderPass(),
+            globalSetLayout->getDescriptorSetLayout()
+        );
+
+        m_cameraSystem = std::make_unique<CameraSystem>(m_ecs);
+    }
+
+    void VulkanRenderer::update(const float deltaTime) {
+        if (auto commandBuffer = beginFrame()) {
+            int frameIndex = getFrameIndex();
+
+            // update
+            FrameInfo frameInfo{
+                frameIndex,
+                deltaTime,
+                commandBuffer,
+                getAspectRatio(),
+                {},
+                nullptr,
+                m_globalDescriptorSets[frameIndex]
+            };
+
+            m_cameraSystem->update(frameInfo);
+            m_pointLightSystem->update(frameInfo);
+
+            m_uboBuffers[frameIndex]->writeToBuffer(&frameInfo.ubo);
+            m_uboBuffers[frameIndex]->flush();
+
+            // render
+            beingSwapChainRenderPass(commandBuffer);
+
+            m_simpleRendererSystem->render(frameInfo);
+            m_pointLightSystem->render(frameInfo);
+
+            endSwapChainRenderPass(commandBuffer);
+            endFrame();
+        }
     }
 
     VkCommandBuffer VulkanRenderer::beginFrame() {
@@ -30,15 +112,15 @@ namespace Minimal {
 
         m_isFrameStarted = true;
 
-        auto command_buffer = getCurrentCommandBuffer();
+        auto commandBuffer = getCurrentCommandBuffer();
 
         VkCommandBufferBeginInfo beginInfo{};
         beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 
-        if (vkBeginCommandBuffer(command_buffer, &beginInfo) != VK_SUCCESS)
+        if (vkBeginCommandBuffer(commandBuffer, &beginInfo) != VK_SUCCESS)
             throw std::runtime_error("failed to begin recording command buffer!");
 
-        return command_buffer;
+        return commandBuffer;
     }
 
     void VulkanRenderer::endFrame() {

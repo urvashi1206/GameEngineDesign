@@ -3,10 +3,10 @@
 //
 #pragma once
 
-#include "System.hpp"
+#include "../rendering/RenderSubsystem.hpp"
 
 namespace Minimal {
-    class CameraSystem : public System {
+    class CameraSystem final : public RenderSubsystem {
     public:
         CameraSystem(ECSCoordinator &ecs);
 
@@ -14,25 +14,15 @@ namespace Minimal {
 
         CameraSystem &operator=(const CameraSystem &) = delete;
 
-        void setOrthographicProjection(Entity cameraEntity, float left, float right, float top, float bottom, float near, float far);
+        void processOrthographicProjection(glm::mat4 &projectionMatrix, float left, float right, float top, float bottom, float near, float far);
 
-        void setOrthographicProjection(CameraComponent &camera, float left, float right, float top, float bottom, float near, float far);
+        void processPerspectiveProjection(glm::mat4 &projectionMatrix, float fovY, float aspect, float near, float far);
 
-        void setPerspectiveProjection(Entity cameraEntity, float fovY, float aspect, float near, float far);
+        void processViewYXZ(glm::mat4 &viewMatrix, glm::mat4 &inverseViewMatrix, const TransformComponent &transform);
 
-        void setPerspectiveProjection(CameraComponent &camera, float fovY, float aspect, float near, float far);
+        void update(FrameInfo &frameInfo) override;
 
-        void setViewDirection(Entity cameraEntity, glm::vec3 direction, glm::vec3 up = {0.0f, -1.0f, 0.0f});
-
-        void setViewTarget(Entity cameraEntity, glm::vec3 target, glm::vec3 up = {0.0f, -1.0f, 0.0f});
-
-        void setViewYXZ(Entity cameraEntity);
-
-        void setViewYXZ(CameraComponent &camera, TransformComponent &transform);
-
-        CameraComponent &getMainCamera();
-
-        void update(FrameInfo &frameInfo);
+        void render(FrameInfo &frameInfo) override;
 
     private:
         bool hasCamera(Entity cameraEntity);

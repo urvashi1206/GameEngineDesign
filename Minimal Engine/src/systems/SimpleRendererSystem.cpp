@@ -16,7 +16,7 @@ namespace Minimal {
                                                VulkanDevice &device,
                                                VkRenderPass renderPass,
                                                VkDescriptorSetLayout globalSetLayout)
-        : m_ecs{ecs},
+        : RenderSubsystem{ecs},
           m_device{device} {
         createPipelineLayout(globalSetLayout);
         createPipeline(renderPass);
@@ -57,6 +57,8 @@ namespace Minimal {
                                                       "shaders/simple_shader.frag.spv",
                                                       pipelineConfig);
     }
+
+    void SimpleRendererSystem::update(FrameInfo &frameInfo) {}
 
     void SimpleRendererSystem::render(FrameInfo &frameInfo) {
         m_pipeline->bind(frameInfo.commandBuffer);

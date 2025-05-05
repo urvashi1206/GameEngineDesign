@@ -1,10 +1,7 @@
 #pragma once
 
-#include <memory>
-
 #include "Window.hpp"
 #include "ecs/ECSCoordinator.hpp"
-#include "rendering/vulkan/VulkanDescriptors.hpp"
 #include "rendering/vulkan/VulkanDevice.hpp"
 #include "rendering/vulkan/VulkanRenderer.hpp"
 #include "scheduler/Scheduler.h"
@@ -34,10 +31,7 @@ namespace Minimal {
 
         Window m_window{"Hello Vulkan!", WIDTH, HEIGHT};
         VulkanDevice m_device{m_window};
-        VulkanRenderer m_renderer{m_window, m_device};
-
-        // note: order of declarations matters
-        std::unique_ptr<VulkanDescriptorPool> m_globalPool{};
+        VulkanRenderer m_renderer{m_ecs, m_window, m_device};
 
         ECSCoordinator m_ecs{};
         Scheduler m_scheduler{};

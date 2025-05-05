@@ -2,10 +2,8 @@
 
 #include "KeyboardMovementController.hpp"
 #include "ecs/Components.hpp"
-#include "rendering/vulkan/VulkanBuffer.hpp"
-#include "systems/PointLightSystem.hpp"
-#include "systems/SimpleRendererSystem.hpp"
 #include "systems/PhysicsSystem.hpp"
+#include "systems/PointLightMover.hpp"
 
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
@@ -14,19 +12,8 @@
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/gtc/constants.hpp>
 
-#include "systems/CameraSystem.hpp"
-
-#include <iostream>
-
-#include "systems/PointLightMover.hpp"
-
 namespace Minimal {
     Engine::Engine() {
-        m_globalPool = VulkanDescriptorPool::Builder(m_device)
-                .setMaxSets(VulkanSwapChain::MAX_FRAMES_IN_FLIGHT)
-                .addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VulkanSwapChain::MAX_FRAMES_IN_FLIGHT)
-                .build();
-
         m_ecs.registerComponent<TransformComponent>();
         m_ecs.registerComponent<CameraComponent>();
         m_ecs.registerComponent<MeshRendererComponent>();
@@ -40,59 +27,16 @@ namespace Minimal {
     Engine::~Engine() = default;
 
     void Engine::run() {
-        std::vector<std::unique_ptr<VulkanBuffer> > uboBuffers(VulkanSwapChain::MAX_FRAMES_IN_FLIGHT);
-        for (int i = 0; i < uboBuffers.size(); i++) {
-            uboBuffers[i] = std::make_unique<VulkanBuffer>(
-                m_device,
-                sizeof(GlobalUBO),
-                1,
-                VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
-                VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT
-            );
-            uboBuffers[i]->map();
-        }
-
-        auto globalSetLayout = VulkanDescriptorSetLayout::Builder(m_device)
-                .addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_ALL_GRAPHICS)
-                .build();
-
-        std::vector<VkDescriptorSet> globalDescriptorSets(VulkanSwapChain::MAX_FRAMES_IN_FLIGHT);
-        for (int i = 0; i < VulkanSwapChain::MAX_FRAMES_IN_FLIGHT; i++) {
-            auto bufferInfo = uboBuffers[i]->descriptorInfo();
-            VulkanDescriptorWriter(*globalSetLayout, *m_globalPool)
-                    .writeBuffer(0, &bufferInfo)
-                    .build(globalDescriptorSets[i]);
-        }
-
-        SimpleRendererSystem simpleRendererSystem{
-            m_ecs,
-            m_device,
-            m_renderer.getSwapChainRenderPass(),
-            globalSetLayout->getDescriptorSetLayout()
-        };
-
-        PointLightSystem pointLightSystem{
-            m_ecs,
-            m_device,
-            m_renderer.getSwapChainRenderPass(),
-            globalSetLayout->getDescriptorSetLayout()
-        };
-
-        PhysicsSystem physicsSystem(m_ecs);
+        PhysicsSystem physicsSystem{m_ecs};
+        PointLightMover pointLightMover{m_ecs};
 
         m_scheduler.Startup();
 
         physicsSystem.initialize();
+        m_renderer.initialize();
 
-        CameraSystem cameraSystem{m_ecs};
-
-        PointLightMover pointLightMover{m_ecs};
-
-        Entity cameraEntity = m_ecs.createEntity();
+        auto cameraEntity = m_ecs.createEntity();
         m_ecs.addComponent<CameraComponent>(cameraEntity, {true});
-
-        // cameraSystem.setViewDirection(glm::vec3(0.0f), glm::vec3(0.5f, 0.0f, 1.0f));
-        cameraSystem.setViewTarget(cameraEntity, glm::vec3(-1.0f, -2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 2.5f));
 
         auto &cameraTransform = m_ecs.getComponent<TransformComponent>(cameraEntity);
         cameraTransform.position.y = -0.5f;
@@ -103,62 +47,31 @@ namespace Minimal {
         auto currentTime = std::chrono::high_resolution_clock::now();
 
         Scheduler::QueueTask([&]() {
-            Counter *mainCounter = Scheduler::CreateCounter();
+            // Counter *mainCounter = Scheduler::CreateCounter();
             while (!m_window.shouldClose()) {
                 glfwPollEvents();
 
                 auto newTime = std::chrono::high_resolution_clock::now();
-                float frameTime = std::chrono::duration<float>(newTime - currentTime).count();
+                float deltaTime = std::chrono::duration<float>(newTime - currentTime).count();
                 currentTime = newTime;
 
-                cameraController.moveInPlaneXZ(m_window.getGlfwWindow(), frameTime, cameraTransform);
+                cameraController.moveInPlaneXZ(m_window.getGlfwWindow(), deltaTime, cameraTransform);
 
+                // Scheduler::QueueTask([&]() {
+                //     pointLightMover.update(deltaTime);
+                // }, TaskPriority::HIGH, mainCounter);
+                // Scheduler::QueueTask([&]() {
+                //     physicsSystem.update(deltaTime);
+                // }, TaskPriority::HIGH, mainCounter);
+                // // todo: should we wait for all the tasks to finish before rendering?
+                // Scheduler::QueueTask([&]() {
+                //     m_renderer.update(deltaTime);
+                // }, TaskPriority::HIGH, mainCounter);
+                // Scheduler::WaitForCounter(mainCounter);
 
-                if (auto commandBuffer = m_renderer.beginFrame()) {
-                    int frameIndex = m_renderer.getFrameIndex();
-
-                    // update
-                    FrameInfo frameInfo{
-                        frameIndex,
-                        frameTime,
-                        commandBuffer,
-                        m_renderer.getAspectRatio(),
-                        {},
-                        nullptr,
-                        globalDescriptorSets[frameIndex]
-                    };
-
-                    /*Scheduler::QueueTask([&]()
-                        {
-                            cameraSystem.update(frameInfo);
-                        }, TaskPriority::HIGH, mainCounter);
-                    Scheduler::QueueTask([&]()
-                        {
-                            pointLightSystem.update(frameInfo);
-                        }, TaskPriority::HIGH, mainCounter);
-                    Scheduler::QueueTask([&]()
-                        {
-                            physicsSystem.update(frameInfo);
-                        }, TaskPriority::HIGH, mainCounter);
-                    Scheduler::WaitForCounter(mainCounter);*/
-
-                    cameraSystem.update(frameInfo);
-                    pointLightMover.update(frameInfo);
-                    pointLightSystem.update(frameInfo);
-                    physicsSystem.update(frameInfo);
-
-                    uboBuffers[frameIndex]->writeToBuffer(&frameInfo.ubo);
-                    uboBuffers[frameIndex]->flush();
-
-                    // render
-                    m_renderer.beingSwapChainRenderPass(commandBuffer);
-
-                    simpleRendererSystem.render(frameInfo);
-                    pointLightSystem.render(frameInfo);
-
-                    m_renderer.endSwapChainRenderPass(commandBuffer);
-                    m_renderer.endFrame();
-                }
+                pointLightMover.update(deltaTime);
+                physicsSystem.update(deltaTime);
+                m_renderer.update(deltaTime);
             }
 
             m_renderer.shutdown();

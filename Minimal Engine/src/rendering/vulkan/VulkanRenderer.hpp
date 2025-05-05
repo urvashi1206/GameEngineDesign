@@ -1,16 +1,21 @@
 #pragma once
 
-#include <assert.h>
 #include <memory>
 
 #include "VulkanDevice.hpp"
-#include "../../Window.hpp"
 #include "VulkanSwapChain.hpp"
+#include "../../Window.hpp"
+#include "systems/System.hpp"
 
 namespace Minimal {
-    class VulkanRenderer {
+    class CameraSystem;
+    class PointLightSystem;
+    class SimpleRendererSystem;
+    class VulkanDescriptorPool;
+
+    class VulkanRenderer : public System {
     public:
-        VulkanRenderer(Window &window, VulkanDevice &device);
+        VulkanRenderer(ECSCoordinator &ecs, Window &window, VulkanDevice &device);
 
         ~VulkanRenderer();
 
@@ -33,6 +38,10 @@ namespace Minimal {
             assert(m_isFrameStarted && "Cannot get frame index while frame is not in progress");
             return m_currentFrameIndex;
         }
+
+        void initialize();
+
+        void update(float deltaTime) override;
 
         VkCommandBuffer beginFrame();
 
@@ -59,5 +68,14 @@ namespace Minimal {
         uint32_t m_currentImageIndex;
         int m_currentFrameIndex{0};
         bool m_isFrameStarted{false};
+
+        std::vector<std::unique_ptr<VulkanBuffer> > m_uboBuffers{VulkanSwapChain::MAX_FRAMES_IN_FLIGHT};
+        std::vector<VkDescriptorSet> m_globalDescriptorSets{VulkanSwapChain::MAX_FRAMES_IN_FLIGHT};
+
+        std::unique_ptr<VulkanDescriptorPool> m_globalPool{};
+
+        std::unique_ptr<SimpleRendererSystem> m_simpleRendererSystem;
+        std::unique_ptr<PointLightSystem> m_pointLightSystem;
+        std::unique_ptr<CameraSystem> m_cameraSystem;
     };
 }

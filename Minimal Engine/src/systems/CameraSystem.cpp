@@ -5,105 +5,31 @@
 #include "CameraSystem.hpp"
 
 namespace Minimal {
-    CameraSystem::CameraSystem(ECSCoordinator &ecs): System(ecs) {}
+    CameraSystem::CameraSystem(ECSCoordinator &ecs): RenderSubsystem(ecs) {}
 
-    void CameraSystem::setOrthographicProjection(Entity cameraEntity, float left, float right, float top, float bottom, float near, float far) {
-        if (hasCamera(cameraEntity))
-            return;
-
-        auto &camera = getCamera(cameraEntity);
-        setOrthographicProjection(camera, left, right, top, bottom, near, far);
+    void CameraSystem::processOrthographicProjection(glm::mat4 &projectionMatrix, float left, float right, float top, float bottom, float near, float far) {
+        projectionMatrix = glm::mat4{1.0f};
+        projectionMatrix[0][0] = 2.0f / (right - left);
+        projectionMatrix[1][1] = 2.0f / (bottom - top);
+        projectionMatrix[2][2] = 1.0f / (far - near);
+        projectionMatrix[3][0] = -(right + left) / (right - left);
+        projectionMatrix[3][1] = -(bottom + top) / (bottom - top);
+        projectionMatrix[3][2] = -near / (far - near);
     }
 
-    void CameraSystem::setOrthographicProjection(CameraComponent &camera, float left, float right, float top, float bottom, float near, float far) {
-        camera.projectionMatrix = glm::mat4{1.0f};
-        camera.projectionMatrix[0][0] = 2.0f / (right - left);
-        camera.projectionMatrix[1][1] = 2.0f / (bottom - top);
-        camera.projectionMatrix[2][2] = 1.0f / (far - near);
-        camera.projectionMatrix[3][0] = -(right + left) / (right - left);
-        camera.projectionMatrix[3][1] = -(bottom + top) / (bottom - top);
-        camera.projectionMatrix[3][2] = -near / (far - near);
-    }
-
-    void CameraSystem::setPerspectiveProjection(Entity cameraEntity, float fovY, float aspect, float near, float far) {
-        if (hasCamera(cameraEntity))
-            return;
-
-        auto &camera = getCamera(cameraEntity);
-        setPerspectiveProjection(camera, fovY, aspect, near, far);
-    }
-
-    void CameraSystem::setPerspectiveProjection(CameraComponent &camera, float fovY, float aspect, float near, float far) {
+    void CameraSystem::processPerspectiveProjection(glm::mat4 &projectionMatrix, float fovY, float aspect, float near, float far) {
         assert(glm::abs(aspect - std::numeric_limits<float>::epsilon()) > 0.0f && "aspect cannot be zero");
         const float tanHalfFovy = tan(fovY / 2.f);
 
-        camera.projectionMatrix = glm::mat4{0.0f};
-        camera.projectionMatrix[0][0] = 1.0f / (aspect * tanHalfFovy);
-        camera.projectionMatrix[1][1] = 1.0f / (tanHalfFovy);
-        camera.projectionMatrix[2][2] = far / (far - near);
-        camera.projectionMatrix[2][3] = 1.0f;
-        camera.projectionMatrix[3][2] = -(far * near) / (far - near);
+        projectionMatrix = glm::mat4{0.0f};
+        projectionMatrix[0][0] = 1.0f / (aspect * tanHalfFovy);
+        projectionMatrix[1][1] = 1.0f / (tanHalfFovy);
+        projectionMatrix[2][2] = far / (far - near);
+        projectionMatrix[2][3] = 1.0f;
+        projectionMatrix[3][2] = -(far * near) / (far - near);
     }
 
-    void CameraSystem::setViewDirection(Entity cameraEntity, glm::vec3 direction, glm::vec3 up) {
-        if (hasCamera(cameraEntity))
-            return;
-
-        auto &camera = getCamera(cameraEntity);
-        auto &transform = m_ecs.getComponent<TransformComponent>(cameraEntity);
-
-        const glm::vec3 w{normalize(direction)};
-        const glm::vec3 u{normalize(cross(w, up))};
-        const glm::vec3 v{cross(w, u)};
-
-        camera.viewMatrix = glm::mat4{1.0f};
-        camera.viewMatrix[0][0] = u.x;
-        camera.viewMatrix[1][0] = u.y;
-        camera.viewMatrix[2][0] = u.z;
-        camera.viewMatrix[0][1] = v.x;
-        camera.viewMatrix[1][1] = v.y;
-        camera.viewMatrix[2][1] = v.z;
-        camera.viewMatrix[0][2] = w.x;
-        camera.viewMatrix[1][2] = w.y;
-        camera.viewMatrix[2][2] = w.z;
-        camera.viewMatrix[3][0] = -dot(u, transform.position);
-        camera.viewMatrix[3][1] = -dot(v, transform.position);
-        camera.viewMatrix[3][2] = -dot(w, transform.position);
-
-        camera.inverseViewMatrix = glm::mat4{1.0f};
-        camera.inverseViewMatrix[0][0] = u.x;
-        camera.inverseViewMatrix[0][1] = u.y;
-        camera.inverseViewMatrix[0][2] = u.z;
-        camera.inverseViewMatrix[1][0] = v.x;
-        camera.inverseViewMatrix[1][1] = v.y;
-        camera.inverseViewMatrix[1][2] = v.z;
-        camera.inverseViewMatrix[2][0] = w.x;
-        camera.inverseViewMatrix[2][1] = w.y;
-        camera.inverseViewMatrix[2][2] = w.z;
-        camera.inverseViewMatrix[3][0] = transform.position.x;
-        camera.inverseViewMatrix[3][1] = transform.position.y;
-        camera.inverseViewMatrix[3][2] = transform.position.z;
-    }
-
-    void CameraSystem::setViewTarget(Entity cameraEntity, glm::vec3 target, glm::vec3 up) {
-        if (hasCamera(cameraEntity))
-            return;
-
-        auto &transform = m_ecs.getComponent<TransformComponent>(cameraEntity);
-
-        setViewDirection(cameraEntity, target - transform.position, up);
-    }
-
-    void CameraSystem::setViewYXZ(Entity cameraEntity) {
-        if (hasCamera(cameraEntity))
-            return;
-
-        auto &camera = getCamera(cameraEntity);
-        auto &transform = m_ecs.getComponent<TransformComponent>(cameraEntity);
-        setViewYXZ(camera, transform);
-    }
-
-    void CameraSystem::setViewYXZ(CameraComponent &camera, TransformComponent &transform) {
+    void CameraSystem::processViewYXZ(glm::mat4 &viewMatrix, glm::mat4 &inverseViewMatrix, const TransformComponent &transform) {
         const float c3 = glm::cos(glm::roll(transform.rotation));
         const float s3 = glm::sin(glm::roll(transform.rotation));
         const float c2 = glm::cos(glm::pitch(transform.rotation));
@@ -114,58 +40,40 @@ namespace Minimal {
         const glm::vec3 v{(c3 * s1 * s2 - c1 * s3), (c2 * c3), (c1 * c3 * s2 + s1 * s3)};
         const glm::vec3 w{(c2 * s1), (-s2), (c1 * c2)};
 
-        camera.viewMatrix = glm::mat4{1.0f};
-        camera.viewMatrix[0][0] = u.x;
-        camera.viewMatrix[1][0] = u.y;
-        camera.viewMatrix[2][0] = u.z;
-        camera.viewMatrix[0][1] = v.x;
-        camera.viewMatrix[1][1] = v.y;
-        camera.viewMatrix[2][1] = v.z;
-        camera.viewMatrix[0][2] = w.x;
-        camera.viewMatrix[1][2] = w.y;
-        camera.viewMatrix[2][2] = w.z;
-        camera.viewMatrix[3][0] = -dot(u, transform.position);
-        camera.viewMatrix[3][1] = -dot(v, transform.position);
-        camera.viewMatrix[3][2] = -dot(w, transform.position);
+        viewMatrix = glm::mat4{1.0f};
+        viewMatrix[0][0] = u.x;
+        viewMatrix[1][0] = u.y;
+        viewMatrix[2][0] = u.z;
+        viewMatrix[0][1] = v.x;
+        viewMatrix[1][1] = v.y;
+        viewMatrix[2][1] = v.z;
+        viewMatrix[0][2] = w.x;
+        viewMatrix[1][2] = w.y;
+        viewMatrix[2][2] = w.z;
+        viewMatrix[3][0] = -dot(u, transform.position);
+        viewMatrix[3][1] = -dot(v, transform.position);
+        viewMatrix[3][2] = -dot(w, transform.position);
 
-        camera.inverseViewMatrix = glm::mat4{1.0f};
-        camera.inverseViewMatrix[0][0] = u.x;
-        camera.inverseViewMatrix[0][1] = u.y;
-        camera.inverseViewMatrix[0][2] = u.z;
-        camera.inverseViewMatrix[1][0] = v.x;
-        camera.inverseViewMatrix[1][1] = v.y;
-        camera.inverseViewMatrix[1][2] = v.z;
-        camera.inverseViewMatrix[2][0] = w.x;
-        camera.inverseViewMatrix[2][1] = w.y;
-        camera.inverseViewMatrix[2][2] = w.z;
-        camera.inverseViewMatrix[3][0] = transform.position.x;
-        camera.inverseViewMatrix[3][1] = transform.position.y;
-        camera.inverseViewMatrix[3][2] = transform.position.z;
-    }
-
-    CameraComponent &CameraSystem::getMainCamera() {
-        CameraComponent *fallBackCamera{nullptr};
-        for (Entity entity = 0; entity < m_ecs.getEntityCount(); entity++) {
-            if (!hasCamera(entity))
-                continue;
-
-            auto &camera = getCamera(entity);
-            if (camera.isMain)
-                return camera;
-
-            if (fallBackCamera == nullptr)
-                fallBackCamera = &camera;
-        }
-
-        if (fallBackCamera != nullptr)
-            fallBackCamera->isMain = true;
-
-        return *fallBackCamera;
+        inverseViewMatrix = glm::mat4{1.0f};
+        inverseViewMatrix[0][0] = u.x;
+        inverseViewMatrix[0][1] = u.y;
+        inverseViewMatrix[0][2] = u.z;
+        inverseViewMatrix[1][0] = v.x;
+        inverseViewMatrix[1][1] = v.y;
+        inverseViewMatrix[1][2] = v.z;
+        inverseViewMatrix[2][0] = w.x;
+        inverseViewMatrix[2][1] = w.y;
+        inverseViewMatrix[2][2] = w.z;
+        inverseViewMatrix[3][0] = transform.position.x;
+        inverseViewMatrix[3][1] = transform.position.y;
+        inverseViewMatrix[3][2] = transform.position.z;
     }
 
     void CameraSystem::update(FrameInfo &frameInfo) {
         CameraComponent *mainCamera{nullptr};
+        Entity mainCameraEntity{MAX_ENTITIES + 1};
         CameraComponent *fallbackCamera{nullptr};
+        Entity fallbackCameraEntity{MAX_ENTITIES + 1};
 
         for (Entity entity = 0; entity < m_ecs.getEntityCount(); entity++) {
             if (!hasCamera(entity))
@@ -173,31 +81,43 @@ namespace Minimal {
 
             auto &camera = getCamera(entity);
             auto &cameraTransform = m_ecs.getComponent<TransformComponent>(entity);
-            setViewYXZ(camera, cameraTransform);
 
-            // setOthrographicProjection(-frameInfo.aspect, frameInfo.aspect, -1.0f, 1.0f, -1.0f, 1.0f);
-            setPerspectiveProjection(camera, glm::radians(50.0f), frameInfo.aspect, 0.1f, 100.0f);
+            processViewYXZ(camera.viewMatrix, camera.inverseViewMatrix, cameraTransform);
+            // processOrthographicProjection(camera.projectionMatrix, -frameInfo.aspect, frameInfo.aspect, -1.0f, 1.0f, -1.0f, 1.0f);
+            processPerspectiveProjection(camera.projectionMatrix, glm::radians(50.0f), frameInfo.aspect, 0.1f, 100.0f);
 
             if (mainCamera != nullptr)
                 continue;
 
-            if (camera.isMain)
+            if (camera.isMain) {
                 mainCamera = &camera;
+                mainCameraEntity = entity;
+            }
 
-            if (fallbackCamera == nullptr)
+            if (fallbackCamera == nullptr) {
                 fallbackCamera = &camera;
+                fallbackCameraEntity = entity;
+            }
         }
 
-        if (mainCamera == nullptr)
+        if (mainCamera == nullptr) {
             mainCamera = fallbackCamera;
+            mainCameraEntity = fallbackCameraEntity;
+        }
 
-        assert(mainCamera != nullptr && "No cameras available");
+        assert(hasCamera(mainCameraEntity) && "No cameras available");
 
-        frameInfo.camera = mainCamera;
+        auto &cameraTransform = m_ecs.getComponent<TransformComponent>(mainCameraEntity);
+        auto &camera = getCamera(mainCameraEntity);
+
+        frameInfo.camera = &camera;
+        processViewYXZ(frameInfo.ubo.view, frameInfo.ubo.inverseView, cameraTransform);
         frameInfo.ubo.projection = mainCamera->projectionMatrix;
         frameInfo.ubo.view = mainCamera->viewMatrix;
         frameInfo.ubo.inverseView = mainCamera->inverseViewMatrix;
     }
+
+    void CameraSystem::render(FrameInfo &frameInfo) {}
 
     bool CameraSystem::hasCamera(Entity cameraEntity) {
         return m_ecs.hasComponent<CameraComponent>(cameraEntity);
