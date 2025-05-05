@@ -76,7 +76,7 @@ namespace Minimal {
                 commandBuffer,
                 getAspectRatio(),
                 {},
-                nullptr,
+                MAX_ENTITIES,
                 m_globalDescriptorSets[frameIndex]
             };
 

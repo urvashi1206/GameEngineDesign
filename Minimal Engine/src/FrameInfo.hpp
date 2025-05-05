@@ -4,6 +4,7 @@
 #include <vulkan/vulkan.h>
 
 #include "ecs/Components.hpp"
+#include "ecs/EntityManager.hpp"
 
 namespace Minimal {
 #define MAX_LIGHTS 10
@@ -28,7 +29,7 @@ namespace Minimal {
         VkCommandBuffer commandBuffer;
         float aspect;
         GlobalUBO ubo;
-        CameraComponent *camera;
+        Entity cameraEntity;
         VkDescriptorSet globalDescriptorSet;
     };
 }

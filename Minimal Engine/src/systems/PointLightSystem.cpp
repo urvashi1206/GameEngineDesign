@@ -91,6 +91,8 @@ namespace Minimal {
         // sort lights
         std::map<float, Entity> sortedLights;
 
+        auto &cameraTransform = m_ecs.getComponent<TransformComponent>(frameInfo.cameraEntity);
+        auto cameraPosition = cameraTransform.position;
 
         for (Entity e = 0; e < m_ecs.getEntityCount(); e++) {
             if (!m_ecs.hasComponent<PointLightComponent>(e))
@@ -99,7 +101,7 @@ namespace Minimal {
             auto &transform = m_ecs.getComponent<TransformComponent>(e);
 
             // calculate distance
-            auto offset = frameInfo.camera->getPosition() - transform.position;
+            auto offset = cameraPosition - transform.position;
             float distanceSquared = dot(offset, offset);
             sortedLights[distanceSquared] = e;
         }

@@ -86,8 +86,6 @@ namespace Minimal {
     };
 
     struct CameraComponent {
-        glm::vec3 getPosition() { return glm::vec3(inverseViewMatrix[3]); }
-
         bool isMain;
         glm::mat4 projectionMatrix{1.0f};
         glm::mat4 viewMatrix{1.0f};

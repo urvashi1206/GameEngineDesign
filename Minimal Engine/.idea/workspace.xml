@@ -40,26 +40,13 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ff6dfa8c-eb6c-408e-98c4-a7d0c45c3a71" name="Changes" comment="function names changed pt 2">
-      <change afterPath="$PROJECT_DIR$/src/rendering/RenderSubsystem.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/rendering/RenderSubsystem.hpp" afterDir="false" />
+    <list default="true" id="ff6dfa8c-eb6c-408e-98c4-a7d0c45c3a71" name="Changes" comment="Refactor projection and view matrix calculations&#10;&#10;Refactored projection and view matrix calculations to make them reusable for both orthographic and perspective scenarios. Simplified CameraSystem by removing entity-based methods, reducing redundancy, and improving modularity. Replaced `FrameInfo` with `deltaTime` for time update functions across systems for clarity.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Engine.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Engine.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Engine.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/Engine.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/FrameInfo.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/FrameInfo.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ecs/Components.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/ecs/Components.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/rendering/vulkan/VulkanRenderer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/rendering/vulkan/VulkanRenderer.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rendering/vulkan/VulkanRenderer.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/rendering/vulkan/VulkanRenderer.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/systems/CameraSystem.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/systems/CameraSystem.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/systems/CameraSystem.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/systems/CameraSystem.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/systems/PhysicsSystem.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/systems/PhysicsSystem.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/systems/PhysicsSystem.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/systems/PhysicsSystem.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/systems/PointLightMover.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/systems/PointLightMover.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/systems/PointLightMover.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/systems/PointLightMover.hpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/systems/PointLightSystem.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/systems/PointLightSystem.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/systems/PointLightSystem.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/systems/PointLightSystem.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/systems/SimpleRendererSystem.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/systems/SimpleRendererSystem.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/systems/SimpleRendererSystem.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/systems/SimpleRendererSystem.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/systems/System.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/systems/System.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/systems/System.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/systems/System.hpp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -238,7 +225,7 @@
       <workItem from="1746132244665" duration="108000" />
       <workItem from="1746153622773" duration="1822000" />
       <workItem from="1746317614163" duration="1982000" />
-      <workItem from="1746385049210" duration="9451000" />
+      <workItem from="1746385049210" duration="15972000" />
     </task>
     <task id="LOCAL-00001" summary="Solved the vk device destroyed before memory being freed issue">
       <option name="closed" value="true" />
@@ -296,7 +283,15 @@
       <option name="project" value="LOCAL" />
       <updated>1745559224378</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Refactor projection and view matrix calculations&#10;&#10;Refactored projection and view matrix calculations to make them reusable for both orthographic and perspective scenarios. Simplified CameraSystem by removing entity-based methods, reducing redundancy, and improving modularity. Replaced `FrameInfo` with `deltaTime` for time update functions across systems for clarity.">
+      <option name="closed" value="true" />
+      <created>1746405571685</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1746405571685</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -318,7 +313,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="main" />
+                        <option value="Rendering" />
                       </list>
                     </value>
                   </entry>
@@ -338,7 +333,8 @@
     <MESSAGE value="function names changed" />
     <MESSAGE value="function names changed pt 2" />
     <MESSAGE value="removed redundant code" />
-    <option name="LAST_COMMIT_MESSAGE" value="removed redundant code" />
+    <MESSAGE value="Refactor projection and view matrix calculations&#10;&#10;Refactored projection and view matrix calculations to make them reusable for both orthographic and perspective scenarios. Simplified CameraSystem by removing entity-based methods, reducing redundancy, and improving modularity. Replaced `FrameInfo` with `deltaTime` for time update functions across systems for clarity." />
+    <option name="LAST_COMMIT_MESSAGE" value="Refactor projection and view matrix calculations&#10;&#10;Refactored projection and view matrix calculations to make them reusable for both orthographic and perspective scenarios. Simplified CameraSystem by removing entity-based methods, reducing redundancy, and improving modularity. Replaced `FrameInfo` with `deltaTime` for time update functions across systems for clarity." />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
