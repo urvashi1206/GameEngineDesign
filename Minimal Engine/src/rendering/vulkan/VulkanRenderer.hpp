@@ -43,14 +43,6 @@ namespace Minimal {
 
         void update(float deltaTime) override;
 
-        VkCommandBuffer beginFrame();
-
-        void endFrame();
-
-        void beingSwapChainRenderPass(VkCommandBuffer commandBuffer);
-
-        void endSwapChainRenderPass(VkCommandBuffer commandBuffer);
-
         void shutdown();
 
     private:
@@ -59,6 +51,14 @@ namespace Minimal {
         void freeCommandBuffers();
 
         void recreateSwapChain();
+
+        VkCommandBuffer beginFrame();
+
+        void endFrame();
+
+        void beingSwapChainRenderPass(VkCommandBuffer commandBuffer);
+
+        void endSwapChainRenderPass(VkCommandBuffer commandBuffer);
 
         Window &m_window;
         VulkanDevice &m_device;
